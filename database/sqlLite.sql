@@ -8,5 +8,5 @@
 --      password TEXT NOT NULL
 -- );
 
-.tables
+SELECT * FROM users
 
