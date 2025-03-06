@@ -2,6 +2,8 @@ import express, {json} from "express"
 import cors from "cors"
 
 import { routUser } from "./Routes/user.js"
+import { routBet } from "./Routes/bet.js"
+import { routTransaction } from "./Routes/transaction.js"
 
 const app = express()
 
@@ -14,7 +16,10 @@ app.use(cors())
 app.use("/user", routUser)
 
 //ruta de Apuestas
+app.use("/bet", routBet)
 
+//ruta de tarjetas
+app.use("/transaction", routTransaction)
 
 //Puerto temporal
 const PORT = 1234

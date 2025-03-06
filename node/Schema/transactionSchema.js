@@ -1,0 +1,17 @@
+import z from "zod";
+
+const transactionSchema = z.object({
+    id: z.string().uuid().optional(),
+    cardNumber: z.min(10**12).max(10**16-1), //minimo de 13 maximo de 16
+    cardPassword: z.min(100).max(999), //3 digitos numericos
+    bank: z.enum(
+        ["HSBC", "BANAMEX", "INBURSA", "BBVA", "SANTANDER",
+        "SCOTIABANK"]
+    ),
+    amount: z.number().min(1).multipleOf(0.01), // centavos
+    type: z.enum(["DEPOSITO", "RETIRO"])
+});
+
+export function validateTransaction(object) {
+    return transactionSchema.safeParse(object);
+}

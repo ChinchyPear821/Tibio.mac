@@ -1,13 +1,13 @@
 import { db } from "../Connection/db.js"
 import bcrypt from "bcrypt"
-import crypto from "crypto"
-
 
 export class UserModel{
+    //POST
     static async register({ data }){
         try {
             const { username, password } = data;
 
+            //TODO: generar uno aleatorio
             const uuid = "c1652e8c-d87a-11ef-83ea-047c162f14c5"
             const newPassword = await bcrypt.hash(password, 10);
     
