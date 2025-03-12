@@ -21,7 +21,7 @@ export class BetController{
         try{
 
             //Me regresa el id de la apuesta, el evento, el tipo, el monto y el momio. (si acaso contra quien)
-            const bet = await BetModel.place({ data: })
+            //const bet = await BetModel.place({ data: })
 
             res.status(200).json(bet)
 
@@ -34,7 +34,7 @@ export class BetController{
         try{
 
             //Me regresa el id de la apuesta, el evento, el tipo y el monto
-            const bet = await BetModel.create({ data: })
+            //const bet = await BetModel.create({ data: })
             
             res.status(200).json(bet)
 

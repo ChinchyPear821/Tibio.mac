@@ -1,20 +1,22 @@
 import { TransactionModel } from "../Model/transaction.js"
 
-import { validateTransaction } from "../Schema/transactionSchema.js"
+import { validateTransaction, partialValidateTransaction } from "../Schema/transactionSchema.js"
 
 /*
-los datos del get desde req.query(url)
+los datos del get desde req.params(url)
 los datos del post desde req.body
+los datos del get desde req.query comom "?id=12343"
 */
 
 export class TransactionController{
     //GET
     static async allTransactions(req, res){
         try{
-            const { id: user_id} = req.query
+            console.log(req.params)
+            const { id: id_user} = req.params
 
             //me regresa un array de todas las transacciones
-            const transactions = await TransactionModel.allBets({ data: user_id })
+            const transactions = await TransactionModel.allTransactions({ data: { id_user } })
 
             res.status(201).json(transactions);
 
@@ -27,8 +29,10 @@ export class TransactionController{
     //POST
     static async deposit(req, res){
         try{
-
-            const depositValidated = validateTransaction(req.body)
+            //id_user con JWT
+            const {id: id_user} = req.params
+            const transactionInfo = {id_user, ...req.body}
+            const depositValidated = validateTransaction(transactionInfo)
 
             if(depositValidated.error){
                 return res.status(422).json({ error: depositValidated.error.message })
@@ -46,7 +50,12 @@ export class TransactionController{
     }
     static async withdraw(req, res){
         try{
-            const withdrawValidated = validateTransaction(req.body)
+            //id_user con JWT
+            const {id: id_user} = req.params
+            const transactionInfo = {id_user, ...req.body}
+            const withdrawValidated = partialValidateTransaction(transactionInfo)
+
+            console.log(transactionInfo)
 
             if(withdrawValidated.error){
                 return res.status(422).json({ error: withdrawValidated.error.message })

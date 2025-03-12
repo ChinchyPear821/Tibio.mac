@@ -1,0 +1,24 @@
+GET http://localhost:1234/transaction/user/c1652e8c-d87a-11ef-83ea-047c162f14c5
+
+###
+POST http://localhost:1234/transaction/deposit/c1652e8c-d87a-11ef-83ea-047c162f14c5
+Content-Type: application/json
+
+{
+    "cardNumber": 1234567891011,
+    "cardPassword": 987,
+    "bank": "BBVA",
+    "amount": 10,
+    "type": "DEPOSITO"
+}
+
+###
+POST http://localhost:1234/transaction/withdraw/c1652e8c-d87a-11ef-83ea-047c162f14c5
+Content-Type: application/json
+
+{
+    "cardNumber": 1234567891011,
+    "bank": "BBVA",
+    "amount": 5,
+    "type": "RETIRO"
+}

@@ -1,11 +1,13 @@
+-- Como la tabla betHistory tiene una primary Key compuesta
+-- automaticamente ya refrencia a esas tablas
+-- Si quieres consultar el bet_history de un usuario: SELECT * FROM betHistory WHER id_user = "";
+
 CREATE TABLE users (
     id_user TEXT NOT NULL UNIQUE PRIMARY KEY,
-    username TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
     balance REAL NOT NULL DEFAULT 0,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    id_betHistory TEXT, 
-    FOREIGN KEY(id_betHistory) REFERENCES betHistory(id_betHistory)
 );
 
 CREATE TABLE events (

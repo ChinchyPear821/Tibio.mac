@@ -1,12 +1,14 @@
 import { Router } from "express";
 
-import { TransactionController } from "../Controller/transaction";
+import { TransactionController } from "../Controller/transaction.js";
 
 export const routTransaction = Router()
+
+//DEBERIA DE PASAR EL USER ID CON UN JWT
 
 //GET
 routTransaction.get("/user/:id", TransactionController.allTransactions) //todas las transacciones 
 
 //POST
-routTransaction.post("/deposit", TransactionController.deposit)
-routTransaction.post("/withdraw", TransactionController.withdraw)
+routTransaction.post("/deposit/:id", TransactionController.deposit)
+routTransaction.post("/withdraw/:id", TransactionController.withdraw)
