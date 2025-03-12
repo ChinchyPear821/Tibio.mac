@@ -1,17 +1,22 @@
 import { BetModel } from "../Model/bet.js"
+import {validateBet, validatePartialBet} from "../Schema/betSchema.js";
 
 export class BetController{
     //GET
     static async allBets(req, res){
         try{
+            const validateBet = validateBet(req.body)
 
+            if (validateBet.error){
+                return res.status(422).json({ error: validateBet.error.message });
+            }
             //me regresa un aray de todas las apuestas
             const bets = await BetModel.allBets({ data: user.id })
 
             res.status(200).json(bets)
             
         } catch(error){
-            console.error("Erro al buscar el historial de apuestas", error)
+            console.error("Error al buscar el historial de apuestas", error)
             res.status(500).json({ error: "Error al buscar el historial de apuestas" })
         }
     }
