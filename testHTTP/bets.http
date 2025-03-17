@@ -1,0 +1,64 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=WebStorm
+
+#### OBTIENE TODOS LOS EVENTOS###
+GET http://localhost:1234/bet/events
+
+### OBTIENE TODAS LAS BETS ####
+GET http://localhost:1234/bet/
+
+### TODAS LAS BETS DE UN USUARIO POR ID####
+GET http://localhost:1234/bet/user/
+Content-Type: application/json
+
+{
+  "id_user": "83396f12-2d31-4ff2-9ba1-ada93e26e83c"
+}
+
+#### GET BET POR ID###
+GET http://localhost:1234/bet/id
+Content-Type: application/json
+
+{
+  "id_bet": "68e6aa8b-be8c-4f5c-9fa7-edf1ad2748ca"
+}
+
+### GET EVENTO POR ID ####
+GET http://localhost:1234/events/id
+Content-Type: application/json
+
+{
+  "id_event": "25f0b73e-01d1-4f20-9c31-ed9b81efbc83"
+}
+
+### CREAR UN EVENTO ###
+POST http://localhost:1234/bet/events
+Content-Type: application/json
+
+{
+  "name": "Chivas vs America",
+  "status": "EN PROCESO",
+  "sport": "Futbol"
+}
+
+#### CREA UNA APUESTA ###
+POST http://localhost:1234/bet/
+Content-Type: application/json
+
+{
+  "id_user": "83396f12-2d31-4ff2-9ba1-ada93e26e83c",
+  "id_event": "25f0b73e-01d1-4f20-9c31-ed9b81efbc83",
+  "type": "GANADOR",
+  "amount": 100,
+  "extra": 1.5
+}
+
+
+### ELIMINA UNA APUESTA ###
+DELETE http://localhost:1234/bet/id
+Content-Type: application/json
+
+{
+  "id_bet":"68e6aa8b-be8c-4f5c-9fa7-edf1ad2748ca"
+}

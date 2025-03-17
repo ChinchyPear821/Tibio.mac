@@ -3,10 +3,16 @@ import { Router } from "express";
 import { BetController } from "../Controller/bet.js";
 
 export const routBet = Router()
+// GET
+routBet.get("/",BetController.allBets)
+routBet.get("/user/", BetController.allBetsByUserId)
+routBet.get("/events", BetController.allEvents)
+routBet.get("/id", BetController.getBetById)
+routBet.get("/events/id", BetController.getEventById)
+// POST
+routBet.post("/place", BetController.acceptBet)
+routBet.post("/events", BetController.createEvent)
+routBet.post("/", BetController.createBet)
 
-//Post
-routBet.post("/place", BetController.place) //aceptar una apuesta
-routBet.post("/create", BetController.create) //crear una apuesta 1 a 1
-
-//Get
-routBet.post("/user/:id", BetController.allBets) //todas las apuestas de un usuario
+// DELETE
+routBet.delete("/id", BetController.deleteBet)
