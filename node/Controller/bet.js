@@ -77,12 +77,13 @@ export class BetController{
     //POST
     static async acceptBet(req, res){
         try{
-            const betValidet = validateBet(req.body)
-            if (betValidated.error){
-                return res.status(422).json({ error: validateBet.error.message });
+            const {id_bet, id_user} = req.body
+            if(!id_user||!id_bet){
+                return res.status(400).json({error:"Faltan datos"})
             }
 
-            const betAccepeted = await BetModel.acceptBet({data:betValidet.data})
+
+            const betAccepeted = await BetModel.acceptBet({data:{id_bet, id_user}});
 
             //Me regresa el id de la apuesta, el evento, el tipo, el monto y el momio. (si acaso contra quien)
             //const bet = await BetModel.place({ data: })
@@ -145,6 +146,23 @@ export class BetController{
         }catch(error){
             console.error("Error al eliminar la apuesta", error)
             return  res.status(500).json({ error: "Error al eliminar la apuesta" })
+        }
+    }
+    static async deleteEvent(req, res){
+        try{
+            const {id_event} = req.body
+            if(!id_event){
+                return res.status(400).json({ error: "No se encontró el Id" })
+            }
+            const result = await BetModel.deleteEvent(id_event);
+            if (result === 0) {
+                return res.status(404).json({ error: "Evento no encontrado" });
+            }
+
+            return res.status(200).json({ message: "Evento eliminado correctamente" });
+        }catch(error){
+            console.error("Error al eliminar el evento", error)
+            return  res.status(500).json({ error: "Error al eliminar el evento" })
         }
     }
 }

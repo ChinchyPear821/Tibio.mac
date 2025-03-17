@@ -10,9 +10,12 @@ routBet.get("/events", BetController.allEvents)
 routBet.get("/id", BetController.getBetById)
 routBet.get("/events/id", BetController.getEventById)
 // POST
-routBet.post("/place", BetController.acceptBet)
+
 routBet.post("/events", BetController.createEvent)
 routBet.post("/", BetController.createBet)
 
+// PATCH
+routBet.patch("/place", BetController.acceptBet)
 // DELETE
 routBet.delete("/id", BetController.deleteBet)
+routBet.delete("/events/id", BetController.deleteEvent)

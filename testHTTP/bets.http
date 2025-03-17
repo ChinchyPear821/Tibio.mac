@@ -53,7 +53,14 @@ Content-Type: application/json
   "amount": 100,
   "extra": 1.5
 }
+###
+PATCH http://localhost:1234/bet/place
+Content-Type: application/json
 
+{
+  "id_bet": "4958335d-26ce-4f80-b31f-876fa8af179b",
+  "id_user": "83396f12-2d31-4ff2-9ba1-ada93e26e83c"
+}
 
 ### ELIMINA UNA APUESTA ###
 DELETE http://localhost:1234/bet/id

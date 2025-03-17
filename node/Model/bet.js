@@ -1,5 +1,5 @@
 import { db } from "../Connection/db.js"
-
+const minutes = 3;
 export class BetModel{
     //GET
     static async getAllBets(){
@@ -61,10 +61,7 @@ export class BetModel{
         }
     }
 
-
-
     //POST
-
     static async acceptBet({ data }){
         try {
             const { id_bet, id_user } = data;
@@ -73,7 +70,7 @@ export class BetModel{
                 throw new Error("Datos incompletos para aceptar la apuesta");
             }
 
-            const bet = db.prepare(`SELECT * FROM bet WHERE id_bet = ?`).get(id_bet);
+            const bet = db.prepare(`SELECT * FROM bets WHERE id_bet = ?`).get(id_bet);
 
             if (!bet) {
                 throw new Error("La apuesta no existe");
@@ -83,7 +80,7 @@ export class BetModel{
                 throw new Error("La apuesta ya ha sido aceptada");
             }
             const updateBet = db.prepare(`
-                UPDATE bet
+                UPDATE bets
                 SET status = 'ACEPTADO'
                 WHERE id_bet = ?
             `);
@@ -134,7 +131,7 @@ export class BetModel{
             const date = new Date().toISOString().split("T")[0];
             const hour = new Date().toISOString().split("T")[1].split(".")[0];
 
-            console.log("Datos que se van a insertar:", {
+            console.log("Datos:", {
                 id_bet, id_user, id_event, type, amount, extra, status, result, date, hour
             });
 
@@ -171,11 +168,65 @@ export class BetModel{
         try {
             const {id_event} = data
             const eventDelete = db.prepare(`DELETE FROM events WHERE id_event = ?`);
-            return eventDelete.run(id_event)
+            const result= eventDelete.run(id_event);
+            return result.changes;
         } catch (error) {
             console.error("No se encontro la apuesta", error);
             throw error;
         }
     }
-
 }
+function monitorBets() {
+    setInterval(() => {
+        try {
+            console.log("[DEBUG] Verificando apuestas en proceso...");
+
+            const bets = db.prepare(`
+                SELECT id_bet, id_event, date, hour, status FROM bets WHERE status = 'EN PROCESO'
+            `).all();
+
+            if (!bets.length) {
+                console.log("[DEBUG] No hay apuestas en proceso.");
+                return;
+            }
+
+            const now = new Date();
+
+            bets.forEach((bet) => {
+                const betTime = new Date(`${bet.date}T${bet.hour}Z`); // Convertir a objeto Date
+                const elapsedTime = (now - betTime) / 60000; // Convertir a minutos
+
+                console.log(`[DEBUG] Apuesta ${bet.id_bet} tiene ${elapsedTime.toFixed(2)} minutos.`);
+
+                if (elapsedTime >= minutes) {
+                    console.log(` La apuesta ${bet.id_bet} ha finalizado.`);
+
+                    // Generar un resultado aleatorio
+                    const result = Math.random() > 0.5 ? "GANADO" : "PERDIDO";
+
+                    // Actualizar apuesta y evento en una transacción
+                    const updateTransaction = db.transaction(() => {
+                        db.prepare(`
+                            UPDATE bets SET status = 'FINALIZADO', result = ? WHERE id_bet = ?
+                        `).run(result, bet.id_bet);
+
+                        db.prepare(`
+                            UPDATE events SET status = 'FINALIZADO' WHERE id_event = ?
+                        `).run(bet.id_event);
+                    });
+
+                    updateTransaction();
+
+                    console.log(`Apuesta ${bet.id_bet} y evento ${bet.id_event} actualizados a FINALIZADO.`);
+                }
+            });
+
+            console.log("[DEBUG] Ciclo de verificación completado.");
+        } catch (error) {
+            console.error("Error en monitorBets:", error);
+        }
+    }, 60000); // Se ejecuta cada minuto
+}
+
+// Llamar la función cuando inicie el servidor
+monitorBets();
