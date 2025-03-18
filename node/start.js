@@ -1,9 +1,11 @@
-import express, {json} from "express"
+import express, { json } from "express"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 
 import { routUser } from "./Routes/user.js"
 import { routBet } from "./Routes/bet.js"
 import { routTransaction } from "./Routes/transaction.js"
+import { SECRET_JWT_KEY } from "./config.js"
 
 const app = express()
 
@@ -11,6 +13,21 @@ app.disable("x-powered-by")
 
 app.use(json())
 app.use(cors())
+app.use(cookieParser())
+
+//Que todas las rutas pueden acceder a un token si es que hay uno
+app.use((req, res, next) => {
+    const token = req.cookies.access_token
+
+    req.session = { user: null }
+
+    try {
+        const data = jwt.verify(token, SECRET_JWT_KEY)
+        req.session.user = data
+    } catch {}
+
+    next();
+})
 
 //ruta de Login
 app.use("/user", routUser)
@@ -24,6 +41,6 @@ app.use("/transaction", routTransaction)
 //Puerto temporal
 const PORT = 1234
 
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
     console.log("http://localhost:1234")
 })

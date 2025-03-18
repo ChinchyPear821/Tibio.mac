@@ -61,7 +61,4 @@ export class UserModel{
         }
 
     }
-    static async logout(){
-
-    }
 }
