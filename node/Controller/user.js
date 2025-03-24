@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken'
 import { UserModel } from "../Model/user.js"
 
 import { validateUsername, partialValidateUsername } from "../Schema/userSchema.js"
-import { SECRET_JWT_KEY } from '../config.js';
+
+import { SECRET_JWT_KEY } from "../config.js"
 
 export class UserController{
     //GET
@@ -43,9 +44,9 @@ export class UserController{
             }
 
             //Me regresa el usuario encontrado
-            const userFound = await UserModel.login({ data: userValidated.data })
+            const userLogged = await UserModel.login({ data: userValidated.data })
 
-            const {id_user, username} = userFound
+            const { id_user, username } = userLogged
 
             //crear la cookie
             const token = jwt.sign(
@@ -61,7 +62,7 @@ export class UserController{
                 sameSite: "strict", //la cookie solo viaja en nuestro dominio
                 maxAge: 1000*60*60 //1hr de expiracion
             })
-            .status(201).json({ userFound, token })
+            .status(201).json({ userLogged, token })
 
         } catch(error){
             console.error("Error al hacer login:", error)

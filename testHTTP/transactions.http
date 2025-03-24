@@ -1,7 +1,7 @@
-GET http://localhost:1234/transaction/user/c1652e8c-d87a-11ef-83ea-047c162f14c5
+GET http://localhost:1234/transaction/user
 
 ###
-POST http://localhost:1234/transaction/deposit/c1652e8c-d87a-11ef-83ea-047c162f14c5
+POST http://localhost:1234/transaction/deposit
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:1234/transaction/withdraw/c1652e8c-d87a-11ef-83ea-047c162f14c5
+POST http://localhost:1234/transaction/withdraw
 Content-Type: application/json
 
 {

@@ -1,4 +1,5 @@
 import { db } from "../Connection/db.js"
+import { getRowById } from "../utils.js"
 
 export class TransactionModel{
     //GET
@@ -6,9 +7,11 @@ export class TransactionModel{
         try{
             const { id_user } = data
 
-            const allTransactions = db.prepare(`
-                SELECT * FROM transactions WHERE id_user = ?
-            `).all(id_user)
+            //  const allTransactions = db.prepare(`
+            //      SELECT * FROM transactions WHERE id_user = ?
+            //  `).all(id_user)
+
+            const allTransactions = getRowById("transactions", "id_user", id_user.toString())
 
             return allTransactions
 
@@ -21,7 +24,7 @@ export class TransactionModel{
     //POST
     static async deposit({ data }){
         try{
-            const {id_user, cardNumber, bank, amount, type} = data
+            const { id_user, cardNumber, bank, amount, type } = data
 
             //Crear el registro en la tabla transactions
             //const uuid = "c1652e8c-d87a-11ef-83ea-047c162f14k5"

@@ -12,8 +12,7 @@ export class TransactionController{
     //GET
     static async allTransactions(req, res){
         try{
-            console.log(req.params)
-            const { id: id_user} = req.params
+            const { user: { id_user } } = req.session
 
             //me regresa un array de todas las transacciones
             const transactions = await TransactionModel.allTransactions({ data: { id_user } })
@@ -30,9 +29,10 @@ export class TransactionController{
     static async deposit(req, res){
         try{
             //id_user con JWT
-            const {id: id_user} = req.params
+            const { user: { id_user } } = req.session
             const transactionInfo = {id_user, ...req.body}
             const depositValidated = validateTransaction(transactionInfo)
+
 
             if(depositValidated.error){
                 return res.status(422).json({ error: depositValidated.error.message })
@@ -51,11 +51,9 @@ export class TransactionController{
     static async withdraw(req, res){
         try{
             //id_user con JWT
-            const {id: id_user} = req.params
-            const transactionInfo = {id_user, ...req.body}
+            const { user: { id_user } } = req.session
+            const transactionInfo = { id_user, ...req.body }
             const withdrawValidated = partialValidateTransaction(transactionInfo)
-
-            console.log(transactionInfo)
 
             if(withdrawValidated.error){
                 return res.status(422).json({ error: withdrawValidated.error.message })

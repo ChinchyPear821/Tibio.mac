@@ -1,1 +1,2 @@
-SELECT * FROM transactions
+SELECT * FROM transactions;
+-- .tables

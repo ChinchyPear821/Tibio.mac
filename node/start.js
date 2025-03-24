@@ -1,6 +1,8 @@
 import express, { json } from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import jwt from "jsonwebtoken"
+import { PORT } from "./config.js"
 
 import { routUser } from "./Routes/user.js"
 import { routBet } from "./Routes/bet.js"
@@ -37,9 +39,6 @@ app.use("/bet", routBet)
 
 //ruta de tarjetas
 app.use("/transaction", routTransaction)
-
-//Puerto temporal
-const PORT = 1234
 
 app.listen(PORT, () => {
     console.log("http://localhost:1234")
