@@ -1,0 +1,118 @@
+Metodos/solicitudes de 'bet'
+
+GET http://localhost:1234/bet/events
+No recibe nada en el cuerpo de la solicitud y Regresa un objeto de todos los eventos creados
+
+GET http://localhost:1234/bet/
+No recibe nada en el cuerpo de la solicitud y regresa un objeto de todas las apuestas qeu hay.
+
+GET http://localhost:1234/bet/user/
+Recibe como cuerpo de la solicitud un id_user(id del usuario) y regresa todas las
+apuestas asociadas a ese usuario (Que contengan el id del usuario en la tabla bet)
+
+GET http://localhost:1234/bet/id
+Recibe un id_bet(id de la apuesta) como cuerpo de la solicitud y regresa el objeto con todos
+ los campos de esa apuesta
+
+GET http://localhost:1234/events/id
+Recibe un id_event(id del evento) como cuerpo de la solcitud y regresa un objeto con todos
+los campos del evento encontrado
+
+POST http://localhost:1234/bet/events
+Recibe un "name", "status", "sport"(campos de la tabla event) y asigna el resto de campos en la logica del metodo
+regresa un objeto con todos los campos del evento
+
+POST http://localhost:1234/bet/
+Recibe un "id_user1", "id_event", "category", "type", "amount", "extra" (campos de la tabla bet)
+El resto son creados con la logica del metodo y regresa una objeto con todos los campos de bet
+
+PATCH http://localhost:1234/bet/place
+Recibe un "id_bet" y "id_user" como cuerpo de la peticion y Primero busca si la categoria del evento es "1-1"
+si no, si es asi, el id_user enviado se asocia con la apuesta y ahora apareceran los dos id_user en la tabla,
+y actualiza el status de la apuesta a "ACEPTADO".
+Si la categoria no es "1-1" la apuesta solo cambiara de status a "ACEPTADA" pero conservara el mismo id_user del unico
+usuario que la habia creado
+
+
+-----------------------------------------------------------------------------------------------------------------------
+TIPOS
+
+Categorias : ["NORMAL", "1-1"]
+"Normal" -> Un usuario (Puede ser un usuario tipo cliente o administrador) crea una apuesta y
+la apuesta es solo de el y recibira o no dependiendo del resultado
+
+"1-1" -> Un usuario crea una apuesta y otro usuario puede encontrar su apuesta y aceptarla
+de modo que ambos usuarios compiten entre si
+
+
+Tipos de apuestas: ["GANADOR", "PERDEDOR", "PUNTUACION", "EMPATE"]
+"GANADOR" -> Apuesta a que  el Equipo deportivo ganara
+
+"PERDEDOR" -> Apuesta a que el Equipo deportivo perdera
+
+"PUNTUACION" -> Apuesta hacia la puntuacion especifica de un equipo,
+por ejemplo: goles, canastas, etc
+
+"EMPATE" -> Apuesta a que los equipos que compiten quedaran en empate
+
+
+Tipos de estatus: ["EN PROCESO", "FINALIZADA, "ACEPTADA"]
+"EN PROCESO" -> Al crear cualquier apuesta se encuentra en proceso antes de que alguien la acepte
+"ACEPTADA" -> Cuando se usa la solicitud de aceptar la apuesta, el estatus de una apuesta creada
+cambiara de "EN PROCESO" a "ACEPTADA" Y se guarda en el historial de apuestas del usuario o usuarios que
+aceptaron la apuesta.
+
+"FINALIZADA" -> Tras pasar el tiempo especifico de la duracion de una apuesta esta cambia de estatus ya sea de "EN PROCESO" o "ACEPTADA"
+a "FINALIZADA" mediante una funcion donde se comprueba el estatus de la apuesta constantemente.
+
+La funcion para monitorear eventos y cerrarlos funciona de la siuguiente manera:
+La funcion se inicializa cada minuto y busca constantemente los eventos que esten con un status de "FINALIZADO"
+si hay eventos finalizados buscara todas las apuestas asociadas a el evento y tambien cambiara su status a finalizado, de modo que cuando
+termina un evento las apuestas se cierran.
+¿Como saber cuando se cierra un evento? Mediante una pestaña especial para administradores Se enviara La peticion para cerrar el evento
+y cuando este se cierre la funcion de monitorbets hara lo anterior mencionado.
+Esto soluciona que los eventos no siempre tengan un tiempo constante de duracion y se cierran cuando se deseen cerrar.
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------
+La tabla de apuesta tendria otro estado en el campo status para cuando alguien quiera hacer una apuesta 1 a 1 y la hara
+con el status de "ENVIADO" y cuando alguien acepte la apuesta cambiara el estado a "EN PROCESO"
+
+✅ No validar en el modelo porque ya paso esos filtros
+
+✅ Ruta para hacer search con queryParams
+
+✅ Los get no obtienen informacion del body
+
+La Funcion de monitorBets tiene que tener otra funcion que actualice todas las apuestas relacionadas a un evento para que se eepa quien gano o quien perido y se actualice el resultado en los usuarios
+
+Agregar al evento el resultado y los momios del evento
+
+Utilizar variables constantes en el modelo
+
+✅ Agregar el campo de la finalizacion del evento y guardar "date, hour" en un solo campo de la forma "30/03/2025:02:32:45"
+
+✅ Buscar como poner las namedparams en sql para no solo usar ?,?,? propuesta con una lista o un map
+
+✅ Solo el getById tiene un parametro y los demas funcionan con un search
+
+✅ La tabla betHistory no sirve de nada
+
+Identificar las apuestas 1-1 por su tipo su id_evento obteniendo el nombre
+
+Hacer delete logico y no eliminando registros de la bd
+
+* Hacer funcion de parlay
+
+
+✅
+
+

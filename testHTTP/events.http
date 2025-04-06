@@ -1,0 +1,33 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=WebStorm
+
+###
+POST http://localhost:1234/event/
+Content-Type: application/json
+
+{
+  "name": "PUMAS AMERICA",
+  "sport": "Fútbol",
+  "extra": 2.4
+}
+
+### Buscar apuesta por ID
+GET http://localhost:1234/event/8e9a730c-4384-4629-9ddc-421e73a65ce5
+
+### Cerrar una apuesta
+PATCH http://localhost:1234/event/close
+Content-Type:  application/json
+
+{
+  "id_event": "9a10efe7-f389-4842-936b-17c5045c5ea8",
+  "result": "EMPATE"
+}
+### Buscar por cualquier tipo de parametros de la consulta
+GET http://localhost:1234/event/search?id_event=8e9a730c-4384-4629-9ddc-421e73a65ce5
+
+###
+GET http://localhost:1234/event/search?sport=Fútbol&name=Clásico Nacional
+
+
+

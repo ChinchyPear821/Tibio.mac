@@ -1,0 +1,25 @@
+export const BET_STATUS = {
+    EN_PROCESO: "EN PROCESO",
+    ENVIADA: "ENVIADO",
+    FINALIZADO: "FINALIZADO"
+};
+
+export const EVENT_STATUS= {
+    EN_PROCESO: "EN_PROCESO",
+    FINALIZADO: "FINALIZADO",
+};
+
+export const EVENT_TYPES= {
+    NORMAL: "DEPORTIVA",
+    UNO_A_UNO: "1 A 1"
+}
+
+export const BET_TYPES =["GANADOR", "PERDEDOR", "EMPATE", "PUNTUACION"]
+
+export const EVENT_RESULTS={
+    NULL: null,
+    GANADOR: "GANADOR",
+    PERDEDOR: "PERDEDOR",
+    EMPATE: "EMPATE",
+    PENDIENTE: "PENDIENTE"
+}

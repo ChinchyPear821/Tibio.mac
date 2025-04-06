@@ -14,4 +14,12 @@ Content-Type: application/json
     "email": "saul_2004@gmail.com",
     "password": "Saul123"
 }
+###
+POST http://localhost:1234/user/register
+Content-Type: application/json
 
+{
+"username": "Gilberto",
+"email": "gil@gmail.com",
+"password": "1234521"
+}

@@ -4,18 +4,14 @@ import { BetController } from "../Controller/bet.js";
 
 export const routBet = Router()
 // GET
+routBet.get("/search", BetController.search)
 routBet.get("/",BetController.allBets)
-routBet.get("/user/", BetController.allBetsByUserId)
-routBet.get("/events", BetController.allEvents)
-routBet.get("/id", BetController.getBetById)
-routBet.get("/events/id", BetController.getEventById)
-// POST
+routBet.get("/:id", BetController.getBetById)//si
 
-routBet.post("/events", BetController.createEvent)
+// POST
 routBet.post("/", BetController.createBet)
 
 // PATCH
 routBet.patch("/place", BetController.acceptBet)
 // DELETE
-routBet.delete("/id", BetController.deleteBet)
-routBet.delete("/events/id", BetController.deleteEvent)
+routBet.delete("/:id", BetController.deleteBet)

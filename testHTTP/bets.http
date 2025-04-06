@@ -1,10 +1,3 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=WebStorm
-
-#### OBTIENE TODOS LOS EVENTOS###
-GET http://localhost:1234/bet/events
-
 ### OBTIENE TODAS LAS BETS ####
 GET http://localhost:1234/bet/
 
@@ -13,7 +6,7 @@ GET http://localhost:1234/bet/user/
 Content-Type: application/json
 
 {
-  "id_user": "83396f12-2d31-4ff2-9ba1-ada93e26e83c"
+  "id_user": "9cd4cc71-20fd-486f-a487-261c09daf30a"
 }
 
 #### GET BET POR ID###
@@ -21,25 +14,7 @@ GET http://localhost:1234/bet/id
 Content-Type: application/json
 
 {
-  "id_bet": "68e6aa8b-be8c-4f5c-9fa7-edf1ad2748ca"
-}
-
-### GET EVENTO POR ID ####
-GET http://localhost:1234/events/id
-Content-Type: application/json
-
-{
-  "id_event": "25f0b73e-01d1-4f20-9c31-ed9b81efbc83"
-}
-
-### CREAR UN EVENTO ###
-POST http://localhost:1234/bet/events
-Content-Type: application/json
-
-{
-  "name": "Chivas vs America",
-  "status": "EN PROCESO",
-  "sport": "Futbol"
+  "id_bet": "9cd4cc71-20fd-486f-a487-261c09daf30a"
 }
 
 #### CREA UNA APUESTA ###
@@ -47,25 +22,25 @@ POST http://localhost:1234/bet/
 Content-Type: application/json
 
 {
-  "id_user": "83396f12-2d31-4ff2-9ba1-ada93e26e83c",
-  "id_event": "25f0b73e-01d1-4f20-9c31-ed9b81efbc83",
+  "id_user" :"34d28724-9217-4f7e-ab37-f4a3bac1b6b1",
+  "id_event": "604323c1-043f-4523-93a9-7340b34bbfd5",
+  "category": "1 A 1",
   "type": "GANADOR",
-  "amount": 100,
+  "amount": 10000,
   "extra": 1.5
 }
-###
+### ACEPTAR UNA APUESTA ###
 PATCH http://localhost:1234/bet/place
 Content-Type: application/json
 
 {
-  "id_bet": "4958335d-26ce-4f80-b31f-876fa8af179b",
-  "id_user": "83396f12-2d31-4ff2-9ba1-ada93e26e83c"
+  "id_bet": "0c2f6d95-d740-4975-9588-9c153a6099da",
+  "id_user": "53a28e31-8624-4572-9f73-6915e06e04a0"
 }
 
-### ELIMINA UNA APUESTA ###
-DELETE http://localhost:1234/bet/id
-Content-Type: application/json
+### Busqueda por parametros en general search
+GET http://localhost:1234/bet/search?id_user=53a28e31-8624-4572-9f73-6915e06e04a0
 
-{
-  "id_bet":"68e6aa8b-be8c-4f5c-9fa7-edf1ad2748ca"
-}
+### Busqueda por parametros en general search
+GET http://localhost:1234/bet/search?status=EN PROCESO
+

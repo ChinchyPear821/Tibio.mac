@@ -1,8 +1,9 @@
-import { db } from "../Connection/db.js"
-const minutes = 3;
-export class BetModel{
-    //GET
-    static async getAllBets(){
+import { db } from "../Connection/db.js";
+import {BET_STATUS, EVENT_TYPES} from "../utils/consts.js";
+
+export class BetModel {
+    // GET
+    static async getAllBets() {
         try {
             const bets = db.prepare(`SELECT * FROM bets`);
             return bets.all();
@@ -11,222 +12,125 @@ export class BetModel{
             throw error;
         }
     }
-    static async getAllEvents(){
-        try{
 
-            const events = db.prepare(`
-                SELECT * FROM events`
-            );
-            return events.all();
-        }catch(error){
-            console.log("Error al obtener los eventos: ", error);
-            throw error
-        }
-    }
-    static async getAllBetsByUserId({ data }){
-        try{
-            const { id_user } = data;
-            const bets = db.prepare(`
-                SELECT * FROM bets WHERE id_user = ?`
-            );
-            return bets.all(id_user);
-        }catch(error){
-            console.log("Error al obtener las apuestas del usuario:", error);
-            throw error
-        }
-    }
-    //GET
-    static async getBetById({ data }){
-        try{
-            const { id_bet } = data;
-            const bet = db.prepare(`
-                SELECT * FROM bets WHERE id_bet = ?`
-            );
-            return bet.get(id_bet);
-        }catch(error){
-            console.log("Error al obtener la apuesta", error);
-            throw error
-        }
-    }
-    static async getEventById({ data }){
-        try{
-            const { id_event } = data;
-            const event = db.prepare(`
-                SELECT * FROM events WHERE id_event = ?`
-            );
-            return event.get(id_event);
-        }catch(error){
-            console.log("Error al obtener el evento", error);
-            throw error
-        }
-    }
-
-    //POST
-    static async acceptBet({ data }){
+    // GET ✅
+    static async getBetById(id_bet) {
         try {
-            const { id_bet, id_user } = data;
+            const bet = db.prepare(`SELECT * FROM bets WHERE id_bet = ?`);
+            return bet.get(id_bet);
+        } catch (error) {
+            console.log("Error al obtener la apuesta", error);
+            throw error;
+        }
+    }
 
-            if (!id_bet || !id_user) {
-                throw new Error("Datos incompletos para aceptar la apuesta");
-            }
-
+    // PATCH ✅
+    static async acceptBet(id_bet, id_user) {
+        try {
             const bet = db.prepare(`SELECT * FROM bets WHERE id_bet = ?`).get(id_bet);
-
-            if (!bet) {
-                throw new Error("La apuesta no existe");
+            if(!bet){
+                return console.error("Error al buscar la apuesta");
+            }
+            if(bet.id_user === id_user){
+                console.log("No puede aceptar la apuesta enviada")
+                return;
+            }
+            if(bet.status !== BET_STATUS.ENVIADA){
+                return console.error("La apuesta ya esta en proceso");
             }
 
-            if (bet.status !== "EN PROCESO") {
-                throw new Error("La apuesta ya ha sido aceptada");
+            const betData = {
+                id_user,
+                id_event: bet.id_event,
+                category: bet.category,
+                type: bet.type,
+                amount:bet.amount,
+                extra: bet.extra
             }
-            const updateBet = db.prepare(`
-                UPDATE bets
-                SET status = 'ACEPTADO'
-                WHERE id_bet = ?
-            `);
 
-            updateBet.run(id_bet);
+            await this.createBet({data:betData});
+            db.prepare(`UPDATE bets
+                            SET status = ?
+                            WHERE id_event = ?`).run(BET_STATUS.EN_PROCESO, bet.id_event);
 
-            return { id_bet, id_user, status: "ACEPTADO" };
+            const now = new Date().toISOString();
+
+            db.prepare(`UPDATE bets
+                            SET status = ?, begin_date = ?
+                            WHERE id_bet = ?`
+            ).run(BET_STATUS.EN_PROCESO, now, id_bet);
+
+            return db.prepare(`SELECT * FROM bets WHERE id_bet = ?`).get(id_bet);
 
         } catch (error) {
             console.error("Error al aceptar apuesta:", error);
             throw error;
         }
     }
-    //POST
-    static async createEvent({ data }){
+    //GET
+    static async search(params){
         try {
-            const { name, status, sport } = data;
-
-            if (!name || !status || !sport) {
-                throw new Error("Datos incompletos");
+            const conditions = [];
+            const queryParams = [];
+            for (const [key, value] of Object.entries(params)) {
+                conditions.push(`${key} = ?`);
+                queryParams.push(value);
+            }
+            if (conditions.length === 0) {
+                throw new Error("No hay filtros de busqueda ")
             }
 
-            const id_event = crypto.randomUUID();
-            const date = new Date().toISOString().split("T")[0];
-            const hour = new Date().toISOString().split("T")[1].split(".")[0];
-
-            const insertEvent = db.prepare(`
-            INSERT INTO events (id_event, name, status, sport, date, hour)
-            VALUES (?, ?, ?, ?, ?, ?)
-            `);
-
-            insertEvent.run(id_event, name, status, sport, date, hour);
-
-            const event = db.prepare(`SELECT * FROM events WHERE id_event = ?`).get(id_event);
-
-            return event;
-        } catch (error) {
-            console.error("Error al crear evento:", error);
-            throw error;
+            const query = `SELECT * FROM bets WHERE ${conditions.join(' AND ')}`;
+            return db.prepare(query).all(...queryParams);
+        } catch(error){
+            console.log("Error al buscar por filtros");
         }
+
     }
+    // POST ✅
     static async createBet({ data }) {
         try {
-            const { id_user, id_event, type, amount, extra } = data;
             const id_bet = crypto.randomUUID();
-            const status = "EN PROCESO";
+            const now = new Date();
+            let begin_date = now.toISOString();
+            let status =  BET_STATUS.EN_PROCESO;
+            if(data.category === EVENT_TYPES.UNO_A_UNO){
+                begin_date = null;
+                status = BET_STATUS.ENVIADA;
+            }
+            const end_date = null;
             const result = null;
-            const date = new Date().toISOString().split("T")[0];
-            const hour = new Date().toISOString().split("T")[1].split(".")[0];
 
-            console.log("Datos:", {
-                id_bet, id_user, id_event, type, amount, extra, status, result, date, hour
-            });
+            const betData = {
+              id_bet,
+              ...data,
+              result,
+              status,
+              begin_date,
+              end_date
+            };
 
-            const createBet = db.prepare(`
-            INSERT INTO bets (
-                id_bet, id_user, id_event, type, amount, extra, status, result, date, hour
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `);
+            const fields = Object.keys(betData).join(", ");
+            const places =  Object.keys(betData).map(()=> "?" ).join(", ")
+            const values = Object.values(betData);
 
-            createBet.run(id_bet, id_user, id_event, type, amount, extra, status, result, date, hour);
+            db.prepare(`INSERT INTO bets (${fields}) VALUES(${places})`).run(...values);
+            return db.prepare(`SELECT * FROM bets WHERE id_bet = ?`).get(id_bet);
 
-            console.log("Apuesta creada correctamente");
-
-            return { id_bet, id_user, id_event, type, amount, extra, status, date, hour };
         } catch (error) {
             console.error("Error al crear la apuesta", error);
             throw error;
         }
     }
 
-    //DELETE
+    // DELETE
     static async deleteBet(id_bet) {
         try {
-            const betDelete = db.prepare(`DELETE FROM bets WHERE id_bet = ?`);
-            const result=betDelete.run(id_bet);
+            const result = db.prepare(`DELETE FROM bets WHERE id_bet = ?`).run(id_bet);
             return result.changes;
         } catch (error) {
-            console.error("No se encontro la apuesta", error);
-            throw error;
-        }
-    }
-
-    static async deleteEvent({ data }) {
-        try {
-            const {id_event} = data
-            const eventDelete = db.prepare(`DELETE FROM events WHERE id_event = ?`);
-            const result= eventDelete.run(id_event);
-            return result.changes;
-        } catch (error) {
-            console.error("No se encontro la apuesta", error);
+            console.error("Error al eliminar la apuesta", error);
             throw error;
         }
     }
 }
-function monitorBets() {
-    setInterval(() => {
-        try {
-            console.log("[DEBUG] Verificando apuestas en proceso...");
-
-            const bets = db.prepare(`
-                SELECT id_bet, id_event, date, hour, status FROM bets WHERE status = 'EN PROCESO'
-            `).all();
-
-            if (!bets.length) {
-                console.log("[DEBUG] No hay apuestas en proceso.");
-                return;
-            }
-
-            const now = new Date();
-
-            bets.forEach((bet) => {
-                const betTime = new Date(`${bet.date}T${bet.hour}Z`); // Convertir a objeto Date
-                const elapsedTime = (now - betTime) / 60000; // Convertir a minutos
-
-                console.log(`[DEBUG] Apuesta ${bet.id_bet} tiene ${elapsedTime.toFixed(2)} minutos.`);
-
-                if (elapsedTime >= minutes) {
-                    console.log(` La apuesta ${bet.id_bet} ha finalizado.`);
-
-                    // Generar un resultado aleatorio
-                    const result = Math.random() > 0.5 ? "GANADO" : "PERDIDO";
-
-                    // Actualizar apuesta y evento en una transacción
-                    const updateTransaction = db.transaction(() => {
-                        db.prepare(`
-                            UPDATE bets SET status = 'FINALIZADO', result = ? WHERE id_bet = ?
-                        `).run(result, bet.id_bet);
-
-                        db.prepare(`
-                            UPDATE events SET status = 'FINALIZADO' WHERE id_event = ?
-                        `).run(bet.id_event);
-                    });
-
-                    updateTransaction();
-
-                    console.log(`Apuesta ${bet.id_bet} y evento ${bet.id_event} actualizados a FINALIZADO.`);
-                }
-            });
-
-            console.log("[DEBUG] Ciclo de verificación completado.");
-        } catch (error) {
-            console.error("Error en monitorBets:", error);
-        }
-    }, 60000); // Se ejecuta cada minuto
-}
-
-// Llamar la función cuando inicie el servidor
-monitorBets();
