@@ -1,10 +1,15 @@
+/*
+
+Me quede con mi archivo de start.js porque no funcionaba con el de los ultimos cambios
+
+*/
 import express, {json} from "express"
 import cors from "cors"
 
 import { routUser } from "./Routes/user.js"
 import { routBet } from "./Routes/bet.js"
 import { routTransaction } from "./Routes/transaction.js"
-import {eventRouter} from "./Routes/event.js";
+import {routEvent} from "./Routes/event.js";
 import {monitorBets} from "./utils/functions.js";
 
 const app = express()
@@ -22,7 +27,7 @@ app.use("/bet", routBet)
 
 //ruta de tarjetas
 app.use("/transaction", routTransaction)
-app.use("/event", eventRouter)
+app.use("/event", routEvent)
 //Puerto temporal
 const PORT = 1234
 

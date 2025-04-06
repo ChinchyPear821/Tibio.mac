@@ -1,8 +1,21 @@
+import jwt from 'jsonwebtoken'
 import { UserModel } from "../Model/user.js"
 
 import { validateUsername, partialValidateUsername } from "../Schema/userSchema.js"
 
+import { SECRET_JWT_KEY } from "../config.js"
+
 export class UserController{
+    //GET
+    static async protected(req, res){
+        const { user } = req.session
+
+        if(!user) return res.status(403).json({ error: "No puedes acceder a una ruta protegida" })
+
+        return res.status(201).json(user)
+    }
+
+
     //POST
     static async register(req, res){
         try {
@@ -31,9 +44,25 @@ export class UserController{
             }
 
             //Me regresa el usuario encontrado
-            const userFound = await UserModel.login({ data: userValidated.data })
+            const userLogged = await UserModel.login({ data: userValidated.data })
 
-            res.status(201).json(userFound)
+            const { id_user, username } = userLogged
+
+            //crear la cookie
+            const token = jwt.sign(
+                { id_user, username },
+                SECRET_JWT_KEY,
+                { expiresIn: "1h" }
+            )
+            
+            //mandar la cookie con la respuesta
+            res
+            .cookie("access_token", token, {
+                httpOnly: true, //solo servidor
+                sameSite: "strict", //la cookie solo viaja en nuestro dominio
+                maxAge: 1000*60*60 //1hr de expiracion
+            })
+            .status(201).json({ userLogged, token })
 
         } catch(error){
             console.error("Error al hacer login:", error)
@@ -42,6 +71,9 @@ export class UserController{
 
     }
     static async logout(req, res){
-
+        res
+        .clearCookie("access_token")
+        .status(201)
+        .json({ message: "Logout succesful" })
     }
 } 

@@ -1,3 +1,1 @@
-1. Generar uuids aleatorios
-
-2.JWT para transaction
+1.JWT para transaction

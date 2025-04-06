@@ -7,8 +7,8 @@ export const routTransaction = Router()
 //DEBERIA DE PASAR EL USER ID CON UN JWT
 
 //GET
-routTransaction.get("/user/:id", TransactionController.allTransactions) //todas las transacciones 
+routTransaction.get("/user", TransactionController.allTransactions) //todas las transacciones 
 
 //POST
-routTransaction.post("/deposit/:id", TransactionController.deposit)
-routTransaction.post("/withdraw/:id", TransactionController.withdraw)
+routTransaction.post("/deposit", TransactionController.deposit)
+routTransaction.post("/withdraw", TransactionController.withdraw)
