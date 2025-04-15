@@ -1,20 +1,22 @@
 import { z } from 'zod';
-import {BET_TYPES} from "../utils/consts.js";
-// Regex para validar fecha y hora
-const dateTimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z?$/;
+import { BET_STATUS, CATEGORY} from "../utils/consts.js";
 
 export const betSchema = z.object({
     id_bet: z.string().uuid().optional(),
-    id_user: z.string().uuid(),
-    id_event: z.string().uuid(),
-    category: z.string().optional(),
-    type: z.enum(BET_TYPES),
-    amount: z.number().positive(),
-    extra: z.number(),
-    status: z.enum(["EN PROCESO", "FINALIZADA", "ENVIADA"]).default("EN PROCESO"),
+    id_user: z.string().uuid().optional(), // se saca del token
+    id_event: z.string().uuid(), // se pide en el body
+    category: z.enum(Object.values(CATEGORY)).optional(), // se obtiene del evento creado
+    type: z.enum(
+        ["ganador", "goles", "tarjetas amarillas", "tiros esquina", "tarjetas rojas",
+                "puntos totales", "triples", "rebotes",
+                "touchdowns", "sacks","goles de campo", "intercepciones"]), //se pide en el body
+    target: z.string().min(1), //se pide en el body
+    amount: z.number().positive(), //se pide en el body
+    extra: z.number(), //se pide en el body
+    status: z.enum(Object.values(BET_STATUS)).default("EN PROCESO"),
     result: z.string().nullable().optional(),
-    begin_date: z.string().regex(dateTimeRegex).default(() => new Date().toISOString()),
-    end_date: z.string().regex(dateTimeRegex).nullable().optional(),
+    begin_date: z.string().nullable().optional(),
+    end_date: z.string().nullable().optional(),
 });
 
 export function validateBet(object) {

@@ -1,15 +1,8 @@
-### OBTIENE TODAS LAS BETS ####
+### OBTIENE TODAS LAS BETS
 GET http://localhost:1234/bet/
 
-### TODAS LAS BETS DE UN USUARIO POR ID####
-GET http://localhost:1234/bet/user/
-Content-Type: application/json
 
-{
-  "id_user": "9cd4cc71-20fd-486f-a487-261c09daf30a"
-}
-
-#### GET BET POR ID###
+#### GET BET POR ID
 GET http://localhost:1234/bet/id
 Content-Type: application/json
 
@@ -17,30 +10,57 @@ Content-Type: application/json
   "id_bet": "9cd4cc71-20fd-486f-a487-261c09daf30a"
 }
 
-#### CREA UNA APUESTA ###
+#### CREA UNA APUESTA (DESPUES DE CREAR EL EVENTO PORQUE SE NECESITA EL ID)
+// despues de hacer un login el token va en el Bearer y se envia el id del evento a apostar
+// tambien el type debe ser alguno valido del zod o en const.js y debe ser acorde a la categoria, las de futbol no pueden ir en basquetbol
+// este regresa un id_bet por lo que si se hara una apuesta 1 vs 1 es necesario guardarlo
 POST http://localhost:1234/bet/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0NjcyMDI5LCJleHAiOjE3NDQ2NzU2Mjl9.ohdUsAMtKQisImgh1Loddwg8m5q08qusJ_3sXukJcaE
 Content-Type: application/json
 
 {
-  "id_user" :"34d28724-9217-4f7e-ab37-f4a3bac1b6b1",
-  "id_event": "604323c1-043f-4523-93a9-7340b34bbfd5",
-  "category": "1 A 1",
-  "type": "GANADOR",
-  "amount": 10000,
-  "extra": 1.5
+  "id_event": "3b4ce87c-5406-4d4e-9ffb-0d4ce616cb4d",
+  "type": "tarjetas amarillas",
+  "target": "2",
+  "amount": 410,
+  "extra": 3.4
 }
-### ACEPTAR UNA APUESTA ###
+### APUESTA DE TIPO 1 VS 1...
+POST http://localhost:1234/bet/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0NjcyMDI5LCJleHAiOjE3NDQ2NzU2Mjl9.ohdUsAMtKQisImgh1Loddwg8m5q08qusJ_3sXukJcaE
+Content-Type: application/json
+
+{
+  "id_event": "e90a1337-13cd-4bda-b59d-f0cd119f2ea6",
+  "type": "ganador",
+  "target": "lakers",
+  "amount": 410,
+  "extra": 3.4
+}
+
+### ACEPTAR UNA APUESTA
+//Se necesita el token del usuario RECEPTOR de la apuesta y el id de la apuesta que hizo el EMISOR
 PATCH http://localhost:1234/bet/place
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiMzJmZmRlNTctYzNkYS00ZDA1LWE1ZjAtZWRhMTllZDEwMjMwIiwidXNlcm5hbWUiOiJHaWxiZXJ0byIsImlhdCI6MTc0NDY3MzY3NywiZXhwIjoxNzQ0Njc3Mjc3fQ.J7nTrNcdO8HZ-2pU8dtsPP8aoXpEY9aNQ2PHX_mBCnw
 Content-Type: application/json
 
 {
-  "id_bet": "0c2f6d95-d740-4975-9588-9c153a6099da",
-  "id_user": "53a28e31-8624-4572-9f73-6915e06e04a0"
+  "id_bet": "0dbb682a-5429-4d26-bcd4-7156c873b1a6"
 }
 
-### Busqueda por parametros en general search
-GET http://localhost:1234/bet/search?id_user=53a28e31-8624-4572-9f73-6915e06e04a0
 
 ### Busqueda por parametros en general search
-GET http://localhost:1234/bet/search?status=EN PROCESO
+GET http://localhost:1234/bet/search?id_bet=e5c8138d-a501-4a5b-aa58-32913dbac968
+
+### Busqueda por parametros en general search
+GET http://localhost:1234/bet/search?status=finalizado
+
+### Busqueda por parametros en general search con un token
+// este lo hice por si el usuario quiere acceder a su historial como siempre se manda el token ya busca sus apuestas si
+// hace esta solicitud. Y puedes enviar mas parametros en la ruta como en los anteriores
+GET http://localhost:1234/bet/search/auth?result=ganada
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0Njc0OTEwLCJleHAiOjE3NDQ2Nzg1MTB9.1OIZj-KI3QO3Z9wc0E5qS5Xoac1iznY0aeFZuMUPeXg
+
+
+
 

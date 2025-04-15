@@ -6,7 +6,9 @@ Content-Type: application/json
     "email": "saul_2004@gmail.com",
     "password": "Saul123"
 }
-###
+### Guarda el token de este usuario para hacer las pruebas de evento y apuesta
+  //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0NjcyMDI5LCJleHAiOjE3NDQ2NzU2Mjl9.ohdUsAMtKQisImgh1Loddwg8m5q08qusJ_3sXukJcaE
+
 POST http://localhost:1234/user/login
 Content-Type: application/json
 
@@ -14,6 +16,8 @@ Content-Type: application/json
     "email": "saul_2004@gmail.com",
     "password": "Saul123"
 }
+
+
 ###
 POST http://localhost:1234/user/register
 Content-Type: application/json
@@ -21,5 +25,16 @@ Content-Type: application/json
 {
 "username": "Gilberto",
 "email": "gil@gmail.com",
-"password": "1234521"
+"password": "gil12345"
 }
+### Guarda el token de este usuario para hacer las pruebas de evento y apuesta
+POST http://localhost:1234/user/login
+Content-Type: application/json
+
+{
+"email": "gil@gmail.com",
+"password": "gil12345"
+}
+
+
+

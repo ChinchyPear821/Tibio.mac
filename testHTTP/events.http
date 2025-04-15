@@ -2,32 +2,101 @@
 GET https://examples.http-client.intellij.net/get
     ?generated-in=WebStorm
 
-###
+### SOLICITUD PARA CREAR UNA APUESTA
+// "name" debe ser de la siguiente forma "equipoA vs equipoB" el vs debe ir en medio separado de un espacio y sport
+// debe se alguno de los que estan en const.js en CATEGORY
 POST http://localhost:1234/event/
 Content-Type: application/json
 
 {
-  "name": "PUMAS AMERICA",
-  "sport": "Fútbol",
-  "extra": 2.4
+  "name": "vikings vs lakers",
+  "sport": "basquetbol"
+}
+### EJEMPLO DE CREAR APUESTA/EVENTO 1 VS 1
+// Para crear una apuesta de tipo 1vs 1 tenemos que poner en sport el evento que seria 1 vs 1 y luego el deporte del que es
+POST http://localhost:1234/event/
+Content-Type: application/json
+
+{
+"name": "america vs chivas",
+"sport": "1 vs 1 futbol"
+}
+### CON ESTA SOLICITUD SE ACTUALIZAN LAS ESTADISTICAS DE UN PARTIDO (futbol)
+// type debe ser el mismo que el del evento que se creo y se necesita el id_event
+// este es para el ejemplo de que sea futbol porque sus campos son para partido de futbol(independientemente de si es 1 vs 1 o normal)
+PATCH http://localhost:1234/sports
+Content-Type: application/json
+
+{
+  "type": "futbol",
+  "id_event": "e90a1337-13cd-4bda-b59d-f0cd119f2ea6",
+  "data": {
+    "home_goals": 4,
+    "away_goals": 1,
+    "yellow_cards": 2,
+    "red_cards": 1,
+    "corners": 5,
+    "penalties": 1
+  }
 }
 
-### Buscar apuesta por ID
-GET http://localhost:1234/event/8e9a730c-4384-4629-9ddc-421e73a65ce5
-
-### Cerrar una apuesta
+### Cerrar un evento
 PATCH http://localhost:1234/event/close
 Content-Type:  application/json
 
 {
-  "id_event": "9a10efe7-f389-4842-936b-17c5045c5ea8",
-  "result": "EMPATE"
+  "id_event": "e90a1337-13cd-4bda-b59d-f0cd119f2ea6",
+  "result": "pendiente"
 }
+
+
+### Buscar evento por ID
+GET http://localhost:1234/event/3d5842f5-8e24-4510-9ba9-7b8a24b4bfcd
+
 ### Buscar por cualquier tipo de parametros de la consulta
-GET http://localhost:1234/event/search?id_event=8e9a730c-4384-4629-9ddc-421e73a65ce5
+//estas solicitudes son para buscar por cualquier filtro de la forma especificada
+GET http://localhost:1234/event/search?name=america vs chivas
 
 ###
-GET http://localhost:1234/event/search?sport=Fútbol&name=Clásico Nacional
+GET http://localhost:1234/event/search?sport=FUTBOL
+
+
+
+////////////////////////////////////////////////////////////////////
+//EJEMPLOS PARA ACTUALIZAR PARTIDOS DE BASQUETBOL Y FUTBOL AMERICANO
+////////////////////////////////////////////////////////////////////
+
+### basquetbol
+PATCH http://localhost:1234/sports
+Content-Type: application/json
+
+{
+"type": "basquetbol",
+"id_event": "42777fc3-fea5-4b10-b363-78a155616f30",
+"data": {
+"home_points": 4,
+"away_points": 1,
+"three_pointers": 4,
+"fouls": 1,
+"rebounds": 5
+}
+}
+
+### futbol americano
+PATCH http://localhost:1234/sports
+Content-Type: application/json
+
+{
+  "type": "futbol americano",
+  "id_event": "42777fc3-fea5-4b10-b363-78a155616f30",
+  "data": {
+    "home_touchdowns": 4,
+    "away_touchdowns": 1,
+    "field_goals": 4,
+    "interceptions": 1,
+    "sacks": 5
+  }
+}
 
 
 

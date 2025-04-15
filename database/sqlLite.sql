@@ -1,6 +1,6 @@
--- Como la tabla betHistory tiene una primary Key compuesta
--- automaticamente ya refrencia a esas tablas
--- Si quieres consultar el bet_history de un usuario: SELECT * FROM betHistory WHER id_user = "";
+DROP TABLE IF EXISTS soccer_stats;
+DROP TABLE IF EXISTS football_stats;
+DROP TABLE IF EXISTS basketball_stats;
 DROP TABLE IF EXISTS betHistory;
 DROP TABLE IF EXISTS bets;
 DROP TABLE IF EXISTS transactions;
@@ -13,14 +13,13 @@ CREATE TABLE users (
     username TEXT NOT NULL UNIQUE,
     balance REAL NOT NULL DEFAULT 0,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
+    password TEXT NOT NULL
 );
 
 CREATE TABLE events (
     id_event TEXT NOT NULL UNIQUE PRIMARY KEY,
     name TEXT NOT NULL,
     sport TEXT NOT NULL,
-    extra NUMERIC,
     status TEXT NOT NULL,
     result TEXT,
     begin_date TEXT NOT NULL,
@@ -36,6 +35,7 @@ CREATE TABLE bets (
     amount NUMERIC NOT NULL,
     extra NUMERIC NOT NULL,  -- 'extra' parece referirse al momio
     status TEXT NOT NULL,
+    target TEXT,
     result TEXT,
     begin_date TEXT,
     end_date TEXT,
@@ -55,3 +55,39 @@ CREATE TABLE transactions (
     FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
 
+CREATE TABLE soccer_stats (
+    id_event TEXT PRIMARY KEY,
+    home_team TEXT,
+    away_team TEXT,
+    home_goals INTEGER,
+    away_goals INTEGER,
+    yellow_cards INTEGER,
+    red_cards INTEGER,
+    corners INTEGER,
+    penalties INTEGER,
+    FOREIGN KEY (id_event) REFERENCES events(id_event)
+);
+
+CREATE TABLE basketball_stats (
+    id_event TEXT PRIMARY KEY,
+    home_team TEXT,
+    away_team TEXT,
+    home_points INTEGER,
+    away_points INTEGER,
+    three_pointers INTEGER,
+    fouls INTEGER,
+    rebounds INTEGER,
+    FOREIGN KEY (id_event) REFERENCES events(id_event)
+);
+
+CREATE TABLE football_stats (
+    id_event TEXT PRIMARY KEY,
+    home_team TEXT,
+    away_team TEXT,
+    home_touchdowns INTEGER,
+    away_touchdowns INTEGER,
+    field_goals INTEGER,
+    interceptions INTEGER,
+    sacks INTEGER,
+    FOREIGN KEY (id_event) REFERENCES events(id_event)
+);

@@ -1,118 +1,70 @@
-Metodos/solicitudes de 'bet'
+ Para probar los cambios primero ejecuta nuevamente el archivo de sqLite.sql en SQLITE3 el que tiene
+  el codigo de la base de datos porque la base de datos se
+ actualizo con las tablas para los deportes y los campos nuevos en algunas tablas.
 
-GET http://localhost:1234/bet/events
-No recibe nada en el cuerpo de la solicitud y Regresa un objeto de todos los eventos creados
-
-GET http://localhost:1234/bet/
-No recibe nada en el cuerpo de la solicitud y regresa un objeto de todas las apuestas qeu hay.
-
-GET http://localhost:1234/bet/user/
-Recibe como cuerpo de la solicitud un id_user(id del usuario) y regresa todas las
-apuestas asociadas a ese usuario (Que contengan el id del usuario en la tabla bet)
-
-GET http://localhost:1234/bet/id
-Recibe un id_bet(id de la apuesta) como cuerpo de la solicitud y regresa el objeto con todos
- los campos de esa apuesta
-
-GET http://localhost:1234/events/id
-Recibe un id_event(id del evento) como cuerpo de la solcitud y regresa un objeto con todos
-los campos del evento encontrado
-
-POST http://localhost:1234/bet/events
-Recibe un "name", "status", "sport"(campos de la tabla event) y asigna el resto de campos en la logica del metodo
-regresa un objeto con todos los campos del evento
-
-POST http://localhost:1234/bet/
-Recibe un "id_user1", "id_event", "category", "type", "amount", "extra" (campos de la tabla bet)
-El resto son creados con la logica del metodo y regresa una objeto con todos los campos de bet
-
-PATCH http://localhost:1234/bet/place
-Recibe un "id_bet" y "id_user" como cuerpo de la peticion y Primero busca si la categoria del evento es "1-1"
-si no, si es asi, el id_user enviado se asocia con la apuesta y ahora apareceran los dos id_user en la tabla,
-y actualiza el status de la apuesta a "ACEPTADO".
-Si la categoria no es "1-1" la apuesta solo cambiara de status a "ACEPTADA" pero conservara el mismo id_user del unico
-usuario que la habia creado
+ En ./utils/const.js estan los enums que se mandan en el zod para validar y los que estan permitidos para hacer
+ solicitudes en "bets.http" y "events.http"
 
 
------------------------------------------------------------------------------------------------------------------------
-TIPOS
+Antes de hacer apuestas los usuarios deben tener el balance necesario, entonces haz una solicitud para añadir el balance
+o modificalo directamente en la bd en SQLITE3
 
-Categorias : ["NORMAL", "1-1"]
-"Normal" -> Un usuario (Puede ser un usuario tipo cliente o administrador) crea una apuesta y
-la apuesta es solo de el y recibira o no dependiendo del resultado
+ Para crear un evento y una apuesta:
+1 Primero haz un login de un usuario registrado y guarda ese token de momento para enviarlo en las solicitudes de
+    apuestas
 
-"1-1" -> Un usuario crea una apuesta y otro usuario puede encontrar su apuesta y aceptarla
-de modo que ambos usuarios compiten entre si
+2 Crea un evento con el nombre de dos equipos rivales  en minuscula preferiblemente y separados por un "vs" entre el nombre.
+    Ejemplo: "america vs chivas" y en sport envia alguno de los permitidos en el archivo const.js
 
+3 Crea una apuesta con un type donde tambien se debe colocar uno de los disponibles en const.js y un target que debe
+    coincidir con el type. Por ejemplo si en type colocas "ganador" en target deberas enviar el nombre del equipo al que
+    se va apostar tal como se envio al crear el evento, siguiendo el ejemplo seria "america" es decir que esta apuesta
+    es a que gana el partido el equipo del america. Tambien se envia el amount o lo que se va a apostar y el extra que
+    es el momio por el cual se multiplicara el amount si gana.
+    (si no hay saldo suficiente no se permite hacer la apuesta)
 
-Tipos de apuestas: ["GANADOR", "PERDEDOR", "PUNTUACION", "EMPATE"]
-"GANADOR" -> Apuesta a que  el Equipo deportivo ganara
+4 SI LA APUESTA ES 1 VS 1 de algun deporte debes hacer el login de otro usuario para simular como se acepta la apuesta
+    hacer el login y sacar su token para enviarlo en la solicitud de aceptar apuesta junto con el id de la apuesta creada
+    por el usuario emisor.
 
-"PERDEDOR" -> Apuesta a que el Equipo deportivo perdera
+5 Ya que se hizo la apuesta normal o 1 vs 1 actualiza las estadisticas del partido usando el endpoint correspondiente,
+    para eso necesitas el id del evento creado, cada estadistica especificada y el tipo de deporte.
 
-"PUNTUACION" -> Apuesta hacia la puntuacion especifica de un equipo,
-por ejemplo: goles, canastas, etc
+6 Despues cierra el evento para simular que termino con el endpoint correspondiente, se necesita el id del evento y el resultado
+    que por defecto es "pendiente" esto en lo que la funcion que revisa los eventos y apuestas finalizadas se ejecuta para
+    determinar el ganador de las apuestas. El intervalo en el que se ejecuta la funcion es de 60 segundos por lo que se comprueba
+    si los resultados son los esperados en la consola
 
-"EMPATE" -> Apuesta a que los equipos que compiten quedaran en empate
-
-
-Tipos de estatus: ["EN PROCESO", "FINALIZADA, "ACEPTADA"]
-"EN PROCESO" -> Al crear cualquier apuesta se encuentra en proceso antes de que alguien la acepte
-"ACEPTADA" -> Cuando se usa la solicitud de aceptar la apuesta, el estatus de una apuesta creada
-cambiara de "EN PROCESO" a "ACEPTADA" Y se guarda en el historial de apuestas del usuario o usuarios que
-aceptaron la apuesta.
-
-"FINALIZADA" -> Tras pasar el tiempo especifico de la duracion de una apuesta esta cambia de estatus ya sea de "EN PROCESO" o "ACEPTADA"
-a "FINALIZADA" mediante una funcion donde se comprueba el estatus de la apuesta constantemente.
-
-La funcion para monitorear eventos y cerrarlos funciona de la siuguiente manera:
-La funcion se inicializa cada minuto y busca constantemente los eventos que esten con un status de "FINALIZADO"
-si hay eventos finalizados buscara todas las apuestas asociadas a el evento y tambien cambiara su status a finalizado, de modo que cuando
-termina un evento las apuestas se cierran.
-¿Como saber cuando se cierra un evento? Mediante una pestaña especial para administradores Se enviara La peticion para cerrar el evento
-y cuando este se cierre la funcion de monitorbets hara lo anterior mencionado.
-Esto soluciona que los eventos no siempre tengan un tiempo constante de duracion y se cierran cuando se deseen cerrar.
+** SIEMPRE QUE SE VAYA A HACER UN EVENTO 1 VS 1 SE DEBE COLOCAR DESDE LA SOLICITUD DE CREAR EVENTO Y EN LA APUESTA SOLO DETECTA LA CATEGORIA
+ QUE EN ESE CASO SERIA "1 vs 1 deporte" y tambien es importante escribirlo como en el const.js donde esta CATEGORY
 
 
+USAR LAS SOLICITUDES SEARCH EN EVENTS Y BETS
 
+La solicitud search recibe n parametros y es dinamico, hace busquedas por reigstros segun los parametros enviados.
+En el caso de bet hay dos rutas, una para cuando se tiene el token del usuario y se desea enviar y otra cuando no
+se tiene el token y se quiere buscar informacion en general.
+la ruta de search/auth es para cuando el usuario quiere buscar informacion porque el metodo hace
+SELECT * FROM bets WHERE id_user = id_del_usuario AND ... De modo que solo puede buscar informacion de el, por eso hay dos rutas
+la otra ruta no necesita el id_user.
 
+Se busca de la siguiente manera:
 
+GET http://localhost:1234/bet/search?campo_de_la_tabla=valor
+Ejemplo: GET http://localhost:1234/bet/search?status=FINALIZADA
+Ejemplo: GET http://localhost:1234/bet/search?type=goles&category=soccer
 
+el & separa los parametros como el AND
 
+Para la solicitud que utiliza el token:
+GET http://localhost:1234/bet/search/auth
+Authorization: Bearer token
 
+Este devolvera todas las apuestas que tiene el usuario porque el unico parametro es su token y por ende su id
 
+Ejemplo con el metodo del token en bets con parametros:
+GET http://localhost:1234/bet/search/auth?result=ganada
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0Njc0OTEwLCJleHAiOjE3NDQ2Nzg1MTB9.1OIZj-KI3QO3Z9wc0E5qS5Xoac1iznY0aeFZuMUPeXg
 
---------------------------------------------------------------------------
-La tabla de apuesta tendria otro estado en el campo status para cuando alguien quiera hacer una apuesta 1 a 1 y la hara
-con el status de "ENVIADO" y cuando alguien acepte la apuesta cambiara el estado a "EN PROCESO"
-
-✅ No validar en el modelo porque ya paso esos filtros
-
-✅ Ruta para hacer search con queryParams
-
-✅ Los get no obtienen informacion del body
-
-La Funcion de monitorBets tiene que tener otra funcion que actualice todas las apuestas relacionadas a un evento para que se eepa quien gano o quien perido y se actualice el resultado en los usuarios
-
-Agregar al evento el resultado y los momios del evento
-
-Utilizar variables constantes en el modelo
-
-✅ Agregar el campo de la finalizacion del evento y guardar "date, hour" en un solo campo de la forma "30/03/2025:02:32:45"
-
-✅ Buscar como poner las namedparams en sql para no solo usar ?,?,? propuesta con una lista o un map
-
-✅ Solo el getById tiene un parametro y los demas funcionan con un search
-
-✅ La tabla betHistory no sirve de nada
-
-Identificar las apuestas 1-1 por su tipo su id_evento obteniendo el nombre
-
-Hacer delete logico y no eliminando registros de la bd
-
-* Hacer funcion de parlay
-
-
-✅
 
 
