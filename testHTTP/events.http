@@ -60,6 +60,8 @@ GET http://localhost:1234/event/search?name=america vs chivas
 ###
 GET http://localhost:1234/event/search?sport=FUTBOL
 
+###
+GET http://localhost:1234/event/
 
 
 ////////////////////////////////////////////////////////////////////

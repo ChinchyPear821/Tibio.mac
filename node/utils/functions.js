@@ -42,7 +42,7 @@ export function monitorBets(){
                 //Ya con las estadisticas revisa el ganador del evento solo comparando los puntos
                 const winner =getWinner(event, stats);
 
-                //Asigna el resultado al evento
+                //Asigna el result al evento
                 db.prepare(`
                   UPDATE events
                   SET result = ?
@@ -56,7 +56,7 @@ export function monitorBets(){
                     let won = false;
                     won = evaluateBetSport(bet, stats, event.sport);
 
-                    //Se le suma el balance si gana y se asigna el resultado de la apuesta
+                    //Se le suma el balance si gana y se asigna el result de la apuesta
 
                     const result = won ? "ganada" : "perdida";
                     if (won) {

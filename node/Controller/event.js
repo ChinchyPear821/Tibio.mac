@@ -2,6 +2,14 @@ import { EventModel } from "../Model/event.js";
 import {eventSchema, validatePartialEvent, validateEvent} from "../Schema/eventSchema.js";
 
 export class EventController{
+    static async getAllEvents(req,res){
+        try {
+            const events = await EventModel.getAllEvents();
+            return res.status(200).json(events)
+        }catch (error){
+            return res.status(400).json({error: "Error al encontrar los eventos"})
+        }
+    }
     // GET
     static async getEventById(req, res){
         try{

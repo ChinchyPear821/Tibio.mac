@@ -5,6 +5,7 @@ import { EventController } from "../Controller/event.js";
 export const routEvent = new Router();
 
 //GET
+routEvent.get("/", EventController.getAllEvents);
 routEvent.get("/search", EventController.searchEvents);
 routEvent.get("/:id", EventController.getEventById);
 

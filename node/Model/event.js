@@ -1,9 +1,15 @@
-import { db } from "../Connection/db.js";
+import {db} from "../Connection/db.js";
 import crypto from 'crypto';
-import {BET_STATUS, EVENT_RESULTS, EVENT_STATUS, CATEGORY} from "../utils/consts.js";
-import {SportStatsModel} from "./sports.js";
+import {CATEGORY, EVENT_RESULTS, EVENT_STATUS} from "../utils/consts.js";
 
 export class EventModel{
+    static async getAllEvents(){
+        try{
+            return db.prepare(`SELECT * FROM events`).all();
+        }catch(error){
+            console.log("Error al buscar los eventos")
+        }
+    }
     //✅
     static async getEventById(id_event){
         try {
