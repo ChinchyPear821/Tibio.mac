@@ -1,5 +1,5 @@
 import { db } from "../Connection/db.js"
-import { getRowById } from "../utils/functions.js"
+import { getRowById } from "../utils.js"
 
 export class TransactionModel{
     //GET

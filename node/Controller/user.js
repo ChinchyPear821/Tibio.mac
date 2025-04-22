@@ -46,11 +46,11 @@ export class UserController{
             //Me regresa el usuario encontrado
             const userLogged = await UserModel.login({ data: userValidated.data })
 
-            const { id_user, username } = userLogged
+            const { id_user, username, rol } = userLogged
 
             //crear la cookie
             const token = jwt.sign(
-                { id_user, username },
+                { id_user, username, rol },
                 SECRET_JWT_KEY,
                 { expiresIn: "1h" }
             )

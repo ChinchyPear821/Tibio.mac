@@ -13,23 +13,33 @@ CREATE TABLE users (
     username TEXT NOT NULL UNIQUE,
     balance REAL NOT NULL DEFAULT 0,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    rol TEXT NOT NULL DEFAULT 'USER',
 );
 
 CREATE TABLE events (
     id_event TEXT NOT NULL UNIQUE PRIMARY KEY,
     name TEXT NOT NULL,
     sport TEXT NOT NULL,
-    status TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'EN PROCESO',
     result TEXT,
-    begin_date TEXT NOT NULL,
+    begin_date TEXT NOT NULL, 
     end_date TEXT
+);
+
+CREATE TABLE event_outcomes (
+    id_outcome    TEXT    PRIMARY KEY,
+    id_event      TEXT    NOT NULL,
+    outcome_name  TEXT    NOT NULL,
+    official_odds DECIMAL NOT NULL,
+    UNIQUE (id_event, outcome_name),
+    FOREIGN KEY (id_event) REFERENCES events(id_event)
 );
 
 CREATE TABLE bets (
     id_bet TEXT NOT NULL UNIQUE PRIMARY KEY,
     id_user TEXT,
-    id_event TEXT,
+    id_outcome TEXT NOT NULL,
     category TEXT,
     type TEXT NOT NULL,
     amount NUMERIC NOT NULL,
@@ -40,7 +50,7 @@ CREATE TABLE bets (
     begin_date TEXT,
     end_date TEXT,
     FOREIGN KEY (id_user) REFERENCES users(id_user),
-    FOREIGN KEY (id_event) REFERENCES events(id_event)
+    FOREIGN KEY (id_outcome) REFERENCES events(id_outcome)
 );
 
 CREATE TABLE transactions (

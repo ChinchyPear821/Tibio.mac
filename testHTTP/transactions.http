@@ -8,7 +8,7 @@ Content-Type: application/json
     "cardNumber": 1234567891011,
     "cardPassword": 987,
     "bank": "BBVA",
-    "amount": 10000,
+    "amount": 10,
     "type": "DEPOSITO"
 }
 

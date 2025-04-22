@@ -1,44 +1,56 @@
-/*
-
-Me quede con mi archivo de start.js porque no funcionaba con el de los ultimos cambios
-
-*/
 import express, {json} from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 
 import { SECRET_JWT_KEY , PORT} from "./config.js"
 import jwt from "jsonwebtoken"
+import {monitorBets} from "./utils/functions.js";
 import { routUser } from "./Routes/user.js"
 import { routBet } from "./Routes/bet.js"
 import { routTransaction } from "./Routes/transaction.js"
 import {routEvent} from "./Routes/event.js";
 import {routSports} from "./Routes/sports.js";
 
-import {monitorBets} from "./utils/functions.js";
+import path from "path"
+import { fileURLToPath } from "url"
+
 const app = express()
 
 app.disable("x-powered-by")
 
 app.use(json())
-app.use(cors())
+app.use(cors({
+    origin: "http://localhost:1234", // o donde esté tu frontend
+    credentials: true
+}));
 app.use(cookieParser())
 
-//Que todas las rutas pueden acceder a un token si es que hay uno
+// Middleware para token
 app.use((req, res, next) => {
-    const token = req.cookies.access_token
+    const token = req.cookies.access_token;
+    req.session = { user: null };
 
-    req.session = { user: null }
-
-    try {
-        const data = jwt.verify(token, SECRET_JWT_KEY)
-        req.session.user = data
-    } catch {}
+    if (token) {
+        try {
+            const data = jwt.verify(token, SECRET_JWT_KEY);
+            req.session.user = data;
+        } catch (error) {
+            console.error("Token inválido:", error.message);
+        }
+    }
 
     next();
-})
+});
 
-//ruta de Login
+app.get("/protected-route", (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: "No autorizado. Inicia sesión primero." });
+    }
+
+    res.status(200).json({ message: "Acceso permitido", user: req.session.user});
+});
+
+// Rutas API
 app.use("/user", routUser)
 
 //ruta de Apuestas
@@ -48,9 +60,19 @@ app.use("/bet", routBet)
 app.use("/transaction", routTransaction)
 
 app.use("/event", routEvent)
+// Configurar __dirname para ES Modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 app.use("/sports", routSports)
+// Servir frontend desde /Fetch
+app.use(express.static(path.join(__dirname, "../public")))
 
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/index.html"))
+})
+
+// Iniciar servidor
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`)
 })
