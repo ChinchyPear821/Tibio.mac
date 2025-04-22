@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Emblema+One&family=Lobster&display=swap');
+
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    background-image: url('bg.png');
+    background-size: cover;  /* Ensures the image covers the entire viewport */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents tiling */
+    color: white;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.main-container{
+    margin-top: -150px;
+    padding: 0%;
+    display: flex;
+    height: 80%;
+}
+.h1{
+    color: #ff4444;
+    font-size: calc(3.725rem + -0.5vw);
+    position: absolute;
+    display: flex;
+    font-family: "Bungee Tint", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    padding-top: 10%;
+}
+.title{
+}
+.login-container {
+    background: #7C8478;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    width: 450px;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 15px;
+    height: 302px;
+    margin-top: 200px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    position: relative;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background: #222;
+    color: white;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: #cc0000;
+}
+
+#error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    cursor: pointer;
+}

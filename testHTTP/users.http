@@ -1,0 +1,17 @@
+POST http://localhost:1234/user/register
+Content-Type: application/json
+
+{
+    "username": "Saul",
+    "email": "saul_2004@gmail.com",
+    "password": "Saul123"
+}
+###
+POST http://localhost:1234/user/login
+Content-Type: application/json
+
+{
+    "email": "saul_2004@gmail.com",
+    "password": "Saul123"
+}
+

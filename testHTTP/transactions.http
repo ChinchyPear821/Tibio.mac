@@ -1,0 +1,24 @@
+GET http://localhost:1234/transaction/user
+
+###
+POST http://localhost:1234/transaction/deposit
+Content-Type: application/json
+
+{
+    "cardNumber": 1234567891011,
+    "cardPassword": 987,
+    "bank": "BBVA",
+    "amount": 10,
+    "type": "DEPOSITO"
+}
+
+###
+POST http://localhost:1234/transaction/withdraw
+Content-Type: application/json
+
+{
+    "cardNumber": 1234567891011,
+    "bank": "BBVA",
+    "amount": 5,
+    "type": "RETIRO"
+}
