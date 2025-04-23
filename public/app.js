@@ -96,6 +96,7 @@ async function showBetForm(id_event) {
         const eventDataArray = await eventRes.json();
         const eventData = eventDataArray[0];
         const sport = eventData.sport;
+
         console.log("Datos del evento: ", eventData);
         console.log("nombre del evento:", eventData.name);
 
@@ -125,7 +126,7 @@ async function showBetForm(id_event) {
                 <div class="form-group">
                     <label for="type">Tipo de Apuesta</label>
                     <select id="type" class="form-control" required>
-                         <option value="">Selecciona outcome</option>
+                        <option value="">Selecciona outcome</option>
                         ${outcomes.map(outcome => `<option value="${outcome.outcome_name.toLowerCase()}">${outcome.outcome_name}</option>`).join("")}
                     </select>
                 </div>
@@ -133,7 +134,6 @@ async function showBetForm(id_event) {
                     <label for="target">Target</label>
                     <select id="target" class="form-control" required>
                         <option value="">Selecciona el target</option>
-                        <!--Aqui selecciona dependiendo de si es de tipo ganador el target sera uno de los dos nombres del evento que sera al que le apostara-->
                     </select>
                 </div>
                 <div class="form-group">
@@ -145,6 +145,7 @@ async function showBetForm(id_event) {
                     <input type="number" id="extra" class="form-control" readonly>
                 </div>
                 <button type="submit" class="btn btn-primary">Realizar Apuesta</button>
+                <input type="hidden" id="id_outcome">
             </form>
             <div id="respuesta-apuesta"></div>
         `;
@@ -152,6 +153,7 @@ async function showBetForm(id_event) {
         const typeSelect = document.getElementById("type");
         const targetSelect = document.getElementById("target");
         const extraInput = document.getElementById("extra");
+        const idOutcomeInput = document.getElementById("id_outcome");
 
         typeSelect.addEventListener("change", () => {
             const selectedType = typeSelect.value;
@@ -159,12 +161,13 @@ async function showBetForm(id_event) {
 
             if (selectedOutcome) {
                 extraInput.value = selectedOutcome.official_odds;
+                idOutcomeInput.value = selectedOutcome.id_outcome;
             } else {
                 extraInput.value = "";
+                idOutcomeInput.value = "";
             }
 
             targetSelect.innerHTML = '<option value="">Selecciona el target</option>';
-
             if (selectedType === "ganador") {
                 const teamNames = eventData.name.split(" vs ");
                 teamNames.forEach(team => {
@@ -173,8 +176,7 @@ async function showBetForm(id_event) {
                     option.textContent = team.trim();
                     targetSelect.appendChild(option);
                 });
-            }
-            else if (selectedType) {
+            } else if (selectedType) {
                 for (let i = 0; i <= 10; i++) {
                     const option = document.createElement("option");
                     option.value = i;
@@ -184,18 +186,19 @@ async function showBetForm(id_event) {
             }
         });
 
-
-        // Submit
         document.getElementById("form-bet").addEventListener("submit", async function (e) {
             e.preventDefault();
             const token = localStorage.getItem("token");
 
+            console.log("id_outcome antes de enviar:", idOutcomeInput.value); // Debug
+
             const body = {
                 id_event: document.getElementById("id_event").value.trim(),
-                type: document.getElementById("type").value,
-                target: document.getElementById("target").value.trim(),
+                id_outcome: idOutcomeInput.value.trim(),
+                type: typeSelect.value,
+                target: targetSelect.value.trim(),
                 amount: parseFloat(document.getElementById("amount").value),
-                extra: parseFloat(document.getElementById("extra").value)
+                extra: parseFloat(extraInput.value)
             };
 
             try {
@@ -209,7 +212,12 @@ async function showBetForm(id_event) {
                 });
 
                 const data = await res.json();
-                document.getElementById("respuesta-apuesta").textContent = JSON.stringify(data, null, 2);
+                if (res.ok) {
+                    alert("Apuesta creada correctamente");
+
+                    document.getElementById("respuesta-apuesta").innerHTML = `
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                        `;}
             } catch (err) {
                 document.getElementById("respuesta-apuesta").textContent = "Error: " + err.message;
             }

@@ -77,6 +77,7 @@ export class BetController {
             if(!validatedBet.success){
                 return res.status(400).json({error: "Error al obtener los datos de la apuesta"})
             }
+            console.log("Datos recibidos recibido:", validatedBet.data)
 
             const betCreated = await BetModel.createBet({
                 data:validatedBet.data, id_user_token: req.user.id_user});

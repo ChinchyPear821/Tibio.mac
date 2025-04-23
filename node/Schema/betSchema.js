@@ -5,6 +5,7 @@ export const betSchema = z.object({
     id_bet: z.string().uuid().optional(),
     id_user: z.string().uuid().optional(), // se saca del token
     id_event: z.string().uuid(), // se pide en el body
+    id_outcome: z.string().uuid(),
     category: z.enum(Object.values(CATEGORY)).optional(), // se obtiene del evento creado
     type: z.enum(
         ["ganador", "goles", "tarjetas amarillas", "tiros esquina", "tarjetas rojas",

@@ -38,6 +38,7 @@ CREATE TABLE event_outcomes (
 
 CREATE TABLE bets (
     id_bet TEXT NOT NULL UNIQUE PRIMARY KEY,
+    id_event TEXT,
     id_user TEXT,
     id_outcome TEXT NOT NULL,
     category TEXT,
@@ -49,8 +50,9 @@ CREATE TABLE bets (
     result TEXT,
     begin_date TEXT,
     end_date TEXT,
+    FOREIGN KEY (id_event) REFERENCES events(id_event),
     FOREIGN KEY (id_user) REFERENCES users(id_user),
-    FOREIGN KEY (id_outcome) REFERENCES events(id_outcome)
+    FOREIGN KEY (id_outcome) REFERENCES events_outcome(id_outcome)
 );
 
 CREATE TABLE transactions (
