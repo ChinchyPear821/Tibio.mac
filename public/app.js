@@ -41,7 +41,7 @@ async function checkSession() {
 async function displayAllEvents() {
     /////Display current events
     try {
-        const res = await fetch("http://localhost:1234/event", {
+        const res = await fetch("http://localhost:1234/event/search?status=en%20proceso", {
             method: "GET",
             credentials: "include",
         });
@@ -69,18 +69,155 @@ async function displayAllEvents() {
                         <p class="card-text">Fecha: ${event.begin_date}</p>
                         <p class="card-text">Estatus: ${event.status}</p>
                         <div class="d-flex justify-content-center">
-                            <a href="#" class="btn btn-secondary">Apostar</a>
+                        <a id="bet-btn-${event.id_event}" class="btn btn-secondary">Apostar</a>
                         </div>
+                        <div id="bet-form-container-${event.id_event}" class="mt-3"></div>
                     </div>
                 </div>
             `;
 
             container.appendChild(col);
+            document.getElementById(`bet-btn-${event.id_event}`).addEventListener('click', () => {
+                showBetForm(event.id_event);
+            });
         });
+
     } catch (err) {
         console.error("Error al cargar eventos:", err);
     }
+}
 
+async function showBetForm(id_event) {
+    try {
+        const eventRes = await fetch(`http://localhost:1234/event/search?id_event=${id_event}`, {
+            method: "GET",
+            credentials: "include",
+        });
+        const eventDataArray = await eventRes.json();
+        const eventData = eventDataArray[0];
+        const sport = eventData.sport;
+        console.log("Datos del evento: ", eventData);
+        console.log("nombre del evento:", eventData.name);
+
+        const outcomesRes = await fetch(`http://localhost:1234/event/${id_event}/outcomes`, {
+            method: "GET",
+            credentials: "include",
+        });
+        const outcomesData = await outcomesRes.json();
+        const outcomes = outcomesData.outcomes;
+
+        const sportTypes = {
+            futbol: ["ganador", "goles", "tarjetas amarillas", "tiros esquina", "tarjetas rojas"],
+            basquetbol: ["ganador", "puntos totales", "triples", "rebotes"],
+            futbol_americano: ["ganador", "touchdowns", "sacks", "goles de campo", "intercepciones"]
+        };
+
+        const availableTypes = sportTypes[sport] || [];
+
+        const betFormContainer = document.getElementById(`bet-form-container-${id_event}`);
+        betFormContainer.innerHTML = `
+            <h3>Crear Apuesta para: ${eventData.name}</h3>
+            <form id="form-bet">
+                <div class="form-group">
+                    <label for="id_event">ID del Evento</label>
+                    <input type="text" id="id_event" class="form-control" value="${id_event}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="type">Tipo de Apuesta</label>
+                    <select id="type" class="form-control" required>
+                         <option value="">Selecciona outcome</option>
+                        ${outcomes.map(outcome => `<option value="${outcome.outcome_name.toLowerCase()}">${outcome.outcome_name}</option>`).join("")}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="target">Target</label>
+                    <select id="target" class="form-control" required>
+                        <option value="">Selecciona el target</option>
+                        <!--Aqui selecciona dependiendo de si es de tipo ganador el target sera uno de los dos nombres del evento que sera al que le apostara-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Cantidad a Apostar</label>
+                    <input type="number" id="amount" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="extra">Momio</label>
+                    <input type="number" id="extra" class="form-control" readonly>
+                </div>
+                <button type="submit" class="btn btn-primary">Realizar Apuesta</button>
+            </form>
+            <div id="respuesta-apuesta"></div>
+        `;
+
+        const typeSelect = document.getElementById("type");
+        const targetSelect = document.getElementById("target");
+        const extraInput = document.getElementById("extra");
+
+        typeSelect.addEventListener("change", () => {
+            const selectedType = typeSelect.value;
+            const selectedOutcome = outcomes.find(outcome => outcome.outcome_name.toLowerCase() === selectedType);
+
+            if (selectedOutcome) {
+                extraInput.value = selectedOutcome.official_odds;
+            } else {
+                extraInput.value = "";
+            }
+
+            targetSelect.innerHTML = '<option value="">Selecciona el target</option>';
+
+            if (selectedType === "ganador") {
+                const teamNames = eventData.name.split(" vs ");
+                teamNames.forEach(team => {
+                    const option = document.createElement("option");
+                    option.value = team.trim();
+                    option.textContent = team.trim();
+                    targetSelect.appendChild(option);
+                });
+            }
+            else if (selectedType) {
+                for (let i = 0; i <= 10; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = i;
+                    targetSelect.appendChild(option);
+                }
+            }
+        });
+
+
+        // Submit
+        document.getElementById("form-bet").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const token = localStorage.getItem("token");
+
+            const body = {
+                id_event: document.getElementById("id_event").value.trim(),
+                type: document.getElementById("type").value,
+                target: document.getElementById("target").value.trim(),
+                amount: parseFloat(document.getElementById("amount").value),
+                extra: parseFloat(document.getElementById("extra").value)
+            };
+
+            try {
+                const res = await fetch(`http://localhost:1234/bet`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+                document.getElementById("respuesta-apuesta").textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById("respuesta-apuesta").textContent = "Error: " + err.message;
+            }
+        });
+
+    } catch (err) {
+        console.error("Error al mostrar el formulario de apuestas:", err);
+    }
 }
 
 // Llamar a la función cuando se cargue la página

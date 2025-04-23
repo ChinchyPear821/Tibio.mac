@@ -61,7 +61,7 @@ GET http://localhost:1234/event/search?name=america vs chivas
 GET http://localhost:1234/event/search?sport=FUTBOL
 
 ###
-GET http://localhost:1234/event/
+GET http://localhost:1234/event/search?id_event=c01aad56-3d86-486e-bff2-5abb1e728f4e
 
 
 ////////////////////////////////////////////////////////////////////
@@ -100,5 +100,7 @@ Content-Type: application/json
   }
 }
 
+### GET
+http://localhost:1234/event/c01aad56-3d86-486e-bff2-5abb1e728f4e/outcomes
 
 

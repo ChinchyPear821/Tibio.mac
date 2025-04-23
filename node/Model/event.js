@@ -22,6 +22,33 @@ export class EventModel{
             throw error;
         }
     }
+    //GET
+    static async getAllCurrentEvents(){
+        try{
+
+            const events = db.prepare(`
+                SELECT * FROM events 
+                WHERE status = 'EN PROCESO'`
+            );
+            return events.all();
+        }catch(error){
+            console.log("Error al obtener los eventos: ", error);
+            throw error
+        }
+    }
+
+    // GET
+    static async getOutcomesByEventId(id_event) {
+        try {
+            // Aquí se consulta la base de datos para obtener los outcomes
+            return db.prepare(`
+                SELECT * FROM event_outcomes WHERE id_event = ?
+            `).all(id_event);  // Devuelve los outcomes obtenidos
+        } catch (error) {
+            console.error("Error al obtener outcomes por id_event:", error);
+            throw error;
+        }
+    }
     // GET ( lo hizo GPT )
     static async search(params){
         const conditions = [];
@@ -42,6 +69,7 @@ export class EventModel{
     // GET
     static async createEvent({ data }){
         try {
+            const {outcomes, ...dataEvent} = data;
             const id_event = crypto.randomUUID();
             const now = new Date();
             const status = EVENT_STATUS.EN_PROCESO;
@@ -51,7 +79,7 @@ export class EventModel{
             const eventData = {
                 id_event,
                 status,
-                ...data,
+                ...dataEvent,
                 result,
                 begin_date,
                 end_date
@@ -85,6 +113,25 @@ export class EventModel{
                         id_event, home_team, away_team);
                     break;
             }
+
+
+            // Codigo para guardar los outcomes en la tabla
+            const insertOutcome = db.prepare(`
+                INSERT INTO event_outcomes (id_outcome, id_event, outcome_name, official_odds)
+                VALUES (?, ?, ?, ?)
+            `);
+            console.log("outcomes", outcomes);
+            for (const outcome of outcomes) {
+                if (!outcome.outcome_name || isNaN(outcome.official_odds)) {
+                    throw new Error("Datos incompletos en uno de los outcomes");
+                }
+                insertOutcome.run(
+                    crypto.randomUUID(),
+                    id_event,
+                    outcome.outcome_name,
+                    outcome.official_odds
+                );
+            }
             return eventCreated;
         }catch (error){
             console.log("Error al crear la apuesta", error)
@@ -104,6 +151,19 @@ export class EventModel{
             return db.prepare(`SELECT * FROM events WHERE id_event = ?`).get(id_event);
         }catch (error){
             console.log("Error al cerrar el evento");
+            throw error;
+        }
+    }
+
+    //DELETE
+    static async deleteEvent({ data }) {
+        try {
+            const {id_event} = data
+            const eventDelete = db.prepare(`DELETE FROM events WHERE id_event = ?`);
+            const result= eventDelete.run(id_event);
+            return result.changes;
+        } catch (error) {
+            console.error("No se encontro la apuesta", error);
             throw error;
         }
     }

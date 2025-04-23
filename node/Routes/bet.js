@@ -15,5 +15,5 @@ routBet.post("/", authenticateToken,BetController.createBet)
 
 // PATCH
 routBet.patch("/place", authenticateToken, BetController.acceptBet)
-// DELETE no sirve
-routBet.delete("/:id", BetController.deleteBet)
+//DELETE
+routBet.delete("/:id_bet", BetController.deleteBet)

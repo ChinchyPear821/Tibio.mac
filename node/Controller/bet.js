@@ -87,12 +87,22 @@ export class BetController {
         }
     }
 
-    // DELETE no hay
+    // Ya hay DELETE
     static async deleteBet(req, res) {
         try {
+            const { id_bet } = req.body
+            if (!id_bet) {
+                return res.status(400).json({ error: "No se encontró el Id" })
+            }
+            const result = await BetModel.deleteBet(id_bet);
+            if (result === 0) {
+                return res.status(404).json({ error: "Apuesta no encontrada 2" });
+            }
 
+            return res.status(200).json({ message: "Apuesta eliminada correctamente" });
         } catch (error) {
-            return res.status(500).json({ error: "Error al eliminar la apuesta" });
+            console.error("Error al eliminar la apuesta", error)
+            return res.status(500).json({ error: "Error al eliminar la apuesta" })
         }
     }
 }

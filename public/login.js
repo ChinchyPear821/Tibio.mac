@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 const result = await response.json();
+                localStorage.setItem("token", result.token);
                 alert("Inicio de sesión exitoso: " + result.message);
                 window.location.href = "main.html";
             } else {

@@ -39,16 +39,64 @@ export class EventController{
     // POST
     static async createEvent(req, res){
         try{
-            const validatedEvent = validateEvent(req.body);
 
-            if(!validatedEvent.success){
-                return res.status(400).json({error: validatedEvent.error.errors})
+            const { outcomes, ...eventData } = req.body;
+            console.log("REQ.BODY ===>", req.body);
+
+            const validatedEvent = validateEvent(eventData);
+
+            if (!validatedEvent.success) {
+                return res.status(400).json({ error: validatedEvent.error.errors });
             }
-            const eventCreated = await EventModel.createEvent({data:validatedEvent.data});
+
+            if (!Array.isArray(outcomes) || outcomes.length === 0) {
+                return res.status(400).json({ error: "Debes proporcionar al menos un outcome" });
+            }
+            for (const outcome of outcomes) {
+                if (!outcome.outcome_name || isNaN(outcome.official_odds)) {
+                    return res.status(400).json({ error: "Cada outcome debe tener un nombre y un momio numérico válido" });
+                }
+            }
+            const eventCreated = await EventModel.createEvent({
+                data: { ...validatedEvent.data, outcomes }
+            });
             return res.status(200).json(eventCreated);
         }catch(error){
             console.error("Error inesperado:", error);
             return res.status(400).json({ error: error.message });
+        }
+    }
+
+    //GET
+    static async allCurrentEvents(req, res) {
+        try {
+            const events = await EventModel.getAllCurrentEvents();
+            return res.status(200).json(events)
+        } catch (error) {
+            return res.status(400).json({ error: "Error al obtener los eventos" })
+        }
+    }
+    //GET
+    static async getOutcomesByEventId(req, res) {
+        try {
+            const { id_event } = req.params;  // Obtenemos el id_event de los parámetros de la URL
+
+            if (!id_event) {
+                return res.status(400).json({ error: "ID del evento es requerido" });
+            }
+
+            // Llamamos al modelo para obtener los outcomes por id_event
+            const outcomes = await EventModel.getOutcomesByEventId(id_event);
+
+            if (outcomes.length === 0) {
+                return res.status(404).json({ error: "No se encontraron outcomes para este evento" });
+            }
+
+            // Respondemos con los outcomes obtenidos
+            return res.status(200).json({ outcomes });
+        } catch (error) {
+            console.error("Error al obtener los outcomes:", error);
+            res.status(500).json({ error: "Error interno al obtener outcomes" });
         }
     }
     // PATCH
@@ -66,7 +114,25 @@ export class EventController{
             return res.status(400).json({error: error.message});
 
         }
+
     }
-    // No hay DELETE
+
+    static async deleteEvent(req, res) {
+        try {
+            const { id_event } = req.body
+            if (!id_event) {
+                return res.status(400).json({ error: "No se encontró el Id" })
+            }
+            const result = await EventModel.deleteEvent(id_event);
+            if (result === 0) {
+                return res.status(404).json({ error: "Evento no encontrado" });
+            }
+
+            return res.status(200).json({ message: "Evento eliminado correctamente" });
+        } catch (error) {
+            console.error("Error al eliminar el evento", error)
+            return res.status(500).json({ error: "Error al eliminar el evento" })
+        }
+    }
 
 }

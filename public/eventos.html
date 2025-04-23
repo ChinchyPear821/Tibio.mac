@@ -102,18 +102,19 @@
                         <label for="event-name" class="form-label">Nombre del evento</label>
                         <input type="text" class="form-control" id="event-name" name="event-name" required>
                     </div>
+                    <!--
                     <div class="mb-3">
                         <label for="event-date" class="form-label">Fecha del evento</label>
                         <input type="date" class="form-control" id="event-date" name="event-date" required>
-                    </div>
+                    </div>-->
                     <div class="dropdown w-100 mb-3">
                         Deporte
                         <input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown"
                             placeholder="Selecciona un deporte" id="event-sport" name="event-sport" readonly required>
                         <ul class="dropdown-menu w-100" id="sportDropdown">
-                            <li><a class="dropdown-item" href="#">Soccer</a></li>
-                            <li><a class="dropdown-item" href="#">Basketball</a></li>
-                            <li><a class="dropdown-item" href="#">Football</a></li>
+                            <li><a class="dropdown-item" href="#">futbol</a></li>
+                            <li><a class="dropdown-item" href="#">basquetbol</a></li>
+                            <li><a class="dropdown-item" href="#">futbol americano</a></li>
                         </ul>
                     </div>
                     <!--Soccer-->
@@ -121,21 +122,15 @@
                         <h5 class="mb-3">Momios para apuestas (Soccer)</h5>
 
                         <div class="mb-3">
-                            <label for="odds-local-soccer" class="form-label">Gana local</label>
-                            <input type="number" step="0.1" class="form-control outcome-odds" name="Gana local"
+                            <label for="odds-local-soccer" class="form-label">Ganador</label>
+                            <input type="number" step="0.1" class="form-control outcome-odds" name="ganador"
                                 id="odds-local-soccer">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-empate-soccer" class="form-label">Empate</label>
-                            <input type="number" step="0.5" class="form-control outcome-odds" name="Empate"
-                                id="odds-empate-soccer">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="odds-visitante-soccer" class="form-label">Gana visitante</label>
-                            <input type="number" step="0.5" class="form-control outcome-odds" name="Gana visitante"
-                                id="odds-visitante-soccer">
+                            <label for="odds-goals-soccer" class="form-label">Goles</label>
+                            <input type="number" step="0.1" class="form-control outcome-odds" name="goles"
+                                   id="odds-goals-soccer">
                         </div>
 
                         <div class="mb-3">
@@ -167,14 +162,8 @@
 
                         <div class="mb-3">
                             <label for="odds-local-basketball" class="form-label">Gana local</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Gana local"
+                            <input type="number" step="0.01" class="form-control outcome-odds" name="Ganador"
                                 id="odds-local-basketball">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="odds-visitante-basketball" class="form-label">Gana visitante</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Gana visitante"
-                                id="odds-visitante-basketball">
                         </div>
 
                         <div class="mb-3">
@@ -190,12 +179,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-faltas" class="form-label">Más de X faltas</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Más de X faltas"
-                                id="odds-faltas">
-                        </div>
-
-                        <div class="mb-3">
                             <label for="odds-rebotes" class="form-label">Más de X rebotes</label>
                             <input type="number" step="0.01" class="form-control outcome-odds" name="Más de X rebotes"
                                 id="odds-rebotes">
@@ -207,14 +190,8 @@
 
                         <div class="mb-3">
                             <label for="odds-local-football" class="form-label">Gana local</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Gana local"
+                            <input type="number" step="0.01" class="form-control outcome-odds" name="Ganador"
                                 id="odds-local-football">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="odds-visitante-football" class="form-label">Gana visitante</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Gana visitante"
-                                id="odds-visitante-football">
                         </div>
 
                         <div class="mb-3">

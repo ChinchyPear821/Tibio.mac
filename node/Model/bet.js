@@ -116,6 +116,17 @@ export class BetModel {
             if (event.status === EVENT_STATUS.FINALIZADO) {
                 throw new Error("No se puede apostar a un evento finalizado.");
             }
+
+            // Obtener momio desde event_outcomes
+            const outcome = db.prepare(`
+                  SELECT official_odds FROM event_outcomes 
+                  WHERE id_outcome = ? AND id_event = ?
+                `).get(data.id_outcome, data.id_event);
+            if (!outcome) {
+                throw new Error("El outcome no existe para este evento.");
+            }
+
+
             const id_bet = crypto.randomUUID();
             const now = new Date();
             let begin_date = data.begin_date ?? now.toLocaleDateString() + " " + now.toLocaleTimeString();
@@ -144,6 +155,7 @@ export class BetModel {
               id_bet,
                 id_user:id_user_token,
               ...data,
+                extra: outcome.official_odds,
                 category,
               result,
               status,
@@ -167,11 +179,13 @@ export class BetModel {
     // DELETE no esta hecho
     static async deleteBet(id_bet) {
         try {
-            const result = db.prepare(`DELETE FROM bets WHERE id_bet = ?`).run(id_bet);
+            const betDelete = db.prepare(`DELETE FROM bets WHERE id_bet = ?`);
+            const result=betDelete.run(id_bet);
             return result.changes;
         } catch (error) {
-            console.error("Error al eliminar la apuesta", error);
+            console.error("No se encontro la apuesta", error);
             throw error;
         }
     }
+
 }

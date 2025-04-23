@@ -27,11 +27,11 @@ async function createEvent() {
             document.querySelectorAll(".sport-fields").forEach(div => div.style.display = "none");
 
             // Muestra el div correspondiente al deporte
-            if (sport === "Soccer") {
+            if (sport === "futbol") {
                 document.getElementById("soccer-fields").style.display = "block";
-            } else if (sport === "Basketball") {
+            } else if (sport === "basquetbol") {
                 document.getElementById("basketball-fields").style.display = "block";
-            } else if (sport === "Football") {
+            } else if (sport === "futbol americano") {
                 document.getElementById("football-fields").style.display = "block";
             }
         });
@@ -51,54 +51,49 @@ async function createEvent() {
         eventData = {}
         // Datos del evento
         const sport = document.getElementById("event-sport").value
-        if (sport === "Soccer") {
+        if (sport === "futbol") {
             eventData = {
                 name: document.getElementById("event-name").value,
-                begin_date: document.getElementById("event-date").value,
+               //begin_date: document.getElementById("event-date").value,
                 sport: document.getElementById("event-sport").value,
                 outcomes: [
-                    { outcome_name: "Gana Local", official_odds: parseFloat(document.getElementById("odds-local-soccer").value) },
-                    { outcome_name: "Empate", official_odds: parseFloat(document.getElementById("odds-empate-soccer").value) },
-                    { outcome_name: "Gana Visitante", official_odds: parseFloat(document.getElementById("odds-visitante-soccer").value) },
-                    { outcome_name: "Tarjetas Amarillas", official_odds: parseFloat(document.getElementById("odds-yellow").value) },
-                    { outcome_name: "Tarjetas Rojas", official_odds: parseFloat(document.getElementById("odds-red").value) },
-                    { outcome_name: "Corners", official_odds: parseFloat(document.getElementById("odds-corners").value) },
-                    { outcome_name: "Penales", official_odds: parseFloat(document.getElementById("odds-penalties").value) }
+                    { outcome_name: "ganador", official_odds: parseFloat(document.getElementById("odds-local-soccer").value) },
+                    { outcome_name: "goles", official_odds: parseFloat(document.getElementById("odds-goals-soccer").value) },
+                    { outcome_name: "tarjetas amarillas", official_odds: parseFloat(document.getElementById("odds-yellow").value) },
+                    { outcome_name: "tiros esquina", official_odds: parseFloat(document.getElementById("odds-corners").value) },
+                    { outcome_name: "tarjetas rojas", official_odds: parseFloat(document.getElementById("odds-red").value) }
                 ]
             };
         }
-        else if (sport === "Basketball") {
+        else if (sport === "basquetbol") {
             eventData = {
                 name: document.getElementById("event-name").value,
-                begin_date: document.getElementById("event-date").value,
+                //begin_date: document.getElementById("event-date").value,
                 sport: document.getElementById("event-sport").value,
                 outcomes: [
-                    { outcome_name: "Gana Local", official_odds: parseFloat(document.getElementById("odds-local-basketball").value) },
-                    { outcome_name: "Gana Visitante", official_odds: parseFloat(document.getElementById("odds-visitante-basketball").value) },
-                    { outcome_name: "Total Puntos", official_odds: parseFloat(document.getElementById("odds-puntos").value) },
-                    { outcome_name: "Triples", official_odds: parseFloat(document.getElementById("odds-triples").value) },
-                    { outcome_name: "Faltas", official_odds: parseFloat(document.getElementById("odds-faltas").value) },
-                    { outcome_name: "Rebotes Totales", official_odds: parseFloat(document.getElementById("odds-rebotes").value) },
+                    { outcome_name: "ganador", official_odds: parseFloat(document.getElementById("odds-local-basketball").value) },
+                    { outcome_name: "puntos totales", official_odds: parseFloat(document.getElementById("odds-puntos").value) },
+                    { outcome_name: "triples", official_odds: parseFloat(document.getElementById("odds-triples").value) },
+                    { outcome_name: "rebotes", official_odds: parseFloat(document.getElementById("odds-rebotes").value) },
                 ]
             };
         }
-        else if (sport === "Football") {
+        else if (sport === "futbol americano") {
             eventData = {
                 name: document.getElementById("event-name").value,
-                begin_date: document.getElementById("event-date").value,
+                //begin_date: document.getElementById("event-date").value,
                 sport: document.getElementById("event-sport").value,
                 outcomes: [
-                    { outcome_name: "Gana Local", official_odds: parseFloat(document.getElementById("odds-local-football").value) },
-                    { outcome_name: "Gana Visitante", official_odds: parseFloat(document.getElementById("odds-visitante-football").value) },
-                    { outcome_name: "Touchdowns", official_odds: parseFloat(document.getElementById("odds-touchdowns").value) },
-                    { outcome_name: "Field goals", official_odds: parseFloat(document.getElementById("odds-fieldgoals").value) },
-                    { outcome_name: "Intercepciones Totales", official_odds: parseFloat(document.getElementById("odds-intercepciones").value) },
-                    { outcome_name: "Sacks", official_odds: parseFloat(document.getElementById("odds-sacks").value) }
+                    { outcome_name: "ganador", official_odds: parseFloat(document.getElementById("odds-local-football").value) },
+                    { outcome_name: "touchdowns", official_odds: parseFloat(document.getElementById("odds-touchdowns").value) },
+                    { outcome_name: "sacks", official_odds: parseFloat(document.getElementById("odds-sacks").value) },
+                    { outcome_name: "goles de campo", official_odds: parseFloat(document.getElementById("odds-fieldgoals").value) },
+                    { outcome_name: "intercepciones", official_odds: parseFloat(document.getElementById("odds-intercepciones").value) }
                 ]
             };
         }
         try {
-            const response = await fetch("/bet/events", {
+            const response = await fetch("http://localhost:1234/event/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -130,7 +125,7 @@ async function administrateEvent() {
 
     //obtener todos los eventos
     try {
-        const res = await fetch("/bet/events/current", {
+        const res = await fetch("http://localhost:1234/event/search?status=en%20proceso", {
             method: "GET",
             credentials: "include",
         });
@@ -260,7 +255,7 @@ async function checkSession() {
 
     //displayAllEvents(); // Muestra todos los eventos al cargar la página
     try {
-        const res = await fetch("/bet/events/current", {
+        const res = await fetch("http://localhost:1234/event/search?status=en%20proceso", {
             method: "GET",
             credentials: "include",
         });
