@@ -155,6 +155,26 @@ export class EventModel{
         }
     }
 
+    //PATCH
+    static async updateEvent({ id_event, name, status }) {
+        db.prepare(`
+            UPDATE events
+            SET name = ?, status = ?
+            WHERE id_event = ?
+        `).run(name, status, id_event);
+        return db.prepare(`SELECT * FROM events 
+              WHERE id_event = ?`).get(id_event);
+    }
+
+    static async updateOutcomeOdds({ id_outcome, official_odds }) {
+        db.prepare(`
+            UPDATE event_outcomes
+            SET official_odds = ?
+            WHERE id_outcome = ?
+        `).run(official_odds,id_outcome);
+        return db.prepare(`SELECT * FROM event_outcomes 
+            WHERE id_outcome = ?`).get(id_outcome);
+    }
     //DELETE
     static async deleteEvent({ data }) {
         try {

@@ -104,3 +104,11 @@ Content-Type: application/json
 http://localhost:1234/event/c01aad56-3d86-486e-bff2-5abb1e728f4e/outcomes
 
 
+###
+PATCH http://localhost:1234/event/outcomes/9fefd906-598c-4297-8925-86e92b7ed86d
+Content-Type: application/json
+
+{
+  "official_odds": 3.45
+}
+

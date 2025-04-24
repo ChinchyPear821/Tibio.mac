@@ -117,6 +117,60 @@ export class EventController{
 
     }
 
+    //PATCH
+    static async updateEvent(req, res) {
+        try {
+            const { id_event } = req.params;
+            const validatedEvent = validatePartialEvent(req.body);
+
+            if (!validatedEvent.success) {
+                return res.status(400).json({
+                    error: "Datos inválidos para actualizar evento",
+                    issues: validatedEvent.error.issues
+                });
+            }
+
+            const { name, status } = validatedEvent.data;
+
+             if (!name && !status) {
+                return res.status(400).json({
+                    error: "Debes enviar al menos name o status para actualizar"
+                });
+            }
+
+            const result = await EventModel.updateEvent({ id_event, name, status });
+
+            if (result.changes === 0) {
+                return res.status(404).json({ error: "Evento no encontrado" });
+            }
+
+            res.status(200).json({ message: "Evento actualizado correctamente" });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    static async updateOutcomeOdds(req, res) {
+        try {
+            const { id_outcome } = req.params;
+            const { official_odds } = req.body;
+
+            if (official_odds === undefined) {
+                return res.status(400).json({ error: "Falta official_odds en el body" });
+            }
+
+            const result = await EventModel.updateOutcomeOdds({ id_outcome, official_odds });
+
+            if (result.changes === 0) {
+                return res.status(404).json({ error: "Outcome no encontrado" });
+            }
+
+            res.status(200).json({ message: "Momio actualizado correctamente" });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+
     static async deleteEvent(req, res) {
         try {
             const { id_event } = req.body
