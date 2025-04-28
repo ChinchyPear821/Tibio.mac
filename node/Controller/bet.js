@@ -70,9 +70,60 @@ export class BetController {
         }
     }
 
+    static async rejectBet(req, res) {
+        try {
+            const validatedBet = validatePartialBet(req.body);
+            if (!validatedBet.success) {
+                return res.status(400).json({ error: "Apuesta no válida" });
+            }
+
+            const { id_bet } = validatedBet.data;
+
+            const betRejected = await BetModel.rejectBet(id_bet, req.user.id_user);
+
+            return res.status(200).json(betRejected);
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    static async create1v1Bet(req, res) {
+        try {
+            const id_outcome = req.body.id_outcome;
+            if (!id_outcome) {
+                throw new Error("Debes proporcionar un id_outcome válido.");
+            }
+            const validatedBet = validatePartialBet(req.body);
+            if (!validatedBet.success) {
+                return res.status(400).json({ error: "Error al obtener los datos de la apuesta" });
+            }
+
+            console.log("Datos recibidos:", validatedBet.data);
+
+            const betCreated = await BetModel.create1v1Bet({
+                data: validatedBet.data,
+                id_user_token: req.user.id_user
+            });
+
+            return res.status(200).json(betCreated);
+
+        } catch (error) {
+            console.error("Error al crear la apuesta tipo 1 vs 1", error);
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+
+
+
     // POST
     static async createBet(req, res) {
         try {
+            const id_outcome=req.body.id_outcome;
+            console.log(id_outcome)
+            if (!id_outcome) {
+                throw new Error("Debes proporcionar un id_outcome válido.");
+            }
             const validatedBet = validatePartialBet(req.body);
             if(!validatedBet.success){
                 return res.status(400).json({error: "Error al obtener los datos de la apuesta"})

@@ -18,9 +18,17 @@ POST http://localhost:1234/event/
 Content-Type: application/json
 
 {
-"name": "america vs chivas",
-"sport": "1 vs 1 futbol"
+  "name": "Chivas vs america",
+  "sport": "1 vs 1 futbol",
+  "outcomes": [
+    { "outcome_name": "ganador", "official_odds": 1 },
+    { "outcome_name": "goles", "official_odds": 1 },
+    { "outcome_name": "tarjetas amarillas", "official_odds": 1 },
+    { "outcome_name": "tiros esquina", "official_odds": 1 },
+    { "outcome_name": "tarjetas rojas", "official_odds": 1 }
+  ]
 }
+
 ### CON ESTA SOLICITUD SE ACTUALIZAN LAS ESTADISTICAS DE UN PARTIDO (futbol)
 // type debe ser el mismo que el del evento que se creo y se necesita el id_event
 // este es para el ejemplo de que sea futbol porque sus campos son para partido de futbol(independientemente de si es 1 vs 1 o normal)
@@ -29,7 +37,7 @@ Content-Type: application/json
 
 {
   "type": "futbol",
-  "id_event": "e90a1337-13cd-4bda-b59d-f0cd119f2ea6",
+  "id_event": "acc482d5-3c27-4a0d-bbcf-cb35cc8b0749",
   "data": {
     "home_goals": 4,
     "away_goals": 1,
@@ -45,7 +53,7 @@ PATCH http://localhost:1234/event/close
 Content-Type:  application/json
 
 {
-  "id_event": "e90a1337-13cd-4bda-b59d-f0cd119f2ea6",
+  "id_event": "acc482d5-3c27-4a0d-bbcf-cb35cc8b0749",
   "result": "pendiente"
 }
 
@@ -58,7 +66,7 @@ GET http://localhost:1234/event/3d5842f5-8e24-4510-9ba9-7b8a24b4bfcd
 GET http://localhost:1234/event/search?name=america vs chivas
 
 ###
-GET http://localhost:1234/event/search?sport=FUTBOL
+GET http://localhost:1234/event
 
 ###
 GET http://localhost:1234/event/search?id_event=c01aad56-3d86-486e-bff2-5abb1e728f4e
@@ -74,7 +82,7 @@ Content-Type: application/json
 
 {
 "type": "basquetbol",
-"id_event": "42777fc3-fea5-4b10-b363-78a155616f30",
+"id_event": "7e42e4c5-5812-4d99-b858-fd68c6b1ad1c",
 "data": {
 "home_points": 4,
 "away_points": 1,
@@ -109,6 +117,19 @@ PATCH http://localhost:1234/event/outcomes/9fefd906-598c-4297-8925-86e92b7ed86d
 Content-Type: application/json
 
 {
-  "official_odds": 3.45
+"official_odds": 3.45
 }
+
+###
+PATCH http://localhost:1234/event/5afc2581-820a-4ff7-83f1-82a3835c208f
+Content-Type: application/json
+
+{
+  "name": "Chihuahua vs Queretaro",
+  "sport": "futbol",
+  "status": "en proceso"
+}
+
+###
+DELETE http://localhost:1234/event/7be32d4f-2b0d-4b70-b480-82ab821a3acf
 

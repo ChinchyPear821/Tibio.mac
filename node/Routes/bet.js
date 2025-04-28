@@ -12,8 +12,12 @@ routBet.get("/:id", BetController.getBetById)
 
 // POST
 routBet.post("/", authenticateToken,BetController.createBet)
+routBet.post('/1v1',authenticateToken, BetController.create1v1Bet);
 
 // PATCH
 routBet.patch("/place", authenticateToken, BetController.acceptBet)
+// PATCH
+routBet.patch("/reject", authenticateToken, BetController.rejectBet);
+
 //DELETE
 routBet.delete("/:id_bet", BetController.deleteBet)
