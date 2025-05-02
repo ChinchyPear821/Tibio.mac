@@ -72,7 +72,7 @@ PATCH http://localhost:1234/event/close
 Content-Type:  application/json
 
 {
-  "id_event": "39793f32-dab1-4393-907d-5e425b0e400d",
+  "id_event": "9d90920a-cf0d-4365-ad82-b13485d2288a",
   "result": "pendiente"
 }
 
@@ -102,7 +102,7 @@ Content-Type: application/json
 
 {
 "type": "basquetbol",
-"id_event": "72547eca-6fe7-48c7-bb92-ed37697205fc",
+"id_event": "9d90920a-cf0d-4365-ad82-b13485d2288a",
 "data": {
 "home_points": 5,
 "away_points": 3,
@@ -118,7 +118,7 @@ Content-Type: application/json
 
 {
   "type": "futbol americano",
-  "id_event": "4f35483d-63fd-4391-a7ae-63a3ef490170",
+  "id_event": "26e70af7-23f4-476f-98ec-64bb163d66bd",
   "data": {
     "home_touchdowns": 5,
     "away_touchdowns": 1,

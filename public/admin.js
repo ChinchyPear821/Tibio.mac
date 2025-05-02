@@ -324,6 +324,12 @@ async function administrateEvent() {
                 tableSport = 'Basquetbol';
             } else if (event.sport === "futbol americano") {
                 tableSport = 'Fútbol Americano';
+            }else if (event.sport === " 1 vs 1 futbol americano") {
+                tableSport = '1 vs 1 Fútbol Americano';
+            }else if (event.sport === "1 vs 1 futbol") {
+                tableSport = '1 vs 1 Fútbol';
+            }else if (event.sport === "1 vs 1 basquetbol") {
+                tableSport = '1 vs 1 Basquetbol';
             }
             let tableStatus = '';
             if (event.status === "en proceso") {
