@@ -64,12 +64,14 @@ export function monitorBets(){
                         db.prepare(`UPDATE users SET balance = balance + ? WHERE id_user = ?`)
                             .run(ganancia, bet.id_user);
                     }
+                    const now = new Date();
+                    const end_date=  now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
                     db.prepare(`
                         UPDATE bets
                         SET status = ?, result = ?, end_date = ?
                         WHERE id_bet = ?
-                      `).run(BET_STATUS.FINALIZADO, result, new Date().toISOString(), bet.id_bet);
+                      `).run(BET_STATUS.FINALIZADO, result, end_date, bet.id_bet);
                 });
                 
             });
@@ -160,12 +162,26 @@ export function authenticateToken(req, res, next){
 
 
 export function calculateTarget({ bet }) {
-    const stats = db.prepare(`SELECT * FROM soccer_stats WHERE id_event = ?`).get(bet.id_event);
-    console.log("stats", stats)
-    const home = stats.home_team;
-    const away = stats.away_team;
+    const event = db.prepare(`SELECT sport FROM events WHERE id_event = ?`).get(bet.id_event);
+    if (!event) throw new Error("Evento no encontrado para la apuesta");
+
+    const sport = event.sport.toLowerCase().replace("1 vs 1", "").trim();
+
+    const sportTableMap = {
+        futbol: "soccer_stats",
+        basquetbol: "basketball_stats",
+        "futbol americano": "football_stats"
+    };
+
+    const statsTable = sportTableMap[sport];
+    if (!statsTable) throw new Error(`No hay tabla de estadísticas para el deporte: ${sport}`);
+
+    const stats = db.prepare(`SELECT * FROM ${statsTable} WHERE id_event = ?`).get(bet.id_event);
+    if (!stats) throw new Error("No se encontraron estadísticas para el evento");
+
+    const home = stats.home_team.toLowerCase();
+    const away = stats.away_team.toLowerCase();
     const originalType = bet.type.toLowerCase();
-    //const originalTarget = bet.target.toLowerCase();
 
     let opponentType = "";
     let opponentTarget = "";
@@ -182,7 +198,7 @@ export function calculateTarget({ bet }) {
 
     return {
         type: opponentType,
-        target: opponentTarget
+        oppositeTarget: opponentTarget
     };
 }
 
@@ -199,7 +215,7 @@ function evaluateSoccerBet(bet, stats) {
             return parseInt(bet.target) === stats.yellow_cards;
         case 'tarjetas rojas':
             return parseInt(bet.target) === stats.red_cards;
-        case 'tiros de esquina':
+        case 'tiros esquina':
             return parseInt(bet.target) === stats.corners;
         case 'penales':
             return parseInt(bet.target) === stats.penalties;
@@ -241,9 +257,9 @@ function evaluateFootballBet(bet, stats) {
     switch (bet.type.toLowerCase()) {
         case 'touchdowns':
             return parseInt(bet.target) === stats.home_touchdowns + stats.away_touchdowns;
-        case 'touchdowns local':
+        case 'anotaciones local':
             return parseInt(bet.target) === stats.home_touchdowns;
-        case 'touchdowns visitante':
+        case 'anotaciones visitante':
             return parseInt(bet.target) === stats.away_touchdowns;
         case 'goles de campo':
             return parseInt(bet.target) === stats.field_goals;

@@ -37,13 +37,13 @@ Content-Type: application/json
 
 {
   "type": "futbol",
-  "id_event": "acc482d5-3c27-4a0d-bbcf-cb35cc8b0749",
+  "id_event": "8315ff0c-da7f-4638-83fd-a5d50fd89e43",
   "data": {
     "home_goals": 4,
     "away_goals": 1,
-    "yellow_cards": 2,
+    "yellow_cards": 3,
     "red_cards": 1,
-    "corners": 5,
+    "corners": 1,
     "penalties": 1
   }
 }
@@ -53,9 +53,29 @@ PATCH http://localhost:1234/event/close
 Content-Type:  application/json
 
 {
-  "id_event": "acc482d5-3c27-4a0d-bbcf-cb35cc8b0749",
+  "id_event": "8315ff0c-da7f-4638-83fd-a5d50fd89e43",
   "result": "pendiente"
 }
+
+### Cerrar un evento
+PATCH http://localhost:1234/event/close
+Content-Type:  application/json
+
+{
+  "id_event": "72547eca-6fe7-48c7-bb92-ed37697205fc",
+  "result": "pendiente"
+}
+
+
+### Cerrar un evento
+PATCH http://localhost:1234/event/close
+Content-Type:  application/json
+
+{
+  "id_event": "39793f32-dab1-4393-907d-5e425b0e400d",
+  "result": "pendiente"
+}
+
 
 
 ### Buscar evento por ID
@@ -82,10 +102,10 @@ Content-Type: application/json
 
 {
 "type": "basquetbol",
-"id_event": "7e42e4c5-5812-4d99-b858-fd68c6b1ad1c",
+"id_event": "72547eca-6fe7-48c7-bb92-ed37697205fc",
 "data": {
-"home_points": 4,
-"away_points": 1,
+"home_points": 5,
+"away_points": 3,
 "three_pointers": 4,
 "fouls": 1,
 "rebounds": 5
@@ -98,12 +118,12 @@ Content-Type: application/json
 
 {
   "type": "futbol americano",
-  "id_event": "42777fc3-fea5-4b10-b363-78a155616f30",
+  "id_event": "4f35483d-63fd-4391-a7ae-63a3ef490170",
   "data": {
-    "home_touchdowns": 4,
+    "home_touchdowns": 5,
     "away_touchdowns": 1,
     "field_goals": 4,
-    "interceptions": 1,
+    "interceptions": 3,
     "sacks": 5
   }
 }

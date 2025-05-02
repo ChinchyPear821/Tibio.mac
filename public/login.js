@@ -41,4 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Ocurrió un error al procesar la solicitud.");
         }
     });
+
 });
+

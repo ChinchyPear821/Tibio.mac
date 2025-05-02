@@ -109,7 +109,7 @@ CREATE TABLE bonuses (
     id_user TEXT NOT NULL,
     amount REAL NOT NULL,
     type TEXT NOT NULL,
-    status TEXT NOT NULL CHECK(status IN ('redeemed', 'pending')),
+    status TEXT NOT NULL,
     redeemed_date TEXT,
     FOREIGN KEY (id_user) REFERENCES users(id_user)
 );

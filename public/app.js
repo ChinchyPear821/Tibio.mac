@@ -27,13 +27,46 @@ function hideLoadingModal() {
     }
 }
 
-
 function showSuccessModal(message = "Operación realizada correctamente") {
     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
     const successMessageContainer = document.querySelector('#successModal h5');
     successMessageContainer.textContent = message;
     successModal.show();
     window.successModalInstance = successModal;
+}
+
+function showErrorModal(message = "Ocurrio un error") {
+    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    const errorMessageContainer = document.querySelector('#errorModal h5');
+    errorMessageContainer.textContent = message;
+    errorModal.show();
+    window.errorModalInstance = errorModal;
+}
+
+
+
+function getEventImages(eventName, sport) {
+    const [local, visitor] = eventName.split(" vs ");
+    let fileSport = '';
+
+    switch (sport.toLowerCase()) {
+        case "futbol":
+            fileSport = 'SoccerImg';
+            break;
+        case "basquetbol":
+            fileSport = 'BasketballImg';
+            break;
+        case "futbol americano":
+            fileSport = 'FootballImg';
+            break;
+        default:
+            fileSport = 'UnknownSportImg';
+    }
+
+    return {
+        localImg: `./${fileSport}/${local}.png`,
+        visitorImg: `./${fileSport}/${visitor}.png`
+    };
 }
 
 
@@ -53,7 +86,7 @@ async function checkSession() {
     } catch (error) {
         console.error("Error al verificar la sesión:", error);
         window.location.href = "index.html";
-    }    
+    }
     if( window.location.pathname.split("/").pop() === "main.html"){
         displayAllEvents();
     }
@@ -62,7 +95,7 @@ async function checkSession() {
 async function displayAllEvents() {
     /////Display current events
     try {
-        const res = await fetch("http://localhost:1234/event/search?status=en%20proceso", {
+        const res = await fetch(`/event/search?status=en%20proceso`, {
             method: "GET",
             credentials: "include",
         });
@@ -70,19 +103,23 @@ async function displayAllEvents() {
         const events = await res.json();
         const container = document.getElementById("event-container");
 
+        const filteredEvents = events.filter(event => !event.sport.toLowerCase().startsWith("1 vs 1"))
+
         if (events.length === 0) {
             container.innerHTML = "<p>No hay eventos disponibles.</p>";
             return;
         }
 
-        events.forEach(event => {
+        filteredEvents.forEach(event => {
             const col = document.createElement("div");
             col.classList.add("col-12", "col-md-6", "col-lg-4", "mb-4");
+            const { localImg, visitorImg } = getEventImages(event.name, event.sport);
 
             col.innerHTML = `
                 <div class="card mt-5" style="width: 22rem; justify-content: center;">
                     <div class="d-flex justify-content-around mt-2 pb-3 pt-3">
-                        <img src="./${event.name}.png" style="width: 300px; height: 200px;" class="card-img-top" alt="${event.name}">
+                        <img src="${localImg}" style="width: 150px; height: 100px;" class="card-img-top" alt="local">
+                        <img src="${visitorImg}" style="width: 150px; height: 100px;" class="card-img-top" alt="visitor">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">${event.name}</h5>
@@ -109,7 +146,7 @@ async function displayAllEvents() {
 
 async function showBetForm(id_event) {
     try {
-        const eventRes = await fetch(`http://localhost:1234/event/search?id_event=${id_event}`, {
+        const eventRes = await fetch(`/event/search?id_event=${id_event}`, {
             method: "GET",
             credentials: "include",
         });
@@ -120,7 +157,7 @@ async function showBetForm(id_event) {
         console.log("Datos del evento: ", eventData);
         console.log("nombre del evento:", eventData.name);
 
-        const outcomesRes = await fetch(`http://localhost:1234/event/${id_event}/outcomes`, {
+        const outcomesRes = await fetch(`/event/${id_event}/outcomes`, {
             method: "GET",
             credentials: "include",
         });
@@ -137,25 +174,28 @@ async function showBetForm(id_event) {
 
         const betModalBody = document.getElementById('betModalBody');
         betModalBody.innerHTML = `
-            <h3>Crear Apuesta para: ${eventData.name}</h3>
+            <h3>Realiza tu Apuesta para ${eventData.name}</h3>
             <form id="form-bet">
-                <div class="form-group">
-                    <label for="id_event">ID del Evento</label>
-                    <input type="text" id="id_event" class="form-control" value="${id_event}" readonly>
+           
+                <div class="form-group mb-3">
+                    <label>Tipo de Apuesta</label>
+                    <div id="type-buttons" class="d-flex flex-wrap gap-2 mt-2">
+                        ${outcomes.map(outcome => `
+                            <button type="button" class="btn btn-outline-primary outcome-btn" data-type="${outcome.outcome_name.toLowerCase()}">
+                                ${outcome.outcome_name}
+                            </button>
+                        `).join("")}
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="type">Tipo de Apuesta</label>
-                    <select id="type" class="form-control" required>
-                        <option value="">Selecciona outcome</option>
-                        ${outcomes.map(outcome => `<option value="${outcome.outcome_name.toLowerCase()}">${outcome.outcome_name}</option>`).join("")}
-                    </select>
-                </div>
-                <div class="form-group">
+
+                <div class="form-group" id="target-group">
                     <label for="target">Target</label>
                     <select id="target" class="form-control" required>
                         <option value="">Selecciona el target</option>
                     </select>
                 </div>
+                <input type="hidden" id="auto-target">
+
                 <div class="form-group">
                     <label for="amount">Cantidad a Apostar</label>
                     <input type="number" id="amount" class="form-control" required>
@@ -168,51 +208,75 @@ async function showBetForm(id_event) {
             </form>
             <div id="respuesta-apuesta"></div>
         `;
+        let selectedType = "";
 
-        const typeSelect = document.getElementById("type");
-        const targetSelect = document.getElementById("target");
+        const typeButtonsContainer = document.getElementById("type-buttons");
         const extraInput = document.getElementById("extra");
         const idOutcomeInput = document.getElementById("id_outcome");
+        const targetSelect = document.getElementById("target");
 
-        typeSelect.addEventListener("change", () => {
-            const selectedType = typeSelect.value;
-            const selectedOutcome = outcomes.find(outcome => outcome.outcome_name.toLowerCase() === selectedType);
+        typeButtonsContainer.querySelectorAll(".outcome-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                typeButtonsContainer.querySelectorAll(".outcome-btn").forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+                selectedType = button.dataset.type;
 
-            if (selectedOutcome) {
-                extraInput.value = selectedOutcome.official_odds;
-                idOutcomeInput.value = selectedOutcome.id_outcome;
-            } else {
-                extraInput.value = "";
-                idOutcomeInput.value = "";
-            }
-
-            targetSelect.innerHTML = '<option value="">Selecciona el target</option>';
-            if (selectedType === "ganador") {
-                const teamNames = eventData.name.split(" vs ");
-                teamNames.forEach(team => {
-                    const option = document.createElement("option");
-                    option.value = team.trim();
-                    option.textContent = team.trim();
-                    targetSelect.appendChild(option);
-                });
-            } else if (selectedType) {
-                for (let i = 0; i <= 10; i++) {
-                    const option = document.createElement("option");
-                    option.value = i;
-                    option.textContent = i;
-                    targetSelect.appendChild(option);
+                const selectedOutcome = outcomes.find(outcome => outcome.outcome_name.toLowerCase() === selectedType);
+                if (selectedOutcome) {
+                    extraInput.value = selectedOutcome.official_odds;
+                    idOutcomeInput.value = selectedOutcome.id_outcome;
+                } else {
+                    extraInput.value = "";
+                    idOutcomeInput.value = "";
                 }
-            }
+
+                const [localTeam, visitanteTeam] = eventData.name.split(" vs ").map(s => s.trim());
+
+                if (selectedType === "ganador local") {
+                    document.getElementById("target-group").style.display = "none";
+                    targetSelect.required = false;
+                    document.getElementById("auto-target").value = localTeam;
+                } else if (selectedType === "ganador visitante") {
+                    document.getElementById("target-group").style.display = "none";
+                    targetSelect.required = false;
+                    document.getElementById("auto-target").value = visitanteTeam;
+                } else {
+                    document.getElementById("target-group").style.display = "block";
+                    targetSelect.required = true;
+                    document.getElementById("auto-target").value = "";
+
+                    targetSelect.innerHTML = '<option value="">Selecciona el target</option>';
+                    if (selectedType === "ganador") {
+                        [localTeam, visitanteTeam].forEach(team => {
+                            const option = document.createElement("option");
+                            option.value = team;
+                            option.textContent = team;
+                            targetSelect.appendChild(option);
+                        });
+                    } else {
+                        for (let i = 0; i <= 10; i++) {
+                            const option = document.createElement("option");
+                            option.value = i;
+                            option.textContent = i;
+                            targetSelect.appendChild(option);
+                        }
+                    }
+                }
+            });
         });
+
+
 
         document.getElementById("submit-bet").addEventListener("click", function (e) {
             e.preventDefault();
 
-            const type = typeSelect.value;
+            const type = selectedType;
             const amount = parseFloat(document.getElementById("amount").value);
-            const target = targetSelect.value.trim();
+            const target = selectedType === "ganador local" || selectedType === "ganador visitante"
+                ? document.getElementById("auto-target").value.trim()
+                : targetSelect.value.trim();
+
             const extra = parseFloat(extraInput.value);
-            const idEvent = document.getElementById("id_event").value.trim();
             const selectedOutcome = outcomes.find(outcome => outcome.outcome_name.toLowerCase() === type);
 
             const confirmationBody = `
@@ -228,21 +292,25 @@ async function showBetForm(id_event) {
             const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
             confirmationModal.show();
 
+            console.log("outcome:" ,selectedOutcome);
+
             document.getElementById("confirm-bet").addEventListener("click", async function () {
                 const token = localStorage.getItem("token");
 
                 const body = {
-                    id_event: idEvent,
+                    id_event: id_event,
                     id_outcome: selectedOutcome ? selectedOutcome.id_outcome : "",
                     type: type,
                     target: target,
                     amount: amount,
                     extra: extra
                 };
+                console.log("Respuesta completa de apuesta:", body);
+
 
                 try {
                     showLoadingModal();
-                    const res = await fetch(`http://localhost:1234/bet`, {
+                    const res = await fetch(`/bet`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

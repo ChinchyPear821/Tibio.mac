@@ -1,5 +1,19 @@
 ### GET request to example server
-GET https://examples.http-client.intellij.net/get$END$
+GET https://examples.http-client.intellij.net/get
     ?generated-in=WebStorm
 
+
 ###
+POST http://localhost:1234/bonus
+Content-Type: application/json
+
+{
+  "amount": 50,
+  "type": "bienvenida"
+}
+
+
+
+###
+PATCH http://localhost:1234/bonus/redeem/318967e4-757d-4cf9-91be-d5a6b85634c5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYjA0Y2QwM2ItMGU1Yy00ZTczLTkxNTItYTNkMGEyMDA0N2QxIiwidXNlcm5hbWUiOiJHaWxiZXJ0byBBdmFsb3MiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTc0NTkwOTM2OCwiZXhwIjoxNzQ1OTEyOTY4fQ.z0lPtLb6tNpN3pARlKq25jaeDvOW7s8uSmw0vQ9D9F8

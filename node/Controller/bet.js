@@ -57,6 +57,7 @@ export class BetController {
     static async acceptBet(req, res) {
         console.log("Token recibido:", req.headers.authorization);
         console.log("Usuario decodificado:", req.user);
+        console.log("apuesta recibida:", req.body.id_bet);
         try {
              const validatedBet = validatePartialBet(req.body);
             if (!validatedBet.success) {

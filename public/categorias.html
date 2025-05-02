@@ -12,67 +12,70 @@
 </head>
 
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Header -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container-fluid d-flex justify-content-between">
-        <a class="navbar-brand fs-1 fs-sm-3 fs-md-2 fs-lg-1" href="#"><img src="./LOGO.png" alt="" width="50px" height="50px">ARDIENTE.mx</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" style="justify-content: right;" id="navbarNavAltMarkup">
-            <div class="navbar-nav" style="color: red;">
-                <p class="p-2">Balance: <span>$0.00</span></p>
-                <a class="nav-link" href="main.html">Inicio</a>
-                <a class="nav-link" href="historial.html">Historial</a>
-                <a class="nav-link" href="usuario.html">Usuario</a>
-                <a class="nav-link active" href="categorias.html">Categorias</a>
-                <button onclick="logout()" class="btn btn-secondary">Salir</button>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  fixed-top">
+        <div class="container-fluid d-flex justify-content-between">
+            <a class="navbar-brand fs-1 fs-sm-3 fs-md-2 fs-lg-1" href="#"><img src="./LOGO.png" alt="" srcset=""
+                    width="50px" height="50px">ARDIENTE.mx</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" style="justify-content: right;" id="navbarNavAltMarkup">
+                <div class="navbar-nav" style="color: red;">
+                    <p class="p-2">Balance: <span>$0.00</span></p>
+                    <a class="nav-link" href="main.html">Inicio</a>
+                    <a class="nav-link" href="historial.html">Historial</a>
+                    <a class="nav-link" href="usuario.html">Usuario</a>
+                    <a class="nav-link  active" href="categorias.html">Categorias</a>
+                    <button onclick="logout()" class="btn btn-secondary">Salir</button>
+                </div>
             </div>
         </div>
+    </nav>
+    <br>
+    <br>
+
+    <div class="container mt-5 mb-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="sport-card" style="background-image: url('basket.jpg');">
+                    <button  class="sport-overlay" onclick="redirectToEvents('basquetbol')">
+                        <h3>Basketball</h3>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sport-card" style="background-image: url('fut.jpg');">
+                    <button  class="sport-overlay" onclick="redirectToEvents('futbol')">
+                        <h3>Soccer</h3>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="sport-card" style="background-image: url('football.png');">
+                    <button class="sport-overlay" onclick="redirectToEvents('futbol americano')">
+                        <h3>Football</h3>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br><br>
     </div>
-</nav>
+    <script src="app.js"></script>
+    <script src="categories.js"></script>
 
-<br><br>
-
-<div class="container mt-5 mb-5">
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="sport-card" style="background-image: url('basket.jpg');">
-                <button class="sport-overlay" onclick="redirectToEvents('basquetbol')">
-                    <h3>Basketball</h3>
-                </button>
-            </div>
+    <!-- Footer -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom"
+        style="color: aliceblue; justify-content: center;">
+        <div class="row" style="gap: 0%;">
+            <div class="col"><img src="./LOGO.png" alt="" height="50px" width="50px"></div>
+            <div class="col">Acerca</div>
+            <div class="col">Créditos</div>
         </div>
-        <div class="col-md-4">
-            <div class="sport-card" style="background-image: url('fut.jpg');">
-                <button class="sport-overlay" onclick="redirectToEvents('futbol')">
-                    <h3>Soccer</h3>
-                </button>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="sport-card" style="background-image: url('football.png');">
-                <button class="sport-overlay" onclick="redirectToEvents('futbol americano')">
-                    <h3>Football</h3>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="categories.js"></script>
-<script src="app.js"></script>
-
-<!-- Footer -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom" style="color: aliceblue; justify-content: center;">
-    <div class="row" style="gap: 0%;">
-        <div class="col"><img src="./LOGO.png" alt="" height="50px" width="50px"></div>
-        <div class="col">Acerca</div>
-        <div class="col">Créditos</div>
-    </div>
-</nav>
+    </nav>
 </body>
 
 </html>

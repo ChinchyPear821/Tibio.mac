@@ -11,7 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
             email: formData.get("email"),
             password: formData.get("password"),
         };
-
+        console.log("Usuario a registrar",userData);
+        const confirmPassword = formData.get("confirm-password");
+        if(userData.password !== confirmPassword){
+            document.getElementById('mensaje').innerHTML = "Las contraseñas no coinciden";
+            return;
+        }
         try {
             // Enviar los datos al servidor
             const response = await fetch("/user/register", {

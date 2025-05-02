@@ -103,3 +103,89 @@ async function testCreateBet() {
 
 // Ejecutar prueba
 testCreateBet();
+/*
+//Las siguientes 3 funciones son las que se usan para evaluar cada tipo de apuesta segun la categoria y determinar la apuesta
+function evaluateSoccerBet(bet, stats) {
+
+    console.log(`[evaluateSoccerBet] bet.target=${bet.target}, home=${stats.home_team}, away=${stats.away_team}`);
+    switch (bet.type.toLowerCase()) {
+        case 'goles':
+            return parseInt(bet.target) === stats.home_goals + stats.away_goals;
+        case 'tarjetas amarillas':
+            return parseInt(bet.target) === stats.yellow_cards;
+        case 'tarjetas rojas':
+            return parseInt(bet.target) === stats.red_cards;
+        case 'tiros de esquina':
+            return parseInt(bet.target) === stats.corners;
+        case 'penales':
+            return parseInt(bet.target) === stats.penalties;
+        case 'ganador':
+            if (stats.home_goals > stats.away_goals) {
+                return bet.target.toLowerCase() === stats.home_team.toLowerCase();
+            } else if (stats.away_goals > stats.home_goals) {
+                return bet.target.toLowerCase() === stats.away_team.toLowerCase();
+            } else {
+                return bet.target.toLowerCase() === 'empate';
+            }
+        default:
+            return false;
+    }
+}
+
+function evaluateBasketballBet(bet, stats) {
+    switch (bet.type.toLowerCase()) {
+        case 'puntos':
+            return parseInt(bet.target) === stats.home_points + stats.away_points;
+        case 'triples':
+            return parseInt(bet.target) === stats.three_pointers;
+        case 'faltas':
+            return parseInt(bet.target) === stats.fouls;
+        case 'rebotes':
+            return parseInt(bet.target) === stats.rebounds;
+        case 'ganador':
+            if (stats.home_points > stats.away_points) {
+                return bet.target.toLowerCase() === stats.home_team.toLowerCase();
+            } else if (stats.away_points > stats.home_points) {
+                return bet.target.toLowerCase() === stats.away_team.toLowerCase();
+            } else {
+                return bet.target.toLowerCase() === 'empate';
+            }
+        default:
+            return false;
+    }
+}
+
+function evaluateFootballBet(bet, stats) {
+    switch (bet.type.toLowerCase()) {
+        case 'touchdowns':
+            return parseInt(bet.target) === stats.home_touchdowns + stats.away_touchdowns;
+        case 'goles de campo':
+            return parseInt(bet.target) === stats.field_goals;
+        case 'intercepciones':
+            return parseInt(bet.target) === stats.interceptions;
+        case 'sacks':
+            return parseInt(bet.target) === stats.sacks;
+        case 'ganador':
+            if (stats.home_touchdowns > stats.away_touchdowns) {
+                return bet.target.toLowerCase() === stats.home_team.toLowerCase();
+            } else if (stats.away_touchdowns > stats.home_touchdowns) {
+                return bet.target.toLowerCase() === stats.away_team.toLowerCase();
+            } else {
+                return bet.target.toLowerCase() === 'empate';
+            }
+        default:
+            return false;
+    }
+}*/
+
+//con esta funcion se calcula el target opuesto al que va apostar el "receptor" en una apuesta 1 vs 1
+/*export function calculateTarget({bet}){
+    const stats = db.prepare(`SELECT * FROM soccer_stats WHERE id_event = ?`).get(bet.id_event);
+    if (bet.target.toLowerCase() === stats.home_team.toLowerCase()) {
+        return stats.away_team;
+    } else if (bet.target.toLowerCase() === stats.away_team.toLowerCase()) {
+        return stats.home_team;
+    } else {
+        throw new Error("El target original no coincide con ningún equipo del evento");
+    }
+}*/

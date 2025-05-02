@@ -145,8 +145,6 @@
             </div>
         </div>
 
-
-
     </div>
     <div class="container my-4">
         <button id="show-events-button" class="btn btn-primary w-100">Mostrar lista de todos los eventos</button>
@@ -189,12 +187,28 @@
                         <div id="soccer-fields" class="sport-fields" style="display: none;">
                             <h5 class="mb-3">Momios para apuestas (Soccer)</h5>
                             <div class="mb-3">
-                                <label for="odds-local-soccer" class="form-label">Ganador</label>
+                                <label for="odds-local-soccer" class="form-label">Ganador local</label>
                                 <input type="number" step="0.1" class="form-control outcome-odds" id="odds-local-soccer">
                             </div>
                             <div class="mb-3">
-                                <label for="odds-goals-soccer" class="form-label">Goles</label>
+                                <label for="odds-draw-soccer" class="form-label">Empate</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-draw-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-away-soccer" class="form-label">Ganador visitante</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-away-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-goals-soccer" class="form-label">Goles totales</label>
                                 <input type="number" step="0.1" class="form-control outcome-odds" id="odds-goals-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-goals-local-soccer" class="form-label">Goles equipo local</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-goals-local-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-goals-away-soccer" class="form-label">Goles equipo visitante</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-goals-away-soccer">
                             </div>
                             <div class="mb-3">
                                 <label for="odds-yellow" class="form-label">Más de X tarjetas amarillas</label>
@@ -344,7 +358,6 @@
         </div>
     </div>
 
-
     <!-- Modal de Información del Evento -->
     <div class="modal fade" id="eventInfoModal" tabindex="-1" aria-labelledby="eventInfoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -362,12 +375,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
 
     <!-- Footer -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom"

@@ -36,5 +36,14 @@ Content-Type: application/json
 "password": "gilberto"
 }
 
+###
+POST http://localhost:1234/user/login
+Content-Type: application/json
+
+{
+"email": "jhayco@gmail.com",
+"password": "jhayconflei"
+}
+
 
 

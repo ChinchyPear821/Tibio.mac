@@ -10,7 +10,7 @@ export const betSchema = z.object({
     type: z.enum(
         ["ganador local","ganador visitante","goles local","goles visitante","empate", "goles", "tarjetas amarillas", "tiros esquina", "tarjetas rojas",
             "puntos locales","puntos visitante","puntos totales", "triples", "rebotes",
-            "touchdowns locales","touchdowns visitante","touchdowns", "sacks","goles de campo", "intercepciones"]), //se pide en el body
+            "anotaciones local","anotaciones visitante","touchdowns", "sacks","goles de campo", "intercepciones"]), //se pide en el body
     target: z.string().min(1), //se pide en el body
     amount: z.number().positive(), //se pide en el body
     extra: z.number(), //se pide en el body

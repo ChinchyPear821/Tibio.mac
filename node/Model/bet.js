@@ -30,55 +30,64 @@ export class BetModel {
         try {
             const bet = db.prepare(`SELECT * FROM bets WHERE id_bet = ?`).get(id_bet);
             const event = db.prepare(`SELECT * FROM events WHERE id_event = ?`).get(bet.id_event);
-            //Para diferenciar los sport o tipos de evento que son del tipo 1 vs 1 con los normales
+
+            // Verificamos si es un evento 1 vs 1
             const isOneVsOne = event.sport.startsWith("1 vs 1");
-
             if (!isOneVsOne) {
-                return console.log("Error al aceptar la apuesta, no es 1 vs 1");
+                throw new Error("Error al aceptar la apuesta, no es 1 vs 1");
             }
 
+            // No permitir que el usuario acepte su propia apuesta
             if (bet.id_user === id_user) {
-                return console.log("Error no puedes aceptar la apuesta que enviaste");
+                throw new Error("Error: No puedes aceptar la apuesta que enviaste");
             }
 
+            // Verificamos el estado de la apuesta
             if (bet.status !== BET_STATUS.ENVIADA) {
-                return console.log("La apuesta ya esta en proceso");
-            }
-            //Obtiene el balance del usuario
-            const userBalance = db.prepare(`SELECT balance FROM users WHERE id_user = ?`).get(id_user)?.balance;
-            //Verifica que tenga el balance para poder apostar el otro usuario
-            if (userBalance === undefined || userBalance < bet.amount) {
-                return console.error("Saldo insuficiente para aceptar la apuesta");
+                throw new Error("La apuesta ya está en proceso o aceptada");
             }
 
+            // Verificamos el balance del usuario para aceptar la apuesta
+            const userBalance = db.prepare(`SELECT balance FROM users WHERE id_user = ?`).get(id_user)?.balance;
+            if (userBalance === undefined || userBalance < bet.amount) {
+                throw new Error("Saldo insuficiente para aceptar la apuesta");
+            }
+
+            // Restamos el monto de la apuesta del balance del usuario
             db.prepare(`UPDATE users SET balance = balance - ? WHERE id_user = ?`).run(bet.amount, id_user);
-            //Aqui se usa esa funcion para elegir el otro target distinto al que se envia para que tenga sentido la apuesta 1vs1
-            const opossiteTarget = calculateTarget({bet})
+
+            // Determinamos el objetivo contrario para la apuesta 1 vs 1
+            const {type, oppositeTarget} = calculateTarget({ bet });
+            console.log("TARGET a apostar ", oppositeTarget)
+
             const betData = {
                 id_user,
                 id_event: bet.id_event,
                 category: bet.category,
-                type: bet.type,
-                target:opossiteTarget,
+                type: type,
+                target: oppositeTarget,
                 amount: bet.amount,
-                extra: bet.extra
+                extra: bet.extra,
+                id_outcome: bet.id_outcome
             };
+
             const now = new Date();
             const begin_date = now.toLocaleDateString() + " " + now.toLocaleTimeString();
-            //Usoo la misma funcion para crear apuestas pero mandamos el status y la fecha para que no se cambien de nuevo a pendiente
 
-            await this.createBet({
+            // Llamamos a la funcion "create1v1Bet" para crear la apuesta 1 vs 1
+            const newBet = await this.create1v1Bet({
                 data: {
                     ...betData,
                     status: BET_STATUS.EN_PROCESO,
-                    begin_date: begin_date
-                }, id_user_token: id_user
+                    begin_date: begin_date,
+                },
+                id_user_token: id_user,
             });
 
-            db.prepare(`UPDATE bets SET status = ?, begin_date = ? WHERE id_bet = ?`)
-                .run(BET_STATUS.EN_PROCESO, begin_date, id_bet);
-            db.prepare(`UPDATE bets SET status = ?, begin_date = ? WHERE id_user=?`).run(BET_STATUS.EN_PROCESO,begin_date, bet.id_event);
-            return db.prepare(`SELECT * FROM bets WHERE id_event = ?`).get(bet.id_event);
+            // Actualizamos la apuesta original para que pase a estado EN_PROCESO
+            db.prepare(`UPDATE bets SET status = ?, begin_date = ? WHERE id_bet = ?`).run(BET_STATUS.EN_PROCESO, begin_date, id_bet);
+
+            return newBet;
 
         } catch (error) {
             console.error("Error al aceptar apuesta:", error);
@@ -86,25 +95,21 @@ export class BetModel {
         }
     }
 
-
+    // No lo usamos
     static async rejectBet(id_bet, id_user) {
         try {
-            // Buscar la apuesta por ID
             const bet = await db.prepare('SELECT * FROM bets WHERE id_bet = ?').get(id_bet);
 
             if (bet.length === 0) {
                 throw new Error('Apuesta no encontrada');
             }
 
-            // Validar que el usuario que rechaza sea el emisor
             if (bet.id_user !== id_user) {
-                throw new Error('Solo el emisor puede cancelar esta apuesta');
+                throw new Error(' ');
             }
 
-            // Regresar el dinero al emisor
             await db.prepare('UPDATE users SET balance = balance + ? WHERE id_user = ?').run(bet.amount, id_user);
 
-            // Eliminar la apuesta
             await db.prepare('DELETE FROM bets WHERE id_bet = ?').get(id_bet);
 
             return { message: 'Apuesta rechazada y dinero devuelto al emisor' };

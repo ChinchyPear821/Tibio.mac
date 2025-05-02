@@ -10,6 +10,7 @@ import { routBet } from "./Routes/bet.js"
 import { routTransaction } from "./Routes/transaction.js"
 import {routEvent} from "./Routes/event.js";
 import {routSports} from "./Routes/sports.js";
+import { routBonus} from "./Routes/bonuses.js";
 
 import path from "path"
 import { fileURLToPath } from "url"
@@ -60,6 +61,8 @@ app.use("/bet", routBet)
 app.use("/transaction", routTransaction)
 
 app.use("/event", routEvent)
+
+app.use("/bonus", routBonus)
 // Configurar __dirname para ES Modules
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
