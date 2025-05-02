@@ -27,15 +27,25 @@ Content-Type: application/json
 }
 ### APUESTA DE TIPO 1 VS 1...
 POST http://localhost:1234/bet/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0NjcyMDI5LCJleHAiOjE3NDQ2NzU2Mjl9.ohdUsAMtKQisImgh1Loddwg8m5q08qusJ_3sXukJcaE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYjA0Y2QwM2ItMGU1Yy00ZTczLTkxNTItYTNkMGEyMDA0N2QxIiwidXNlcm5hbWUiOiJHaWxiZXJ0byBBdmFsb3MiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTc0NTc3MjY4OCwiZXhwIjoxNzQ1Nzc2Mjg4fQ.ToZBAOl4QFmkkosLSS6h-FlWnb40dIKjx7B0_B3giFw
 Content-Type: application/json
 
 {
-  "id_event": "e90a1337-13cd-4bda-b59d-f0cd119f2ea6",
+  "id_event": "790858e9-eb33-4f71-bbf1-dcaa3c849180",
   "type": "ganador",
-  "target": "lakers",
-  "amount": 410,
-  "extra": 3.4
+  "target": "america",
+  "amount": 1,
+  "extra": 1
+}
+###
+POST http://localhost:1234/bets/1v1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYjA0Y2QwM2ItMGU1Yy00ZTczLTkxNTItYTNkMGEyMDA0N2QxIiwidXNlcm5hbWUiOiJHaWxiZXJ0byBBdmFsb3MiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTc0NTc3MjY4OCwiZXhwIjoxNzQ1Nzc2Mjg4fQ.ToZBAOl4QFmkkosLSS6h-FlWnb40dIKjx7B0_B3giFw
+Content-Type: application/json
+
+{
+"id_event": "82cf3d8f-8a05-40c7-8176-d3560879",
+"id_outcome": "f8b72024-b765-45a2-b0f9-a52ab60f",
+"amount": 10
 }
 
 ### ACEPTAR UNA APUESTA
@@ -58,7 +68,7 @@ GET http://localhost:1234/bet/search?status=finalizado
 ### Busqueda por parametros en general search con un token
 // este lo hice por si el usuario quiere acceder a su historial como siempre se manda el token ya busca sus apuestas si
 // hace esta solicitud. Y puedes enviar mas parametros en la ruta como en los anteriores
-GET http://localhost:1234/bet/search/auth?result=ganada
+GET http://localhost:1234/bet/search/auth
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0Njc0OTEwLCJleHAiOjE3NDQ2Nzg1MTB9.1OIZj-KI3QO3Z9wc0E5qS5Xoac1iznY0aeFZuMUPeXg
 
 ###

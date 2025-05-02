@@ -88,6 +88,33 @@ export class BetModel {
         }
     }
 
+
+    static async rejectBet(id_bet, id_user) {
+        try {
+            // Buscar la apuesta por ID
+            const bet = await db.prepare('SELECT * FROM bets WHERE id_bet = ?').get(id_bet);
+
+            if (bet.length === 0) {
+                throw new Error('Apuesta no encontrada');
+            }
+
+            // Validar que el usuario que rechaza sea el emisor
+            if (bet.id_user !== id_user) {
+                throw new Error('Solo el emisor puede cancelar esta apuesta');
+            }
+
+            // Regresar el dinero al emisor
+            await db.prepare('UPDATE users SET balance = balance + ? WHERE id_user = ?').run(bet.amount, id_user);
+
+            // Eliminar la apuesta
+            await db.prepare('DELETE FROM bets WHERE id_bet = ?').get(id_bet);
+
+            return { message: 'Apuesta rechazada y dinero devuelto al emisor' };
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
     //GET ( lo hizo GPT )
     static async search(params){
         try {
@@ -111,6 +138,60 @@ export class BetModel {
 
     }
 
+    static async create1v1Bet({ data, id_user_token }) {
+        try {
+            const event = db.prepare(`SELECT * FROM events WHERE id_event = ?`).get(data.id_event);
+            if (event.status === EVENT_STATUS.FINALIZADO) {
+                throw new Error("No se puede apostar a un evento finalizado.");
+            }
+
+            const outcome = { official_odds: 2.0 };
+
+            const id_bet = crypto.randomUUID();
+            const now = new Date();
+            let begin_date = data.begin_date ?? now.toLocaleDateString() + " " + now.toLocaleTimeString();
+            let status = data.status ?? BET_STATUS.EN_PROCESO;
+
+            if (!data.status && event.sport.startsWith("1 vs 1")) {
+                begin_date = null;
+                status = BET_STATUS.ENVIADA;
+            }
+            const end_date = null;
+            const result = null;
+            const category = event.sport;
+            const user = db.prepare(`SELECT balance FROM users WHERE id_user = ?`).get(id_user_token);
+
+            if(user.balance < data.amount){
+                throw new Error("El usuario no tiene saldo suficiente para apostar");
+            }
+
+            db.prepare(`UPDATE users SET balance= balance - ? WHERE id_user = ?`).run(data.amount, id_user_token);
+            const betData = {
+                id_bet,
+                id_user: id_user_token,
+                ...data,
+                extra: outcome.official_odds,
+                category,
+                result,
+                status,
+                begin_date,
+                end_date
+            };
+
+            const fields = Object.keys(betData).join(", ");
+            const places = Object.keys(betData).map(() => "?").join(", ");
+            const values = Object.values(betData);
+
+            db.prepare(`INSERT INTO bets (${fields}) VALUES(${places})`).run(...values);
+
+            return db.prepare(`SELECT * FROM bets WHERE id_bet = ?`).get(id_bet);
+
+        } catch (error) {
+            console.error("Error al crear la apuesta tipo 1 vs 1", error);
+            throw error;
+        }
+    }
+
     // POST
     static async createBet({ data, id_user_token}) {
         try {
@@ -118,12 +199,14 @@ export class BetModel {
             if (event.status === EVENT_STATUS.FINALIZADO) {
                 throw new Error("No se puede apostar a un evento finalizado.");
             }
+            console.log("outcome id:", data.id_outcome)
 
             // Obtener momio desde event_outcomes
             const outcome = db.prepare(`
                   SELECT official_odds FROM event_outcomes 
                   WHERE id_outcome = ? AND id_event = ?
                 `).get(data.id_outcome, data.id_event);
+            console.log("outcome recibido", outcome)
             if (!outcome) {
                 throw new Error("El outcome no existe para este evento.");
             }

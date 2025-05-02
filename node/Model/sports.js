@@ -1,9 +1,12 @@
 import { db } from "../Connection/db.js";
 
 const tableMap ={
-    futbol: "soccer_stats",
-    basquetbol: "basketball_stats",
-    futbol_americano:"football_stats"
+    "futbol": "soccer_stats",
+    "basquetbol": "basketball_stats",
+    "futbol americano":"football_stats",
+    "1 vs 1 futbol": "soccer_stats",
+    "1 vs 1 basquetbol": "basketball_stats",
+    "1 vs 1 futbol americano": "football_stats"
 };
 
 export class SportStatsModel{
@@ -37,6 +40,27 @@ export class SportStatsModel{
             const values = [...Object.values(data), id_event];
 
             db.prepare(`UPDATE ${table} SET ${sets} WHERE id_event = ?`).run(...values);
+            const updatedEvent = db.prepare(`SELECT * FROM ${table} WHERE id_event = ?`).get(id_event);
+            if (updatedEvent) {
+                const event = db.prepare(`SELECT name FROM events WHERE id_event = ?`).get(id_event);
+                const eventName = event?.name;
+
+                if (eventName) {
+                    const oneVsOneEvent = db.prepare(`
+                    SELECT * FROM events
+                    WHERE name = ? AND sport LIKE '%1 vs 1%'
+                `).get(eventName);
+
+                    if (oneVsOneEvent) {
+                        const oneVsOneTable = this.validateSportType(oneVsOneEvent.sport);
+                        const sets1vs1 = Object.keys(data).map(key => `${key} = ?`).join(', ');
+                        const values1vs1 = [...Object.values(data), oneVsOneEvent.id_event];
+
+                        db.prepare(`UPDATE ${oneVsOneTable} SET ${sets1vs1} WHERE id_event = ?`).run(...values1vs1);
+                    }
+                }
+            }
+
             return db.prepare(`SELECT * FROM ${table} WHERE id_event = ?`).get(id_event);
         } catch (error){
             console.log("Error al actualizar las estadisticas", error);

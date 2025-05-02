@@ -16,6 +16,8 @@ routEvent.post("/", EventController.createEvent)
 
 //PATCH
 routEvent.patch("/close", EventController.closeEvent);
+routEvent.patch("/:id_event", EventController.updateEvent);
+routEvent.patch("/outcomes/:id_outcome", EventController.updateOutcomeOdds);
 //DELETE
 
 routEvent.delete("/:id_event", EventController.deleteEvent)

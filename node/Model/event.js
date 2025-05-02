@@ -113,25 +113,31 @@ export class EventModel{
                         id_event, home_team, away_team);
                     break;
             }
-
-
-            // Codigo para guardar los outcomes en la tabla
-            const insertOutcome = db.prepare(`
-                INSERT INTO event_outcomes (id_outcome, id_event, outcome_name, official_odds)
-                VALUES (?, ?, ?, ?)
-            `);
-            console.log("outcomes", outcomes);
-            for (const outcome of outcomes) {
-                if (!outcome.outcome_name || isNaN(outcome.official_odds)) {
-                    throw new Error("Datos incompletos en uno de los outcomes");
+            // Esto ya no lo necesitamos porque hice otro endpoint
+            if (eventCreated.sport.includes("1 vs 1")) {
+                console.log("Outcomes para 1 vs 1");
+                for (const outcome of outcomes) {
+                    if (!outcome.outcome_name || isNaN(outcome.official_odds)) {
+                        throw new Error("Datos incompletos en uno de los outcomes");
+                    }
+                    db.prepare(`
+                    INSERT INTO event_outcomes (id_outcome, id_event, outcome_name, official_odds)
+                    VALUES (?, ?, ?, ?)
+                `).run(crypto.randomUUID(), id_event, outcome.outcome_name, outcome.official_odds);
                 }
-                insertOutcome.run(
-                    crypto.randomUUID(),
-                    id_event,
-                    outcome.outcome_name,
-                    outcome.official_odds
-                );
+            } else {
+                console.log("Outcomes de evento normal");
+                for (const outcome of outcomes) {
+                    if (!outcome.outcome_name || isNaN(outcome.official_odds)) {
+                        throw new Error("Datos incompletos en uno de los outcomes");
+                    }
+                    db.prepare(`
+                    INSERT INTO event_outcomes (id_outcome, id_event, outcome_name, official_odds)
+                    VALUES (?, ?, ?, ?)
+                `).run(crypto.randomUUID(), id_event, outcome.outcome_name, outcome.official_odds);
+                }
             }
+
             return eventCreated;
         }catch (error){
             console.log("Error al crear la apuesta", error)
@@ -155,10 +161,121 @@ export class EventModel{
         }
     }
 
-    //DELETE
-    static async deleteEvent({ data }) {
+    //PATCH
+    static async updateEvent({ id_event, name, sport, status }) {
         try {
-            const {id_event} = data
+            // Verifica si el evento existe antes de hacer la actualización
+            const eventBefore = db.prepare(`SELECT * FROM events WHERE id_event = ?`).get(id_event);
+            if (!eventBefore) throw new Error("Evento no encontrado");
+
+            const updates = [];
+            const values = [];
+
+            // Solo agrega valores a la actualización si son proporcionados
+            if (name) {
+                updates.push("name = ?");
+                values.push(name);
+            }
+            if (sport) {
+                updates.push("sport = ?");
+                values.push(sport);
+            }
+            if (status) {
+                updates.push("status = ?");
+                values.push(status);
+            }
+
+            // Si no hay nada para actualizar, lanzar error
+            if (updates.length === 0) throw new Error("Nada para actualizar");
+
+            // Ejecuta la actualización de la tabla events
+            const query = `UPDATE events SET ${updates.join(", ")} WHERE id_event = ?`;
+            values.push(id_event);
+            db.prepare(query).run(...values);
+
+            // Si se cambió el deporte, manejar los cambios en las tablas de estadísticas correspondientes
+            if (sport && sport !== eventBefore.sport) {
+                // Eliminar de la tabla anterior
+                const removeStatsFrom = (table) => {
+                    db.prepare(`DELETE FROM ${table} WHERE id_event = ?`).run(id_event);
+                };
+
+                // Elimina las estadísticas del deporte anterior
+                switch (eventBefore.sport.toLowerCase()) {
+                    case CATEGORY.SOCCER:
+                    case CATEGORY.UNO_A_UNO_SOCCER:
+                        removeStatsFrom("soccer_stats");
+                        break;
+                    case CATEGORY.BASKETBALL:
+                    case CATEGORY.UNO_A_UNO_BASKETBALL:
+                        removeStatsFrom("basketball_stats");
+                        break;
+                    case CATEGORY.FOOTBALL:
+                    case CATEGORY.UNO_A_UNO_FOOTBALL:
+                        removeStatsFrom("football_stats");
+                        break;
+                }
+
+                // Insertar en la nueva tabla de estadísticas según el deporte
+                const [home_team, away_team] = (name || eventBefore.name).split(" vs ");
+                switch (sport.toLowerCase()) {
+                    case CATEGORY.SOCCER:
+                    case CATEGORY.UNO_A_UNO_SOCCER:
+                        db.prepare(`INSERT INTO soccer_stats(id_event, home_team, away_team) VALUES(?,?,?)`).run(id_event, home_team, away_team);
+                        break;
+                    case CATEGORY.BASKETBALL:
+                    case CATEGORY.UNO_A_UNO_BASKETBALL:
+                        db.prepare(`INSERT INTO basketball_stats(id_event, home_team, away_team) VALUES(?,?,?)`).run(id_event, home_team, away_team);
+                        break;
+                    case CATEGORY.FOOTBALL:
+                    case CATEGORY.UNO_A_UNO_FOOTBALL:
+                        db.prepare(`INSERT INTO football_stats(id_event, home_team, away_team) VALUES(?,?,?)`).run(id_event, home_team, away_team);
+                        break;
+                }
+            }
+
+            return db.prepare(`SELECT * FROM events WHERE id_event = ?`).get(id_event);
+        } catch (error) {
+            console.log("Error al actualizar el evento", error);
+            throw error;
+        }
+    }
+
+    static async updateOutcomeOdds({ id_outcome, official_odds }) {
+        db.prepare(`
+            UPDATE event_outcomes
+            SET official_odds = ?
+            WHERE id_outcome = ?
+        `).run(official_odds,id_outcome);
+        return db.prepare(`SELECT * FROM event_outcomes 
+            WHERE id_outcome = ?`).get(id_outcome);
+    }
+    //DELETE
+    static async deleteEvent( id ) {
+        try {
+            const id_event = id;
+            const {sport} = db.prepare(`SELECT sport FROM  events 
+                WHERE id_event = ?`)
+                .get(id_event);
+            let deleteStats;
+            switch (sport) {
+                case "futbol":
+                case "1 vs 1 futbol":
+                   db.prepare(`DELETE FROM soccer_stats WHERE id_event = ?`).run(id_event);
+                    break;
+                case "basquetbol":
+                case "1 vs 1 basquetbol":
+                    db.prepare(`DELETE FROM basketball_stats WHERE id_event = ?`).run(id_event);
+                    break;
+                case "futbol americano":
+                case "1 vs 1 futbol americano":
+                    db.prepare(`DELETE FROM football_stats WHERE id_event = ?`).run(id_event);
+                    break;
+                default:
+                    throw new Error("Deporte no soportado");
+            }
+            db.prepare(`DELETE FROM event_outcomes
+                WHERE id_event=?`).run(id_event);
             const eventDelete = db.prepare(`DELETE FROM events WHERE id_event = ?`);
             const result= eventDelete.run(id_event);
             return result.changes;

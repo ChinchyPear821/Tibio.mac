@@ -15,6 +15,28 @@ async function logout() {
     }
 }
 
+function showLoadingModal() {
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    loadingModal.show();
+    window.loadingModalInstance = loadingModal;
+}
+
+function hideLoadingModal() {
+    if (window.loadingModalInstance) {
+        window.loadingModalInstance.hide();
+    }
+}
+
+
+function showSuccessModal(message = "Operación realizada correctamente") {
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    const successMessageContainer = document.querySelector('#successModal h5');
+    successMessageContainer.textContent = message;
+    successModal.show();
+    window.successModalInstance = successModal;
+}
+
+
 async function checkSession() {
     try {
         const response = await fetch("/protected-route", {
@@ -23,7 +45,6 @@ async function checkSession() {
         });
 
         if (!response.ok) {
-            // Usuario no autorizado, redirige a login
             window.location.href = "index.html";
         }
 
@@ -69,9 +90,8 @@ async function displayAllEvents() {
                         <p class="card-text">Fecha: ${event.begin_date}</p>
                         <p class="card-text">Estatus: ${event.status}</p>
                         <div class="d-flex justify-content-center">
-                        <a id="bet-btn-${event.id_event}" class="btn btn-secondary">Apostar</a>
+                            <a id="bet-btn-${event.id_event}" class="btn btn-secondary">Apostar</a>
                         </div>
-                        <div id="bet-form-container-${event.id_event}" class="mt-3"></div>
                     </div>
                 </div>
             `;
@@ -115,8 +135,8 @@ async function showBetForm(id_event) {
 
         const availableTypes = sportTypes[sport] || [];
 
-        const betFormContainer = document.getElementById(`bet-form-container-${id_event}`);
-        betFormContainer.innerHTML = `
+        const betModalBody = document.getElementById('betModalBody');
+        betModalBody.innerHTML = `
             <h3>Crear Apuesta para: ${eventData.name}</h3>
             <form id="form-bet">
                 <div class="form-group">
@@ -144,7 +164,6 @@ async function showBetForm(id_event) {
                     <label for="extra">Momio</label>
                     <input type="number" id="extra" class="form-control" readonly>
                 </div>
-                <button type="submit" class="btn btn-primary">Realizar Apuesta</button>
                 <input type="hidden" id="id_outcome">
             </form>
             <div id="respuesta-apuesta"></div>
@@ -186,42 +205,73 @@ async function showBetForm(id_event) {
             }
         });
 
-        document.getElementById("form-bet").addEventListener("submit", async function (e) {
+        document.getElementById("submit-bet").addEventListener("click", function (e) {
             e.preventDefault();
-            const token = localStorage.getItem("token");
 
-            console.log("id_outcome antes de enviar:", idOutcomeInput.value); // Debug
+            const type = typeSelect.value;
+            const amount = parseFloat(document.getElementById("amount").value);
+            const target = targetSelect.value.trim();
+            const extra = parseFloat(extraInput.value);
+            const idEvent = document.getElementById("id_event").value.trim();
+            const selectedOutcome = outcomes.find(outcome => outcome.outcome_name.toLowerCase() === type);
 
-            const body = {
-                id_event: document.getElementById("id_event").value.trim(),
-                id_outcome: idOutcomeInput.value.trim(),
-                type: typeSelect.value,
-                target: targetSelect.value.trim(),
-                amount: parseFloat(document.getElementById("amount").value),
-                extra: parseFloat(extraInput.value)
-            };
+            const confirmationBody = `
+                <p><strong>Evento:</strong> ${eventData.name}</p>
+                <p><strong>Tipo de Apuesta:</strong> ${selectedOutcome ? selectedOutcome.outcome_name : "No seleccionado"}</p>
+                <p><strong>Target:</strong> ${target}</p>
+                <p><strong>Cantidad a Apostar:</strong> $${amount}</p>
+                <p><strong>Momio:</strong> ${extra}</p>
+            `;
 
-            try {
-                const res = await fetch(`http://localhost:1234/bet`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify(body)
-                });
+            document.getElementById("confirmationModalBody").innerHTML = confirmationBody;
 
-                const data = await res.json();
-                if (res.ok) {
-                    alert("Apuesta creada correctamente");
+            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            confirmationModal.show();
 
-                    document.getElementById("respuesta-apuesta").innerHTML = `
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
-                        `;}
-            } catch (err) {
-                document.getElementById("respuesta-apuesta").textContent = "Error: " + err.message;
-            }
+            document.getElementById("confirm-bet").addEventListener("click", async function () {
+                const token = localStorage.getItem("token");
+
+                const body = {
+                    id_event: idEvent,
+                    id_outcome: selectedOutcome ? selectedOutcome.id_outcome : "",
+                    type: type,
+                    target: target,
+                    amount: amount,
+                    extra: extra
+                };
+
+                try {
+                    showLoadingModal();
+                    const res = await fetch(`http://localhost:1234/bet`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify(body)
+                    });
+
+                    const data = await res.json();
+                    console.log("Apuesta recibida", data);
+                    if (!res.ok) {
+                        throw new Error(data.message || "Error en la petición");
+
+                    }
+                    hideLoadingModal();
+                    showSuccessModal("¡Apuesta realizada correctamente!");
+                    betFormModal._element.addEventListener('hidden.bs.modal', () => {
+                        document.body.classList.remove('modal-open');
+                        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                    });
+                } catch (err) {
+                    document.getElementById("respuesta-apuesta").textContent = "Error: " + err.message;
+                    hideLoadingModal();
+                }
+            });
         });
+
+        betFormModal = new bootstrap.Modal(document.getElementById('betModal'));
+        betFormModal.show();
 
     } catch (err) {
         console.error("Error al mostrar el formulario de apuestas:", err);

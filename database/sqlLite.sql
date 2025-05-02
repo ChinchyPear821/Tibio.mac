@@ -104,3 +104,13 @@ CREATE TABLE football_stats (
     sacks INTEGER,
     FOREIGN KEY (id_event) REFERENCES events(id_event)
 );
+
+CREATE TABLE bonuses (
+    id_bonus TEXT PRIMARY KEY,
+    id_user TEXT NOT NULL,
+    amount REAL NOT NULL,
+    type TEXT NOT NULL,
+    status TEXT NOT NULL CHECK(status IN ('redeemed', 'pending')),
+    redeemed_date TEXT,
+    FOREIGN KEY (id_user) REFERENCES users(id_user)
+);

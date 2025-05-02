@@ -8,9 +8,9 @@ export const betSchema = z.object({
     id_outcome: z.string().uuid(),
     category: z.enum(Object.values(CATEGORY)).optional(), // se obtiene del evento creado
     type: z.enum(
-        ["ganador", "goles", "tarjetas amarillas", "tiros esquina", "tarjetas rojas",
-                "puntos totales", "triples", "rebotes",
-                "touchdowns", "sacks","goles de campo", "intercepciones"]), //se pide en el body
+        ["ganador local","ganador visitante","goles local","goles visitante","empate", "goles", "tarjetas amarillas", "tiros esquina", "tarjetas rojas",
+            "puntos locales","puntos visitante","puntos totales", "triples", "rebotes",
+            "touchdowns locales","touchdowns visitante","touchdowns", "sacks","goles de campo", "intercepciones"]), //se pide en el body
     target: z.string().min(1), //se pide en el body
     amount: z.number().positive(), //se pide en el body
     extra: z.number(), //se pide en el body

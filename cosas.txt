@@ -68,3 +68,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljN
 
 
 
+PROBLEMAS:
+Problema con quitar el backdrop de los modales en app.js o main.hmtl
+Problema con el backdrop de admin.js y events.html
+
+Agregar la funcion de app.js de los modales de confirmacion a todos los fetch
+
+Acomodar los eventos correctamente para que no salgan outcomes ditintos
+
+Hacer el fetch para hacer las apuestas 1 vs 1. Flujo:
+    Se elige el usuario al cual retar. Se selecciona el nombre del mismo evento ya creado
+    Se hace un fetch con ese mismo nombre y solo al sport se le establece 1 vs 1 deporte
+    Se crea tambien la apuesta con el outcome de ganador por defecto en 2 porque ganan el doble
+    Se pide de una vez el amount a apostar y el token se manda
+
+Falta hacer la validacion de que si no se acepta la apuesta se devuelva el dinero al usuario
+Y que se pueda no aceptar la apuesta.
+**(Propuesta) Hacer un metodo rejectBet para poder devolver el dinero y eliminar el evento creado
+si el otro rechaza la apuesta.
+
+
