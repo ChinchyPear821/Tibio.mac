@@ -42,21 +42,21 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="sport-card" style="background-image: url('basket.jpg');">
-                    <button class="sport-overlay">
+                    <button  class="sport-overlay" onclick="redirectToEvents('basquetbol')">
                         <h3>Basketball</h3>
                     </button>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="sport-card" style="background-image: url('fut.jpg');">
-                    <button class="sport-overlay">
+                    <button  class="sport-overlay" onclick="redirectToEvents('futbol')">
                         <h3>Soccer</h3>
                     </button>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="sport-card" style="background-image: url('football.png');">
-                    <button class="sport-overlay">
+                    <button class="sport-overlay" onclick="redirectToEvents('futbol americano')">
                         <h3>Football</h3>
                     </button>
                 </div>
@@ -64,7 +64,8 @@
         </div>
         <br><br>
     </div>
-    <script src="app.js"></script>        
+    <script src="app.js"></script>
+    <script src="categories.js"></script>
 
     <!-- Footer -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom"

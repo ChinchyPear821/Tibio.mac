@@ -25,14 +25,13 @@ export class TransactionController{
         }
     }
 
-    //POST
+    //POST 
     static async deposit(req, res){
         try{
             //id_user con JWT
             const { user: { id_user } } = req.session
-            const transactionInfo = {id_user, ...req.body}
+            const transactionInfo = { id_user, ...req.body }
             const depositValidated = validateTransaction(transactionInfo)
-
 
             if(depositValidated.error){
                 return res.status(422).json({ error: depositValidated.error.message })

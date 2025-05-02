@@ -6,6 +6,7 @@
     height: 100%;
 }
 
+
 .sport-card {
     height: 250px;
     color: white;
@@ -57,4 +58,12 @@
   width: 100%;
   max-width: 100%;
   padding: 1rem;
+}
+
+#loadingModal {
+    z-index: 1056 !important;
+}
+
+.modal-backdrop.loading-backdrop {
+    z-index: 1055 !important;
 }

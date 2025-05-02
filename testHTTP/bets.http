@@ -27,15 +27,25 @@ Content-Type: application/json
 }
 ### APUESTA DE TIPO 1 VS 1...
 POST http://localhost:1234/bet/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0NjcyMDI5LCJleHAiOjE3NDQ2NzU2Mjl9.ohdUsAMtKQisImgh1Loddwg8m5q08qusJ_3sXukJcaE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYjA0Y2QwM2ItMGU1Yy00ZTczLTkxNTItYTNkMGEyMDA0N2QxIiwidXNlcm5hbWUiOiJHaWxiZXJ0byBBdmFsb3MiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTc0NTc3MjY4OCwiZXhwIjoxNzQ1Nzc2Mjg4fQ.ToZBAOl4QFmkkosLSS6h-FlWnb40dIKjx7B0_B3giFw
 Content-Type: application/json
 
 {
-  "id_event": "e90a1337-13cd-4bda-b59d-f0cd119f2ea6",
+  "id_event": "790858e9-eb33-4f71-bbf1-dcaa3c849180",
   "type": "ganador",
-  "target": "lakers",
-  "amount": 410,
-  "extra": 3.4
+  "target": "america",
+  "amount": 1,
+  "extra": 1
+}
+###
+POST http://localhost:1234/bets/1v1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYjA0Y2QwM2ItMGU1Yy00ZTczLTkxNTItYTNkMGEyMDA0N2QxIiwidXNlcm5hbWUiOiJHaWxiZXJ0byBBdmFsb3MiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTc0NTc3MjY4OCwiZXhwIjoxNzQ1Nzc2Mjg4fQ.ToZBAOl4QFmkkosLSS6h-FlWnb40dIKjx7B0_B3giFw
+Content-Type: application/json
+
+{
+"id_event": "82cf3d8f-8a05-40c7-8176-d3560879",
+"id_outcome": "f8b72024-b765-45a2-b0f9-a52ab60f",
+"amount": 10
 }
 
 ### ACEPTAR UNA APUESTA
@@ -60,6 +70,42 @@ GET http://localhost:1234/bet/search?status=finalizado
 // hace esta solicitud. Y puedes enviar mas parametros en la ruta como en los anteriores
 GET http://localhost:1234/bet/search/auth
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0Njc0OTEwLCJleHAiOjE3NDQ2Nzg1MTB9.1OIZj-KI3QO3Z9wc0E5qS5Xoac1iznY0aeFZuMUPeXg
+
+
+
+###
+POST http://localhost:1234/event/
+Content-Type: application/json
+
+{
+  "name": "Chivas vs America",
+  "sport": "futbol",
+  "outcomes": [
+    { "outcome_name": "ganador local", "official_odds": 1.9 },
+    { "outcome_name": "ganador visitante", "official_odds": 2.1 },
+    { "outcome_name": "empate", "official_odds": 3.0 },
+    { "outcome_name": "goles", "official_odds": 1.8 },
+    { "outcome_name": "goles local", "official_odds": 2.2 },
+    { "outcome_name": "goles visitante", "official_odds": 2.0 },
+    { "outcome_name": "tarjetas amarillas", "official_odds": 1.5 },
+    { "outcome_name": "tarjetas rojas", "official_odds": 2.5 },
+    { "outcome_name": "tiros esquina", "official_odds": 1.6 }
+  ]
+}
+
+###
+POST http://localhost:1234/bet/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYjA0Y2QwM2ItMGU1Yy00ZTczLTkxNTItYTNkMGEyMDA0N2QxIiwidXNlcm5hbWUiOiJHaWxiZXJ0byBBdmFsb3MiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTc0NTk5NTYzOCwiZXhwIjoxNzQ1OTk5MjM4fQ.sYBhhssNTfvPjijvCsHXbssmzR21Xgq0DMiUxQT1mbA
+Content-Type: application/json
+
+{
+"id_event": "bbd9a0d1-affe-4cfe-980c-a84e1cfd8d2f",
+  "id_outcome:": "677713ea-6c2d-43aa-b379-1b0bd7e0891c",
+"type": "ganador local",
+"target": "Chivas",
+"amount": 4,
+"extra": 1.9
+}
 
 
 

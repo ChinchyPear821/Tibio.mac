@@ -85,7 +85,6 @@ export class EventController{
                 return res.status(400).json({ error: "ID del evento es requerido" });
             }
 
-            // Llamamos al modelo para obtener los outcomes por id_event
             const outcomes = await EventModel.getOutcomesByEventId(id_event);
 
             if (outcomes.length === 0) {
@@ -122,7 +121,7 @@ export class EventController{
         try {
             const { id_event } = req.params;
             const validatedEvent = validatePartialEvent(req.body);
-
+            console.log("Datos del evento a actualizar:", validatedEvent)
             if (!validatedEvent.success) {
                 return res.status(400).json({
                     error: "Datos inválidos para actualizar evento",
@@ -130,21 +129,21 @@ export class EventController{
                 });
             }
 
-            const { name, status } = validatedEvent.data;
+            const { name, sport,status } = validatedEvent.data;
 
-             if (!name && !status) {
+             if (!name && !status && !sport) {
                 return res.status(400).json({
-                    error: "Debes enviar al menos name o status para actualizar"
+                    error: "Debes enviar al menos nombre deporte o status para actualizar"
                 });
             }
 
-            const result = await EventModel.updateEvent({ id_event, name, status });
+            const result = await EventModel.updateEvent({ id_event, name,sport, status });
 
             if (result.changes === 0) {
                 return res.status(404).json({ error: "Evento no encontrado" });
             }
 
-            res.status(200).json({ message: "Evento actualizado correctamente" });
+            res.status(200).json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
@@ -192,7 +191,7 @@ export class EventController{
 
     static async deleteEvent(req, res) {
         try {
-            const { id_event } = req.body
+            const {id_event}  = req.params;
             if (!id_event) {
                 return res.status(400).json({ error: "No se encontró el Id" })
             }

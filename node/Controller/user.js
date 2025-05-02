@@ -2,17 +2,36 @@ import jwt from 'jsonwebtoken'
 import { UserModel } from "../Model/user.js"
 
 import { validateUsername, partialValidateUsername } from "../Schema/userSchema.js"
+import { validateCard } from '../Schema/cardSchema.js'
 
 import { SECRET_JWT_KEY } from "../config.js"
 
 export class UserController{
     //GET
     static async protected(req, res){
-        const { user } = req.session
+        try{
+            const { user: { id_user } } = req.session
 
-        if(!user) return res.status(403).json({ error: "No puedes acceder a una ruta protegida" })
+            const userInfo = await UserModel.protected({ data: { id_user } })
 
-        return res.status(201).json(user)
+            return res.status(201).json(userInfo)
+        }catch(e){
+            console.error("Error al regresar la informacion dle usuario:", error)
+            res.status(500).json({ error: "Error al regresar la informacion del usuario "})
+        }
+    }
+    static async allCardsByUser(req, res){
+        try{
+            const { user: { id_user } } = req.session
+
+            const cards =  await UserModel.allCardsByUser({ data: { id_user }})
+
+            res.status(201).json(cards)
+
+        }catch(e){
+            console.error("Error controller allCardsByUser", e)
+            return res.status(500).json( { error: "Error controller allCardsByUser" } )
+        }
     }
 
 
@@ -75,5 +94,24 @@ export class UserController{
         .clearCookie("access_token")
         .status(201)
         .json({ message: "Logout succesful" })
+    }
+    static async addCard(req, res){
+        try{
+            const { user: { id_user } } = req.session
+            console.log(req.body)
+            const cardInfo = { id_user, ...req.body }
+
+            const cardValidated =  validateCard(cardInfo)
+
+            if(cardValidated.error) return res.status(422).json({ error:  cardValidated.error })
+
+            const card = await UserModel.addCard({ data:  cardValidated.data })
+
+            res.status(201).json(card)
+
+        }catch(e){
+            console.error("Error addCard controller", e)
+            return res.status(500).json({ error: "Error addCard controller" })
+        }
     }
 } 

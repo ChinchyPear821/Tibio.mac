@@ -1,8 +1,41 @@
 import { db } from "../Connection/db.js"
+import { getRowById } from "../utils.js"
 import bcrypt from "bcrypt"
 import crypto from "crypto" // asegúrate de importar esto si usas uuid
 
 export class UserModel {
+    //GET
+    static async protected({ data }){
+        try{
+            const { id_user } = data
+
+            const usertInfo =  db.prepare(`
+                SELECT username, balance, email 
+                FROM users     
+                WHERE id_user= ?
+            `).get(id_user)
+
+            return usertInfo
+
+        }catch(error){
+            console.error("Error al regresar la informacion dle usuario")
+            throw error
+        }
+    }
+
+    static async allCardsByUser({ data }){
+        try{
+            const { id_user } = data
+
+            return getRowById("cards", "id_user", id_user)
+
+        } catch(e){
+            console.error("Error al allCardsByUser Model", e)
+            throw new Error("Error al allCardsByUser Model", e)
+        }
+
+    }
+    //POST
     static async register({ data }) {
         try {
             const { username, email, password } = data;
@@ -64,5 +97,28 @@ export class UserModel {
             throw error;
         }
     }
-    
+
+    static async addCard({ data }){
+        try{
+            const { id_user, cardName, cardNumber, cardExpiration, cardPassword, bank } = data
+
+            const uuid = crypto.randomUUID()
+            console.log("Insertando tarjeta", uuid, id_user, cardName, cardNumber, cardExpiration, cardPassword, bank)
+
+            const insertCard = db.prepare(`
+                INSERT INTO cards
+                    (id_card, id_user, name, number, expiration, cvv, bank)    
+                VALUES
+                    (?, ?, ?, ?, ?, ?, ?)
+            `)
+
+            insertCard.run(uuid, id_user, cardName, cardNumber, cardExpiration, cardPassword, bank)
+
+            return getRowById("cards", "id_card", uuid)
+
+        }catch(e){
+            console.error("Error addCard model", e)
+            throw new Error("Erroe addCard mode", e)
+        }
+    }
 }

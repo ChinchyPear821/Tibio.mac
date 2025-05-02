@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="./LOGO.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles-main.css">
+
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  fixed-top">
+        <div class="container-fluid d-flex justify-content-between">
+            <a class="navbar-brand fs-1 fs-sm-3 fs-md-2 fs-lg-1" href="#"><img src="./LOGO.png" alt="" srcset=""
+                    width="50px" height="50px">ARDIENTE.mx</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" style="justify-content: right;" id="navbarNavAltMarkup">
+                <div class="navbar-nav" style="color: red;">
+                    <p class="p-2">Bienvenido: <span id="admin-name">F Mac Louis</span></p>
+                    <a class="nav-link " href="admin.html">Inicio</a>
+                    <a class="nav-link" href="apuestas.html">Apuestas</a>
+                    <a class="nav-link active" href="eventos-auth.html">Eventos</a>
+                    <a class="nav-link" href="Usuarios.html">Usuarios</a>
+                    <button onclick="logout()" class="btn btn-secondary">Salir</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container py-5" style="background-color: #6c6868; color: white;">
+        <div class="row mt-5">
+            <div class="col">
+                <p class="h1 text-center">EVENTOS</p>
+            </div>
+        </div>
+        <div class="container mt-2 ">
+            <div class="row g-0 justify-content-center">
+                <!-- Crear Evento -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="card shadow rounded-4 h-100 text-center border-0">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                            <button class="btn btn-primary mt-3 w-100" id="btn-create-event">CREAR</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Administrar Evento -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="card shadow rounded-4 h-100 text-center border-0">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                            <button class="btn btn-secondary mt-3 w-100"
+                                id="iniciar-administracion">ADMINISTRAR</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eliminar Evento -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="card shadow rounded-4 h-100 text-center border-0">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                            <button class="btn btn-danger mt-3 w-100"
+                            id="btn-delete-event">ELIMINAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="event-container">
+            <!-- Cartas con la siguiente estructura
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="card mt-5" style="width: 22rem; justify-content: center;">
+
+                    <div class="d-flex justify-content-around mt-2 pb-3 pt-3" ">
+                        <img src="america vs chivas.png" style="width: 160px;">                       
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">América vs Chivas</h5>
+                        <p class="card-text mb-0">Categoria: Futbol</p>
+                        <p class="card-text mb-0">Fecha: 18/04/2025</p>
+                        <p class="card-text mb-0">Estatus: EN PROCESO</p>
+                        <div class="d-flex justify-content-center">
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+
+        </div>
+
+
+        <!-- Modal  para asginar resultado -->
+        <div class="modal fade" id="assignResultsModal" tabindex="-1" aria-labelledby="assignResultsModalLabel" style="color: black">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="assignResultsModalLabel">Asignar resultados</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="results-form">
+                            <!-- Los campos del formulario se agregarán dinámicamente según el deporte -->
+                            <div id="form-fields">
+                                <!-- Aquí se llenarán los campos dinámicamente -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar resultados</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación para Cerrar Evento -->
+        <div class="modal fade" id="confirmCloseModal" tabindex="-1" aria-labelledby="confirmCloseModalLabel" aria-hidden="true" style="color: black">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmCloseModalLabel">Confirmar Cierre de Evento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Seguro que los resultados asignados son correctos y deseas cerrar el evento?</p>
+                        <div id="summary-results">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button id="btn-confirm-close" type="button" class="btn btn-danger">Cerrar Evento</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container my-4">
+        <button id="show-events-button" class="btn btn-primary w-100">Mostrar lista de todos los eventos</button>
+
+        <!-- Sección para mostrar los eventos -->
+        <div id="events-list" class="mt-4" style="display: none;">
+            <div class="row" id="events-container">
+                <!-- Los eventos se cargarán aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+     <!-- Modal de Crear Evento -->
+    <div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createEventModalLabel">Crear Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-event-form">
+                        <div class="mb-3">
+                            <label for="event-name" class="form-label">Nombre del evento</label>
+                            <input type="text" class="form-control" id="event-name" name="event-name" required>
+                        </div>
+
+                        <div class="dropdown w-100 mb-3">
+                            Deporte
+                            <input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown"
+                                   placeholder="Selecciona un deporte" id="event-sport" name="event-sport" readonly required>
+                            <ul class="dropdown-menu w-100" id="sportDropdown">
+                                <li><a class="dropdown-item" href="#">futbol</a></li>
+                                <li><a class="dropdown-item" href="#">basquetbol</a></li>
+                                <li><a class="dropdown-item" href="#">futbol americano</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Tus campos dinámicos según el deporte -->
+                        <div id="soccer-fields" class="sport-fields" style="display: none;">
+                            <h5 class="mb-3">Momios para apuestas (Soccer)</h5>
+                            <div class="mb-3">
+                                <label for="odds-local-soccer" class="form-label">Ganador local</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-local-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-draw-soccer" class="form-label">Empate</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-draw-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-away-soccer" class="form-label">Ganador visitante</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-away-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-goals-soccer" class="form-label">Goles totales</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-goals-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-goals-local-soccer" class="form-label">Goles equipo local</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-goals-local-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-goals-away-soccer" class="form-label">Goles equipo visitante</label>
+                                <input type="number" step="0.1" class="form-control outcome-odds" id="odds-goals-away-soccer">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-yellow" class="form-label">Más de X tarjetas amarillas</label>
+                                <input type="number" step="0.5" class="form-control outcome-odds" id="odds-yellow">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-red" class="form-label">Más de X tarjetas rojas</label>
+                                <input type="number" step="0.5" class="form-control outcome-odds" id="odds-red">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-corners" class="form-label">Más de X corners</label>
+                                <input type="number" step="0.5" class="form-control outcome-odds" id="odds-corners">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-penalties" class="form-label">Más de X penales</label>
+                                <input type="number" step="0.5" class="form-control outcome-odds" id="odds-penalties">
+                            </div>
+                        </div>
+
+                        <!-- Igual para basquetbol y futbol americano -->
+                        <div id="basketball-fields" class="sport-fields" style="display: none;">
+                            <h5 class="mb-3">Momios para apuestas (Basketball)</h5>
+                            <div class="mb-3">
+                                <label for="odds-local-basketball" class="form-label">Gana local</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-local-basketball">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-puntos" class="form-label">Más de X puntos totales</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-puntos">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-triples" class="form-label">Más de X triples</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-triples">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-rebotes" class="form-label">Más de X rebotes</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-rebotes">
+                            </div>
+                        </div>
+
+                        <div id="football-fields" class="sport-fields" style="display: none;">
+                            <h5 class="mb-3">Momios para apuestas (Football)</h5>
+                            <div class="mb-3">
+                                <label for="odds-local-football" class="form-label">Gana local</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-local-football">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-touchdowns" class="form-label">Más de X touchdowns</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-touchdowns">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-fieldgoals" class="form-label">Más de X field goals</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-fieldgoals">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-intercepciones" class="form-label">Más de X intercepciones</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-intercepciones">
+                            </div>
+                            <div class="mb-3">
+                                <label for="odds-sacks" class="form-label">Más de X sacks</label>
+                                <input type="number" step="0.01" class="form-control outcome-odds" id="odds-sacks">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Crear Evento</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  MODAL PARA ADMINISTRAR EVENTOS-->
+    <div class="modal fade" id="modalEventosProceso" tabindex="-1" aria-labelledby="modalEventosProcesoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEventosProcesoLabel">Eventos en Proceso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="administrate-event-container" class="container-fluid">
+                        <!-- Aquí se cargan dinámicamente los eventos -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL: fuera de cualquier contenedor dinámico -->
+    <div class="modal fade" id="modifyEventModal" tabindex="-1" aria-labelledby="modifyEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifyEventModalLabel">Modificar Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modify-form-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="section-delete-event">
+        <div class="contenedor-crear-evento mx-auto w-100 mt-5" id="container-delete-event">
+            <div class="container-selector">
+                <!-- Aquí metemos la tabla por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal tabla de eventos -->
+    <div class="modal fade" id="modalDeleteEvents" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Eliminar Eventos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="delete-event-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal confirmar eliminación -->
+    <div class="modal fade" id="modalConfirmDelete" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Seguro que quieres eliminar este evento?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-btn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Información del Evento -->
+    <div class="modal fade" id="eventInfoModal" tabindex="-1" aria-labelledby="eventInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventInfoModalLabel">Información del Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="event-info-content">
+                    <!-- La información del evento se cargará aquí dinámicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom"
+        style="color: aliceblue; justify-content: center;">
+        <div class="row" style="gap: 0%;">
+            <div class="col"><img src="./LOGO.png" alt="" height="50px" width="50px"></div>
+            <div class="col">Acerca</div>
+            <div class="col">Créditos</div>
+        </div>
+    </nav>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

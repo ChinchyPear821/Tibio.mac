@@ -10,6 +10,7 @@ import { routBet } from "./Routes/bet.js"
 import { routTransaction } from "./Routes/transaction.js"
 import {routEvent} from "./Routes/event.js";
 import {routSports} from "./Routes/sports.js";
+import { routBonus} from "./Routes/bonuses.js";
 
 import path from "path"
 import { fileURLToPath } from "url"
@@ -27,13 +28,18 @@ app.use(cookieParser())
 
 // Middleware para token
 app.use((req, res, next) => {
+
+    //console.log("Request antes del token: ", req)
+
     const token = req.cookies.access_token;
     req.session = { user: null };
-
+    
     if (token) {
         try {
             const data = jwt.verify(token, SECRET_JWT_KEY);
             req.session.user = data;
+
+            //console.log("Request despues del token: ", req)
         } catch (error) {
             console.error("Token inválido:", error.message);
         }
@@ -60,6 +66,8 @@ app.use("/bet", routBet)
 app.use("/transaction", routTransaction)
 
 app.use("/event", routEvent)
+
+app.use("/bonus", routBonus)
 // Configurar __dirname para ES Modules
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

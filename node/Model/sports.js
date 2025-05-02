@@ -1,9 +1,12 @@
 import { db } from "../Connection/db.js";
 
 const tableMap ={
-    futbol: "soccer_stats",
-    basquetbol: "basketball_stats",
-    futbol_americano:"football_stats"
+    "futbol": "soccer_stats",
+    "basquetbol": "basketball_stats",
+    "futbol americano":"football_stats",
+    "1 vs 1 futbol": "soccer_stats",
+    "1 vs 1 basquetbol": "basketball_stats",
+    "1 vs 1 futbol americano": "football_stats"
 };
 
 export class SportStatsModel{
@@ -29,25 +32,44 @@ export class SportStatsModel{
             console.log("Error al crear las estadisticas", error)
         }
     }
-
+    //Aqui se actualizan tanto el evento principal que no es 1 vs 1 como las apuestas que si son 1 vs 1 y se aplican
+    // los mismos stats para ese evento
     static async updateStats({type, id_event, data}) {
         try {   
             const table = this.validateSportType(type);
             const sets = Object.keys(data).map(key => `${key} = ?`).join(', ');
             const values = [...Object.values(data), id_event];
 
-            db.prepare(`UPDATE ${table} SET ${sets} WHERE id_event = ?`).run(...values);            
-            const result = db.prepare(`SELECT * FROM ${table} WHERE id_event = ?`).get(id_event);
+            db.prepare(`UPDATE ${table} SET ${sets} WHERE id_event = ?`).run(...values);
 
-            if (!result) {
-                throw new Error("No se encontraron estadísticas para actualizar.");
+            const updatedEvent = db.prepare(`SELECT * FROM ${table} WHERE id_event = ?`).get(id_event);
+            if (!updatedEvent) return;
+
+            const event = db.prepare(`SELECT name FROM events WHERE id_event = ?`).get(id_event);
+            const eventName = event?.name;
+            if (!eventName) return updatedEvent;
+
+            const oneVsOneEvents = db.prepare(`
+            SELECT * FROM events
+            WHERE name = ? AND sport LIKE '%1 vs 1%' AND id_event != ?
+        `).all(eventName, id_event);
+
+            for (const ev of oneVsOneEvents) {
+                const oneVsOneTable = this.validateSportType(ev.sport);
+                if (!oneVsOneTable) continue;
+
+                const sets1vs1 = Object.keys(data).map(key => `${key} = ?`).join(', ');
+                const values1vs1 = [...Object.values(data), ev.id_event];
+
+                db.prepare(`UPDATE ${oneVsOneTable} SET ${sets1vs1} WHERE id_event = ?`).run(...values1vs1);
             }
-            return result;
+
+            return updatedEvent;
         } catch (error){
-            console.log("Error al actualizar las estadisticas", error);
-            throw error;
+            console.log("Error al actualizar las estadísticas", error);
         }
     }
+
 
     static async getStats({type, id_event}) {
         try {

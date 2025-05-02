@@ -1,3 +1,4 @@
+-- Cree otra tabla "card". La query esta en el archivo showTable.sql
 DROP TABLE IF EXISTS soccer_stats;
 DROP TABLE IF EXISTS football_stats;
 DROP TABLE IF EXISTS basketball_stats;
@@ -102,4 +103,14 @@ CREATE TABLE football_stats (
     interceptions INTEGER,
     sacks INTEGER,
     FOREIGN KEY (id_event) REFERENCES events(id_event)
+);
+
+CREATE TABLE bonuses (
+    id_bonus TEXT PRIMARY KEY,
+    id_user TEXT NOT NULL,
+    amount REAL NOT NULL,
+    type TEXT NOT NULL,
+    status TEXT NOT NULL,
+    redeemed_date TEXT,
+    FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
