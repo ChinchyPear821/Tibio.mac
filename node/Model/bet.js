@@ -2,6 +2,8 @@ import { db } from "../Connection/db.js";
 import {BET_STATUS, CATEGORY, EVENT_STATUS} from "../utils/consts.js";
 import {calculateTarget} from "../utils/functions.js";
 
+import { getRowById } from "../utils.js";
+
 export class BetModel {
     // GET
     static async getAllBets() {
@@ -274,6 +276,19 @@ export class BetModel {
             console.error("No se encontro la apuesta", error);
             throw error;
         }
+    }
+
+    //SAUL'S GET ALL BETS BY USER WITH COOKIES
+    static async getAllBetsByUser({ data }){
+        try{
+            const { id_user } = data
+
+            return getRowById("bets", "id_user", id_user)
+        }catch(e){
+            console.error("Error Saul's allBetsByUser model", e)
+            throw new Error("Error Sauls allBetsByUser model", e)
+        }
+
     }
 
 }

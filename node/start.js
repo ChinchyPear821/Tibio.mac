@@ -28,13 +28,18 @@ app.use(cookieParser())
 
 // Middleware para token
 app.use((req, res, next) => {
+
+    //console.log("Request antes del token: ", req)
+
     const token = req.cookies.access_token;
     req.session = { user: null };
-
+    
     if (token) {
         try {
             const data = jwt.verify(token, SECRET_JWT_KEY);
             req.session.user = data;
+
+            //console.log("Request despues del token: ", req)
         } catch (error) {
             console.error("Token inválido:", error.message);
         }

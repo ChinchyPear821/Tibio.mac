@@ -35,6 +35,8 @@ Content-Type: application/json
 "email": "gilbertomac@gmail.com",
 "password": "gilberto"
 }
+###
+GET http://localhost:1234/user/protected
 
 ###
 POST http://localhost:1234/user/login

@@ -15,9 +15,9 @@ export class TransactionModel{
 
             return allTransactions
 
-        }catch(error){
-            console.error("Error al regresar todas las transacciones", error)
-            throw error
+        }catch(e){
+            console.error("Error allTransactions Model", e)
+            throw new Error("Error allTransactions Model", e)
         }
     }
 
