@@ -100,22 +100,22 @@ export class EventController{
         }
     }
     // PATCH
-    static async closeEvent(req, res){
-        try{
-            const validatedEvent = validatePartialEvent(req.body);
-            if(!validatedEvent.success){
-                return res.status(400).json({error: "Error al buscar el evento"})
+        static async closeEvent(req, res){
+            try{
+                const validatedEvent = validatePartialEvent(req.body);
+                if(!validatedEvent.success){
+                    return res.status(400).json({error: "Error al buscar el evento"})
+                }
+
+                const {id_event, result} = validatedEvent.data;
+                const eventClosed = await EventModel.closeEvent(id_event, result);
+                return res.status(200).json(eventClosed);
+            }catch(error){
+                return res.status(400).json({error: error.message});
+
             }
 
-            const {id_event, result} = validatedEvent.data;
-            const eventClosed = await EventModel.closeEvent(id_event, result);
-            return res.status(200).json(eventClosed);
-        }catch(error){
-            return res.status(400).json({error: error.message});
-
         }
-
-    }
 
     //PATCH
     static async updateEvent(req, res) {
@@ -169,7 +169,26 @@ export class EventController{
             res.status(500).json({ error: error.message });
         }
     }
-
+    static async updateOutcomesByIdEvent(req, res) {
+        try {
+            const { id_event } = req.params;
+            const { outcomes } = req.body;
+    
+            if (!Array.isArray(outcomes) || outcomes.length === 0) {
+                return res.status(400).json({ error: "Se esperaba un array de outcomes válido." });
+            }
+    
+            const updatedOutcomes = await EventModel.updateOutcomesByIdEvent(id_event, outcomes);
+    
+            if (updatedOutcomes.length === 0) {
+                return res.status(404).json({ error: "No se actualizaron outcomes. Verifica los datos." });
+            }
+    
+            res.status(200).json({ message: "Momios actualizados correctamente", data: updatedOutcomes });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 
     static async deleteEvent(req, res) {
         try {

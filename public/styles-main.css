@@ -1,5 +1,4 @@
-
-body{
+  body{
     background: rgb(100,7,7);
     background: linear-gradient(-45deg, rgba(100,7,7,1) 0%, rgba(121,9,9,1) 50%, rgba(255,0,0,1) 100%);
     background-attachment: fixed;
@@ -28,6 +27,7 @@ body{
     width: 100%;
     text-align: center;
     cursor: pointer;
+    height: 100%;
   }
   .sport-overlay:active{
     background-color: aliceblue;

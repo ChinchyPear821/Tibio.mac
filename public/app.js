@@ -41,7 +41,7 @@ async function checkSession() {
 async function displayAllEvents() {
     /////Display current events
     try {
-        const res = await fetch("http://localhost:1234/event/search?status=en%20proceso", {
+        const res = await fetch("/event/search?status=en%20proceso", {
             method: "GET",
             credentials: "include",
         });
@@ -55,19 +55,42 @@ async function displayAllEvents() {
         }
 
         events.forEach(event => {
+            const [local, visitor] = event.name.split(" vs ");
+            let cardSport = '';
+            let sportFile = '';
+            if (event.sport === "futbol") {
+                cardSport = 'Fútbol';
+                sportFile = 'SoccerImg';
+            } else if (event.sport === "basquetbol") {
+                cardSport = 'Basquetbol';
+                sportFile = 'BasketballImg';
+            } else if (event.sport === "futbol americano") {
+                cardSport = 'Fútbol Américano';
+                sportFile = 'FootballImg';
+            }
+            let cardStatus = '';
+            if (event.status === "en proceso") {
+                cardStatus = 'En Proceso';
+            } else if (event.status === "finalizado") {
+                cardStatus = 'Finalizado';
+            }
+            let cardDate = event.begin_date.toString();
+
+
             const col = document.createElement("div");
             col.classList.add("col-12", "col-md-6", "col-lg-4", "mb-4");
 
             col.innerHTML = `
                 <div class="card mt-5" style="width: 22rem; justify-content: center;">
                     <div class="d-flex justify-content-around mt-2 pb-3 pt-3">
-                        <img src="./${event.name}.png" style="width: 300px; height: 200px;" class="card-img-top" alt="${event.name}">
+                        <img src="./${sportFile}/${local}.png" style="width: 150px; height: 200px;" class="card-img-top" alt="${local}">
+                        <img src="./${sportFile}/${visitor}.png" style="width: 150px; height: 200px;" class="card-img-top" alt="${visitor}">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">${event.name}</h5>
-                        <p class="card-text">Deporte: ${event.sport}</p>
-                        <p class="card-text">Fecha: ${event.begin_date}</p>
-                        <p class="card-text">Estatus: ${event.status}</p>
+                        <p class="card-text">Deporte: ${cardSport}</p>
+                        <p class="card-text">Fecha: ${cardDate}</p>
+                        <p class="card-text">Estatus: ${cardStatus}</p>
                         <div class="d-flex justify-content-center">
                         <a id="bet-btn-${event.id_event}" class="btn btn-secondary">Apostar</a>
                         </div>
@@ -81,7 +104,6 @@ async function displayAllEvents() {
                 showBetForm(event.id_event);
             });
         });
-
     } catch (err) {
         console.error("Error al cargar eventos:", err);
     }

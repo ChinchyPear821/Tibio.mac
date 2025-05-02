@@ -15,7 +15,12 @@ export class SportsStatsController{
         try {
             const { type, id_event, data } = req.body;
             const result = await SportStatsModel.updateStats({ type, id_event, data });
-            res.status(200).json(result);
+            
+            if (!result) {
+                return res.status(200).json({ error: "No se encontraron estadísticas para actualizar." });
+            } else {
+                res.status(200).json(result);
+            }
         } catch (err) {
             console.error("Error al actualizar estadísticas:", err);
             res.status(400).json({ error: err.message });

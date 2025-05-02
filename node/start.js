@@ -20,7 +20,7 @@ app.disable("x-powered-by")
 
 app.use(json())
 app.use(cors({
-    origin: "http://localhost:1234", // o donde esté tu frontend
+    origin: "http://localhost:1234", 
     credentials: true
 }));
 app.use(cookieParser())

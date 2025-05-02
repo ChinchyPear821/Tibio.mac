@@ -163,7 +163,7 @@ export class EventModel{
             WHERE id_event = ?
         `).run(name, status, id_event);
         return db.prepare(`SELECT * FROM events 
-              WHERE id_event = ?`).get(id_event);
+            WHERE id_event = ?`).get(id_event);
     }
 
     static async updateOutcomeOdds({ id_outcome, official_odds }) {
@@ -174,6 +174,30 @@ export class EventModel{
         `).run(official_odds,id_outcome);
         return db.prepare(`SELECT * FROM event_outcomes 
             WHERE id_outcome = ?`).get(id_outcome);
+    }
+    static async updateOutcomesByIdEvent(id_event, outcomes) {
+        const updateStmt = db.prepare(`
+            UPDATE event_outcomes
+            SET official_odds = ?
+            WHERE id_event = ? AND outcome_name = ?
+        `);
+    
+        const selectStmt = db.prepare(`
+            SELECT * FROM event_outcomes
+            WHERE id_event = ? AND outcome_name = ?
+        `);
+    
+        const updated = [];
+    
+        for (const { outcome_name, official_odds } of outcomes) {
+            if (typeof outcome_name !== 'string' || typeof official_odds !== 'number') continue;
+    
+            updateStmt.run(official_odds, id_event, outcome_name);
+            const row = selectStmt.get(id_event, outcome_name);
+            if (row) updated.push(row);
+        }
+    
+        return updated;
     }
     //DELETE
     static async deleteEvent({ data }) {

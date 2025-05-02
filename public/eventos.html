@@ -35,125 +35,99 @@
             </div>
         </div>
     </nav>
-    <div class="container py-5" style="background-color: #6c6868; color: white;">
+    <div class="container py-5 " style="background-color: #000; color: white;">
         <div class="row mt-5">
             <div class="col">
                 <p class="h1 text-center">EVENTOS</p>
             </div>
         </div>
         <div class="container mt-2 ">
-            <div class="row g-0 justify-content-center">
-                <!-- Crear Evento -->
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="card shadow rounded-4 h-100 text-center border-0">
-                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                            <button class="btn btn-primary mt-3 w-100" id="btn-create-event">CREAR</button>
-                        </div>
-                    </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-3">
+                    <button class="btn btn-primary mt-3 w-100" id="btn-create-event">CREAR</button>
                 </div>
-
-                <!-- Administrar Evento -->
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="card shadow rounded-4 h-100 text-center border-0">
-                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                            <button class="btn btn-secondary mt-3 w-100"
-                                id="iniciar-administracion">ADMINISTRAR</button>
-                        </div>
-                    </div>
+                <div class="col-12 col-lg-3">
+                    <button class="btn btn-secondary mt-3 w-100" id="iniciar-administracion">ADMINISTRAR</button>
                 </div>
-
-                <!-- Eliminar Evento -->
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="card shadow rounded-4 h-100 text-center border-0">
-                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                            <button class="btn btn-danger mt-3 w-100">ELIMINAR</button>
-                        </div>
-                    </div>
+                <div class="col-12 col-lg-3">
+                    <button class="btn btn-danger mt-3 w-100">ELIMINAR</button>
                 </div>
             </div>
         </div>
 
         <div class="row" id="event-container">
-            <!-- Cartas con la siguiente estructura
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="card mt-5" style="width: 22rem; justify-content: center;">
-
-                    <div class="d-flex justify-content-around mt-2 pb-3 pt-3" ">
-                        <img src="america vs chivas.png" style="width: 160px;">                       
-                    </div>
-
-                    <div class="card-body">
-                        <h5 class="card-title">América vs Chivas</h5>
-                        <p class="card-text mb-0">Categoria: Futbol</p>
-                        <p class="card-text mb-0">Fecha: 18/04/2025</p>
-                        <p class="card-text mb-0">Estatus: EN PROCESO</p>
-                        <div class="d-flex justify-content-center">
-                        </div>
-                    </div>
-                </div>
-            </div>-->
         </div>
     </div>
     <section id="section-create-event" class="section-absolute">
-        <div class="contenedor-crear-evento mx-auto w-75">
+        <div class="contenedor-crear-evento  w-100 lg-75">
             <div class="card mx-auto mt-4 p-3 shadow" style="max-width: 600px;">
                 <form id="create-event-form">
-                    <div class="mb-3">
-                        <label for="event-name" class="form-label">Nombre del evento</label>
-                        <input type="text" class="form-control" id="event-name" name="event-name" required>
-                    </div>
-                    <!--
-                    <div class="mb-3">
-                        <label for="event-date" class="form-label">Fecha del evento</label>
-                        <input type="date" class="form-control" id="event-date" name="event-date" required>
-                    </div>-->
+                    <h4 class="mb-3">Datos Generales</h4>
                     <div class="dropdown w-100 mb-3">
                         Deporte
                         <input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown"
                             placeholder="Selecciona un deporte" id="event-sport" name="event-sport" readonly required>
                         <ul class="dropdown-menu w-100" id="sportDropdown">
-                            <li><a class="dropdown-item" href="#">futbol</a></li>
-                            <li><a class="dropdown-item" href="#">basquetbol</a></li>
-                            <li><a class="dropdown-item" href="#">futbol americano</a></li>
+                            <!--No moverle a los nombres, readacción importante-->
+                            <li><a class="dropdown-item" href="#">Fútbol</a></li>
+                            <li><a class="dropdown-item" href="#">Basquetbol</a></li>
+                            <li><a class="dropdown-item" href="#">Fútbol Américano</a></li>
                         </ul>
                     </div>
+                    <!--Seleccionar el nombre del local para no cualquier hijo de vecino ponga un nombre-->
+                    <div id="local-name"></div> <!--Local-->
+                    <div id="visitor-name"></div> <!--Visitante-->
                     <!--Soccer-->
                     <div id="soccer-fields" class="sport-fields" style="display: none;">
-                        <h5 class="mb-3">Momios para apuestas (Soccer)</h5>
+                        <h4 class="mb-3">Momios para apuestas</h4>
+                        <h5>Establece los respectivos momios para cada tipo de apuesta</h5>
 
                         <div class="mb-3">
-                            <label for="odds-local-soccer" class="form-label">Ganador</label>
-                            <input type="number" step="0.1" class="form-control outcome-odds" name="ganador"
-                                id="odds-local-soccer">
+                            <label for="odds-local-soccer" class="form-label">Local</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="ganador" id="odds-local-soccer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-visitor-soccer" class="form-label">Visitante</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="visitante" id="odds-visitor-soccer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-draw-soccer" class="form-label">Empate</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="empate" id="odds-draw-soccer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-goals-local" class="form-label">Goles Local</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="goles" id="odds-goals-local">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-goals-visitor" class="form-label">Goles Visitante</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="goles" id="odds-goals-visitor">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-yellow" class="form-label">Tarjetas Amarillas</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="Más de X amarillas" id="odds-yellow">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-goals-soccer" class="form-label">Goles</label>
-                            <input type="number" step="0.1" class="form-control outcome-odds" name="goles"
-                                   id="odds-goals-soccer">
+                            <label for="odds-red" class="form-label">Tarjetas Rojas</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="Más de X rojas" id="odds-red">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-yellow" class="form-label">Más de X tarjetas amarillas</label>
-                            <input type="number" step="0.5" class="form-control outcome-odds" name="Más de X amarillas"
-                                id="odds-yellow">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="odds-red" class="form-label">Más de X tarjetas rojas</label>
-                            <input type="number" step="0.5" class="form-control outcome-odds" name="Más de X rojas"
-                                id="odds-red">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="odds-corners" class="form-label">Más de X corners</label>
-                            <input type="number" step="0.5" class="form-control outcome-odds" name="Más de X corners"
-                                id="odds-corners">
+                            <label for="odds-corners" class="form-label">Tiros de esquina</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="Más de X corners" id="odds-corners">
                         </div>
                         <div class="mb-3">
-                            <label for="odds-penalties" class="form-label">Más de X penales</label>
-                            <input type="number" step="0.5" class="form-control outcome-odds" name="Más de X penales"
-                                id="odds-penalties">
+                            <label for="odds-penalties" class="form-label">Penales</label>
+                            <input type="number" step="0.1" min="1" max="10" class="form-control outcome-odds"
+                                name="Más de X penales" id="odds-penalties">
                         </div>
                     </div>
                     <!-- Basketball -->
@@ -162,58 +136,84 @@
 
                         <div class="mb-3">
                             <label for="odds-local-basketball" class="form-label">Gana local</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Ganador"
-                                id="odds-local-basketball">
+                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
+                                name="Ganador" id="odds-local-basketball">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-puntos" class="form-label">Más de X puntos totales</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Más de X puntos"
-                                id="odds-puntos">
+                            <label for="odds-visitor-basketball" class="form-label">Gana Visitante</label>
+                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
+                                name="visitante" id="odds-visitor-basketball">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-triples" class="form-label">Más de X triples</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Más de X triples"
-                                id="odds-triples">
+                            <label for="odds-puntos-local" class="form-label">Puntos Local</label>
+                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
+                                name="odds-puntos-local" id="odds-puntos-local">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-rebotes" class="form-label">Más de X rebotes</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Más de X rebotes"
-                                id="odds-rebotes">
+                            <label for="odds-puntos-visitor" class="form-label">Puntos Visitante</label>
+                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
+                                name="odds-puntos-visitor" id="odds-puntos-visitor">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="odds-triples" class="form-label">Triples totales</label>
+                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
+                                name="triples-totales" id="odds-triples">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-faltas" class="form-label">Faltas Totales</label>
+                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
+                                name="faltas-totales" id="odds-faltas">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-rebotes" class="form-label">Rebotes Totales</label>
+                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
+                                name="rebotes-totales" id="odds-rebotes">
                         </div>
                     </div>
                     <!-- Football -->
                     <div id="football-fields" class="sport-fields" style="display: none;">
-                        <h5 class="mb-3">Momios para apuestas (Football)</h5>
+                        <h4 class="mb-3">Momios para apuestas</h4>
+                        <h5>Establece los respectivos momios para cada tipo de apuesta</h5>
 
                         <div class="mb-3">
                             <label for="odds-local-football" class="form-label">Gana local</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds" name="Ganador"
+                            <input type="number" step="0.01" class="form-control outcome-odds" name="local"
                                 id="odds-local-football">
                         </div>
-
                         <div class="mb-3">
-                            <label for="odds-touchdowns" class="form-label">Más de X touchdowns</label>
-                            <input type="number" step="0.01" class="form-control outcome-odds"
-                                name="Más de X touchdowns" id="odds-touchdowns">
+                            <label for="odds-visitor-football" class="form-label">Gana Visitante</label>
+                            <input type="number" step="0.01" class="form-control outcome-odds" name="visitor"
+                                id="odds-visitor-football">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-fieldgoals" class="form-label">Más de X field goals</label>
+                            <label for="odds-anotaciones-local" class="form-label">Anotaciones Local</label>
+                            <input type="number" step="0.01" class="form-control outcome-odds"
+                                name="odds-anotaciones-local" id="odds-anotaciones-local">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="odds-anotaciones-visitor" class="form-label">Anotaciones Visitante</label>
+                            <input type="number" step="0.01" class="form-control outcome-odds"
+                                name="odds-anotaciones-visitor" id="odds-anotaciones-visitor">
+                        </div>
+                        <div class="mb-3">
+                            <label for="odds-fieldgoals" class="form-label">Goles de Campo</label>
                             <input type="number" step="0.01" class="form-control outcome-odds"
                                 name="Más de X field goals" id="odds-fieldgoals">
                         </div>
 
                         <div class="mb-3">
-                            <label for="odds-intercepciones" class="form-label">Más de X intercepciones</label>
+                            <label for="odds-intercepciones" class="form-label">Intercepciones</label>
                             <input type="number" step="0.01" class="form-control outcome-odds"
                                 name="Más de X intercepciones" id="odds-intercepciones">
                         </div>
-
                         <div class="mb-3">
-                            <label for="odds-sacks" class="form-label">Más de X sacks</label>
+                            <label for="odds-sacks" class="form-label">Sacks</label>
                             <input type="number" step="0.01" class="form-control outcome-odds" name="Más de X sacks"
                                 id="odds-sacks">
                         </div>
@@ -225,52 +225,226 @@
             </div>
         </div>
     </section>
-
     <section id="section-administrate-event" class="section-absolute">
-        <div class="contenedor-crear-evento mx-auto w-100 mt-5" id="contenedor-administrar-evento">
-            <div id="administrate-event-container" class="container-fluid">
-
+        <div class="contenedor-crear-evento mx-auto w-100 mt-5" id="contenedor-administrar-evento"
+            style="background-color: aliceblue;">
+            <div class="text-end">
+                <button id="volver-administrate-event" class="btn btn-danger p-0 border-0 mb-3"
+                    style="width: 50px; height: 50px;">
+                    <img src="./close.png" alt="Cerrar" style="width: 100%; height: 100%; object-fit: cover;">
+                </button>
             </div>
-
-            <div class="contenedor-modificar-evento mx-auto w-75" id="contenedor-modificar-evento"
+            <div id="administrate-event-container" class="container-fluid">
+            </div>
+            <div class="contenedor-modificar-evento mx-auto w-100" id="contenedor-modificar-evento"
                 style="display: none;">
-                <div class="card mx-auto mt-4 p-3 shadow" style="max-width: 600px;">
-                    <form id="administrate-event-form">
-                        <!--Se genera dinamicamente dependiendo de lo que aparezca en la base de datos
-
-                        <h3 class="h3"><span id="sport-static">Categoria de Evento</span></h3>
-                        <div class="mb-3">
-                            <label for="modify-event-name" class="form-label">Nombre del evento</label>
-                            <input type="text" class="form-control" id="modify-event-name" name="modify-event-name"
-                                required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modify-event-date" class="form-label">Fecha del evento</label>
-                            <input type="date" class="form-control" id="modify-event-date" name="modify-event-date"
-                                required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Modificar Evento</button>
-                        -->
-                        <div id="modify-form-container"></div>
-                    </form>
+                <div class="card mx-auto mt-4 p-3 shadow">
+                    <div id="modify-form-container" class="w-100"></div>
                 </div>
             </div>
-
-            <button id="volver-administrate-event" class="btn btn-danger w-100">Volver</button>
+            <div class="contenedor-modificar-stats mx-auto w-100" id="contenedor-modificar-stats"
+                style="display: none;">
+                <div class="card mx-auto mt-4 p-3 shadow">
+                    <div id="soccer-stats" style="display: none;">
+                        <h4 class="mb-3"> Fútbol</h4>
+                        <div class="mb-3">
+                            <table class="table table-responsive table-striped">
+                                <th>Estatistica</th>
+                                <th>Número Final</th>
+                                <tr>
+                                    <td>Goles Local</td>
+                                    <td>
+                                        <label for="stats-local-goals" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="100" id="stats-local-goals"
+                                            class="form-control" placeholder="0">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Goles Visitante</td>
+                                    <td>
+                                        <label for="stats-visitor-goals" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="100" id="stats-visitor-goals"
+                                            class="form-control" placeholder="0">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tarjetas Amarillas</td>
+                                    <td>
+                                        <label for="stats-yellow" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="100" id="stats-yellow"
+                                            class="form-control" placeholder="0">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tarjetas Rojas</td>
+                                    <td>
+                                        <label for="stats-red" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="100" id="stats-red"
+                                            class="form-control" placeholder="0">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tiros de esquina</td>
+                                    <td>
+                                        <label for="stats-corners" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="100" id="stats-corners"
+                                            class="form-control" placeholder="0">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Penales</td>
+                                    <td>
+                                        <label for="stats-penalties" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="100" id="stats-penalties"
+                                            class="form-control" placeholder="0">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="basketball-stats" style="display: none;">
+                        <h4 class="mb-3">Estadísticas Basquetbol</h4>
+                        <table class="table table-responsive table-striped"><th>Estadistica</th><th>Número Total</th>
+                            <tr>
+                                <td>
+                                    Puntos Local
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-local-points" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-local-points"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Puntos Visitante
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-visitor-points" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-visitor-points"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td>    
+                                    Triples
+                                </td>
+                                <td>    
+                                    <div class="mb-3">
+                                        <label for="stats-three-pointers" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-three-pointers"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>                          
+                            <tr>
+                                <td>
+                                    Faltas
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-fouls" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-fouls"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Rebotes
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-rebounds" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-rebounds"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="football-stats" style="display: none;">
+                        <h4 class="mb-3">Estadísticas Fútbol Américano</h4>
+                        <table class="table table-responsive table-striped"><th>Estadistica</th><th>Número Total</th>
+                            <tr>
+                                <td>
+                                    Touchdowns Local
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-local-touchdowns" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-local-touchdowns"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Touchdowns Visitante
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-visitor-touchdowns" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-visitor-touchdowns"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td>
+                                    Goles de Campo
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-fieldgoals" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-fieldgoals"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Intercepciones
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-interceptions" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-interceptions"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Sacks
+                                </td>
+                                <td>
+                                    <div class="mb-3">
+                                        <label for="stats-sacks" class="form-label"></label>
+                                        <input type="number" step="1" min="0" max="10" id="stats-sacks"
+                                            class="form-control" placeholder="0">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <button class="btn btn-primary w-100 mb-3" id="btn-close-event">Cerrar Evento</button>
+                <button class="btn btn-danger w-100 mb-3" id="btn-retutn-modify">Volver</button>
+            </div>
         </div>
     </section>
-
-    <script src="admin.js"></script>
-
     <!-- Footer -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom"
-        style="color: aliceblue; justify-content: center;">
-        <div class="row" style="gap: 0%;">
-            <div class="col"><img src="./LOGO.png" alt="" height="50px" width="50px"></div>
-            <div class="col">Acerca</div>
-            <div class="col">Créditos</div>
-        </div>
-    </nav>
+    <footer class="bg-dark text-white text-center py-3">
+        <img src="./LOGO.png" alt="Logo" height="40" width="40">
+        <span class="mx-3">Acerca</span>
+        <span>Créditos</span>
+    </footer>
+    <script src="admin.js"></script>
 </body>
 
 </html

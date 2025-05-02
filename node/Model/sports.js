@@ -31,15 +31,21 @@ export class SportStatsModel{
     }
 
     static async updateStats({type, id_event, data}) {
-        try {
+        try {   
             const table = this.validateSportType(type);
             const sets = Object.keys(data).map(key => `${key} = ?`).join(', ');
             const values = [...Object.values(data), id_event];
 
-            db.prepare(`UPDATE ${table} SET ${sets} WHERE id_event = ?`).run(...values);
-            return db.prepare(`SELECT * FROM ${table} WHERE id_event = ?`).get(id_event);
+            db.prepare(`UPDATE ${table} SET ${sets} WHERE id_event = ?`).run(...values);            
+            const result = db.prepare(`SELECT * FROM ${table} WHERE id_event = ?`).get(id_event);
+
+            if (!result) {
+                throw new Error("No se encontraron estadísticas para actualizar.");
+            }
+            return result;
         } catch (error){
             console.log("Error al actualizar las estadisticas", error);
+            throw error;
         }
     }
 
