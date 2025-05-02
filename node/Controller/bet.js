@@ -106,4 +106,20 @@ export class BetController {
             return res.status(500).json({ error: "Error al eliminar la apuesta" })
         }
     }
+
+    //SAUL'S GET ALL BETS BY USER WITH COOKIES
+    static async getAllBetsByUser(req, res){
+        try{
+            const { user: { id_user } } = req.session
+
+            const allBets = await BetModel.getAllBetsByUser({ data : { id_user } })
+
+            return res.status(201).json(allBets)
+        }catch(error){
+            console.error("Error al buscar el historial de transacciones del usuario", error)
+            res.status(500).json({ error: "Error al buscar el historial de transacciones del usuario" })
+        }
+    }
+
+    
 }

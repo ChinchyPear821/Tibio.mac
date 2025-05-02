@@ -61,6 +61,5 @@ GET http://localhost:1234/bet/search?status=finalizado
 GET http://localhost:1234/bet/search/auth?result=ganada
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiYzljNTUzYmMtMzRiZi00MjJmLWJhMWUtNzcwYWFkZDk2MDIzIiwidXNlcm5hbWUiOiJTYXVsIiwiaWF0IjoxNzQ0Njc0OTEwLCJleHAiOjE3NDQ2Nzg1MTB9.1OIZj-KI3QO3Z9wc0E5qS5Xoac1iznY0aeFZuMUPeXg
 
-
-
-
+###
+GET http://localhost:1234/bet/user

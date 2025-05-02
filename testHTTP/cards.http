@@ -1,0 +1,23 @@
+## LOGIN
+POST http://localhost:1234/user/login
+Content-Type: application/json
+
+{
+"email": "gilbertomac@gmail.com",
+"password": "gilberto"
+}
+
+### GET allCardsByUser
+GET http://localhost:1234/user/cards
+
+### POST addCard
+POST http://localhost:1234/user/card
+Content-Type: application/json
+
+{
+    "cardName": "Luis Verga",
+    "cardNumber": 9999567891011,
+    "cardExpiration": "10/28",
+    "cardPassword": 123,
+    "bank": "SCOTIABANK"
+}

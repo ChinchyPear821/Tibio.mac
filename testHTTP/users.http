@@ -32,9 +32,11 @@ POST http://localhost:1234/user/login
 Content-Type: application/json
 
 {
-"email": "gil@gmail.com",
-"password": "gil12345"
+"email": "gilbertomac@gmail.com",
+"password": "gilberto"
 }
+###
+GET http://localhost:1234/user/protected
 
 
 

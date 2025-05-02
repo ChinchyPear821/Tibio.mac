@@ -1,3 +1,4 @@
+-- Cree otra tabla "card". La query esta en el archivo showTable.sql
 DROP TABLE IF EXISTS soccer_stats;
 DROP TABLE IF EXISTS football_stats;
 DROP TABLE IF EXISTS basketball_stats;
