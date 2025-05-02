@@ -18,6 +18,7 @@ function eliminarAcentos(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
+
 //Eventos
 async function createEvent() {
     document.getElementById('section-create-event').style.display = 'block';
@@ -207,8 +208,7 @@ async function createEvent() {
         // Datos del evento
         const localTeam = document.getElementById("local-team").value;
         const visitorTeam = document.getElementById("visitor-team").value;
-        let sport = eliminarAcentos(document.getElementById("event-sport").value.toLowerCase())
-<<<<<<< HEAD
+        let sport = document.getElementById("event-sport").value
 
 
         // Validar que ambos equipos estén llenos
@@ -218,24 +218,14 @@ async function createEvent() {
         }
 
 
-=======
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
         console.log(sport)
         if (sport === "futbol") {
             eventData = {
                 name: `${localTeam} vs ${visitorTeam}`,
-<<<<<<< HEAD
-                sport: sport,
-                outcomes: [
-                    { outcome_name: "local", official_odds: parseFloat(document.getElementById("odds-local-soccer").value) },
-                    { outcome_name: "visitante", official_odds: parseFloat(document.getElementById("odds-visitor-soccer").value) },
-=======
-                //begin_date: document.getElementById("event-date").value,
                 sport: sport,
                 outcomes: [
                     { outcome_name: "ganador local", official_odds: parseFloat(document.getElementById("odds-local-soccer").value) },
                     { outcome_name: "ganador visitante", official_odds: parseFloat(document.getElementById("odds-visitor-soccer").value) },
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
                     { outcome_name: "empate", official_odds: parseFloat(document.getElementById("odds-draw-soccer").value) },
                     { outcome_name: "goles local", official_odds: parseFloat(document.getElementById("odds-goals-local").value) },
                     { outcome_name: "goles visitante", official_odds: parseFloat(document.getElementById("odds-goals-visitor").value) },
@@ -251,17 +241,8 @@ async function createEvent() {
                 //begin_date: document.getElementById("event-date").value,
                 sport: sport,
                 outcomes: [
-<<<<<<< HEAD
-                    { outcome_name: "local", official_odds: parseFloat(document.getElementById("odds-local-basketball").value) },
-                    { outcome_name: "visitante", official_odds: parseFloat(document.getElementById("odds-visitor-basketball").value) },
-                    { outcome_name: "puntos local", official_odds: parseFloat(document.getElementById("odds-puntos-local").value) },
-                    { outcome_name: "puntos visitante", official_odds: parseFloat(document.getElementById("odds-puntos-visitor").value) },
-=======
-                    { outcome_name: "ganador local", official_odds: parseFloat(document.getElementById("odds-local-basketball").value) },
-                    { outcome_name: "ganador visitante", official_odds: parseFloat(document.getElementById("odds-visitor-basketball").value) },
-                    { outcome_name: "puntos local", official_odds: parseFloat(document.getElementById("odds-puntos-local").value) },
-                    { outcome_name: "puntos visitante", official_odds: parseFloat(document.getElementById("odds-puntos-visitante").value) },
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
+                    { outcome_name: "ganador", official_odds: parseFloat(document.getElementById("odds-local-basketball").value) },
+                    { outcome_name: "puntos totales", official_odds: parseFloat(document.getElementById("odds-puntos").value) },
                     { outcome_name: "triples", official_odds: parseFloat(document.getElementById("odds-triples").value) },
                     { outcome_name: "rebotes", official_odds: parseFloat(document.getElementById("odds-rebotes").value) },
                 ]
@@ -273,13 +254,8 @@ async function createEvent() {
                 //begin_date: document.getElementById("event-date").value,
                 sport: sport,
                 outcomes: [
-<<<<<<< HEAD
-                    { outcome_name: "local", official_odds: parseFloat(document.getElementById("odds-local-football").value) },
-                    { outcome_name: "visitante", official_odds: parseFloat(document.getElementById("odds-visitor-football").value) },
-=======
                     { outcome_name: "ganador local", official_odds: parseFloat(document.getElementById("odds-local-football").value) },
                     { outcome_name: "ganador visitante", official_odds: parseFloat(document.getElementById("odds-visitor-football").value) },
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
                     { outcome_name: "anotaciones local", official_odds: parseFloat(document.getElementById("odds-anotaciones-local").value) },
                     { outcome_name: "anotaciones visitante", official_odds: parseFloat(document.getElementById("odds-anotaciones-visitor").value) },
                     { outcome_name: "touchdowns", official_odds: parseFloat(document.getElementById("odds-touchdowns").value) },
@@ -355,15 +331,12 @@ async function administrateEvent() {
                 tableSport = 'Basquetbol';
             } else if (event.sport === "futbol americano") {
                 tableSport = 'Fútbol Americano';
-<<<<<<< HEAD
-=======
             }else if (event.sport === " 1 vs 1 futbol americano") {
                 tableSport = '1 vs 1 Fútbol Americano';
             }else if (event.sport === "1 vs 1 futbol") {
                 tableSport = '1 vs 1 Fútbol';
             }else if (event.sport === "1 vs 1 basquetbol") {
                 tableSport = '1 vs 1 Basquetbol';
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
             }
             let tableStatus = '';
             if (event.status === "en proceso") {
@@ -445,13 +418,8 @@ async function administrateEvent() {
                                 <h5>Outcomes</h5>
                                 <table class="table table-responsive table-bordered table-striped"><th class="w-50">NOMBRE DEL MOMIO</th><th class="text-center w-50">MOMIO ACTUAL</th></tr>
                                 `
-<<<<<<< HEAD
                         outcomes.outcomes.forEach(outcome => {
                             modifyEvent += `
-=======
-                            outcomes.outcomes.forEach(outcome => {
-                                modifyEvent += `
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
                                 <tr>
                                     <td>${(outcome.outcome_name).toUpperCase()}</td>
                                     <td class="text-center justify-content-center">
@@ -460,7 +428,6 @@ async function administrateEvent() {
                                     </td>
                                 </tr>
                                 `
-<<<<<<< HEAD
                         })
                         modifyEvent += `</table>
                             <div align="center">
@@ -500,15 +467,6 @@ async function administrateEvent() {
                         document.getElementById('update-outcomes').addEventListener("click", function () {
                             handleUpdateOutcomes(event.id_event, evento.sport);
                         });
-=======
-                            })
-                        modifyEvent += `</table>
-                            <div align="center">
-                                <button class="btn btn-primary" id="update-outcomes">Actualizar momios</button>
-                            </div>    
-                        </div>`
-                        containerModify.innerHTML = modifyEvent;
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
                     }
                     catch (err) {
                         console.error("Error al obtener outcomes:", err);
@@ -530,7 +488,6 @@ function handleUpdateOutcomes(id_event, sport) {
     const inputs = document.querySelectorAll(`input[id$='-${sport}']`);
     const updatedOutcomes = [];
 
-<<<<<<< HEAD
     inputs.forEach(input => {
         const outcomeName = input.name;
         const odds = parseFloat(input.value);
@@ -555,19 +512,10 @@ async function updateOutcomes(id_event, outcomes) {
     console.log("Outcomes a modificar:", outcomes);
     try {
         const response = await fetch(`/event/${id_event}/outcomes`, {
-=======
-async function updateOutcomes(id_event){
-
-    try{
-
-        const outcomes=S;
-        const responesOutcomes = await fetch(`/${id_event}/outcomes`,{
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
-<<<<<<< HEAD
             body: JSON.stringify({ outcomes }),
             credentials: "include"
         });
@@ -662,18 +610,6 @@ async function closeEvent(id_event, sport) {
 }
 
 // Verificar la sesión al cargar la página
-=======
-            body: JSON.stringify(eventData),
-            credentials: "include"
-        });
-    }catch(error){
-        
-    }
-
-
-}
-
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
 async function checkSession() {
     try {
         const response = await fetch("/protected-route", {
@@ -689,11 +625,7 @@ async function checkSession() {
             window.location.href = "main.html";
             return;
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
         //Show the username in the navbar
         let adminName = document.getElementById('admin-name');
         adminName.innerHTML = `${user.user.username}`
@@ -750,7 +682,6 @@ async function checkSession() {
 
             // Crear la columna
             const col = document.createElement("div");
-<<<<<<< HEAD
             col.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3", "mb-4", "ms-2", "mt-3");
 
             // Insertar contenido de la carta
@@ -768,22 +699,6 @@ async function checkSession() {
                     <p class="card-text mb-1"><i class="bi bi-controller me-1"></i>Deporte: <strong>${cardSport}</strong></p>
                     <p class="card-text mb-1"><i class="bi bi-calendar-event me-1"></i>Fecha: <strong>${cardDate}</strong></p>
                     <p class="card-text"><i class="bi bi-info-circle me-1"></i>Estatus: <strong>${cardStatus}</strong></p>
-=======
-            col.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3", "mb-4", "ms-2");
-
-            // Insertar contenido de la carta
-            col.innerHTML = `
-                <div class="card mt-5 h-100" >
-                    <div class="d-flex justify-content-around">
-                        <img src="./${fileSport}/${local}.png" class="w-50" alt="${local}">
-                        <img src="./${fileSport}/${visitor}.png" class="w-50" alt="${visitor}">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">${event.name}</h5>
-                        <p class="card-text">Deporte: ${cardSport}</p>
-                        <p class="card-text">Fecha: ${cardDate}</p>
-                        <p class="card-text">Estatus: ${cardStatus}</p>
->>>>>>> 9087f9ccb8b140d2487b044ca7dfb6b00aa924bd
                     </div>
                 </div>
                 `;
