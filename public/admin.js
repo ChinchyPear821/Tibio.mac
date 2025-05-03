@@ -208,7 +208,7 @@ async function createEvent() {
         // Datos del evento
         const localTeam = document.getElementById("local-team").value;
         const visitorTeam = document.getElementById("visitor-team").value;
-        let sport = document.getElementById("event-sport").value
+        let sport = eliminarAcentos(document.getElementById("event-sport").value).toLowerCase();
 
 
         // Validar que ambos equipos estén llenos
@@ -233,7 +233,9 @@ async function createEvent() {
                     { outcome_name: "tiros esquina", official_odds: parseFloat(document.getElementById("odds-corners").value) },
                     { outcome_name: "tarjetas rojas", official_odds: parseFloat(document.getElementById("odds-red").value) }
                 ]
+
             };
+            console.log(eventData)
         }
         else if (sport === "basquetbol") {
             eventData = {
@@ -241,8 +243,10 @@ async function createEvent() {
                 //begin_date: document.getElementById("event-date").value,
                 sport: sport,
                 outcomes: [
-                    { outcome_name: "ganador", official_odds: parseFloat(document.getElementById("odds-local-basketball").value) },
-                    { outcome_name: "puntos totales", official_odds: parseFloat(document.getElementById("odds-puntos").value) },
+                    { outcome_name: "ganador local", official_odds: parseFloat(document.getElementById("odds-local-basketball").value) },
+                    { outcome_name: "ganador visitante", official_odds: parseFloat(document.getElementById("odds-visitor-basketball").value) },
+                    { outcome_name: "puntos local", official_odds: parseFloat(document.getElementById("odds-puntos-local").value) },
+                    { outcome_name: "puntos visitante", official_odds: parseFloat(document.getElementById("odds-puntos-visitor").value) },
                     { outcome_name: "triples", official_odds: parseFloat(document.getElementById("odds-triples").value) },
                     { outcome_name: "rebotes", official_odds: parseFloat(document.getElementById("odds-rebotes").value) },
                 ]
@@ -331,11 +335,11 @@ async function administrateEvent() {
                 tableSport = 'Basquetbol';
             } else if (event.sport === "futbol americano") {
                 tableSport = 'Fútbol Americano';
-            }else if (event.sport === " 1 vs 1 futbol americano") {
+            } else if (event.sport === " 1 vs 1 futbol americano") {
                 tableSport = '1 vs 1 Fútbol Americano';
-            }else if (event.sport === "1 vs 1 futbol") {
+            } else if (event.sport === "1 vs 1 futbol") {
                 tableSport = '1 vs 1 Fútbol';
-            }else if (event.sport === "1 vs 1 basquetbol") {
+            } else if (event.sport === "1 vs 1 basquetbol") {
                 tableSport = '1 vs 1 Basquetbol';
             }
             let tableStatus = '';
@@ -387,7 +391,7 @@ async function administrateEvent() {
                         });
 
                         const text = await res.text();
-                        
+
                         if (!res.ok) {
                             console.warn("Error en la respuesta:", text);
                             return;
@@ -589,10 +593,10 @@ async function closeEvent(id_event, sport) {
             },
             body: JSON.stringify(statsData)
         });
-    
+
         // Verificar si la respuesta es exitosa
         const result = await response.json();
-    
+
         if (!response.ok) {
             // Mostrar el error si la respuesta no es exitosa
             console.error("Error al actualizar las estadísticas:", result.error || result.message);
@@ -602,10 +606,128 @@ async function closeEvent(id_event, sport) {
             console.log('Actualización exitosa:', result);
             alert("¡Estadísticas actualizadas correctamente!");
         }
+
+        try {
+            const body = {
+                id_event: id_event,
+                result: "pendiente"
+            };
+
+
+            const res = await fetch(`/event/close`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+                credentials: "include"
+            });
+
+            const result = await res.json();
+            console.log(result)
+            if (res.ok) {
+                alert("Evento cerrado exitosamente");
+                window.location.reload();
+            } else {
+                alert("Error al cerrar evento: " + result.error || result.message);
+            }
+
+        } catch (err) {
+            console.error("Error al cerrar el evento:", err);
+
+        }
+
     } catch (error) {
         // Capturar cualquier error durante el fetch o procesamiento
         console.error('Error al actualizar estadísticas:', error);
         alert("Hubo un problema al actualizar las estadísticas.");
+    }
+
+}
+//Delete Event
+async function deleteEvent() {
+    document.getElementById('section-delete-event').style.display = 'block';
+    document.getElementById("volver-delete-event").addEventListener("click", function () {
+        document.getElementById('section-delete-event').style.display = 'none';
+    });
+    //obtener todos los eventos
+    try {
+        const res = await fetch("/event/search?status=en%20proceso", {
+            method: "GET",
+            credentials: "include",
+        });
+
+        const events = await res.json();
+        const container = document.getElementById("delete-event-container");
+
+        if (events.length === 0) {
+            container.innerHTML = "<p>No hay eventos disponibles.</p>";
+            return;
+        }
+        console.log(events)
+        table = '<div class="table-responsive"><table class="table table-striped"><th>ID EVENTO</th><th>NOMBRE</th><th>DEPORTE</th><th>FECHA</th><th>ESTATUS</th><th>ACCIONES</th>';
+        events.forEach(event => {
+            let tableSport = '';
+            if (event.sport === "futbol") {
+                tableSport = 'Fútbol';
+            } else if (event.sport === "basquetbol") {
+                tableSport = 'Basquetbol';
+            } else if (event.sport === "futbol americano") {
+                tableSport = 'Fútbol Americano';
+            } else if (event.sport === " 1 vs 1 futbol americano") {
+                tableSport = '1 vs 1 Fútbol Americano';
+            } else if (event.sport === "1 vs 1 futbol") {
+                tableSport = '1 vs 1 Fútbol';
+            } else if (event.sport === "1 vs 1 basquetbol") {
+                tableSport = '1 vs 1 Basquetbol';
+            }
+            let tableStatus = '';
+            if (event.status === "en proceso") {
+                tableStatus = 'En Proceso';
+            } else if (event.status === "finalizado") {
+                tableStatus = 'Finalizado';
+            }
+            table += `<tr>
+                            <td>${event.id_event}</td>
+                            <td>${event.name}</td>
+                            <td>${tableSport}</td>
+                            <td>${event.begin_date}</td>
+                            <td>${tableStatus}</td>
+                            <td><button class="btn btn-danger" id="btn-delete-event-${event.id_event}">Eliminar</button></td>
+                        </tr>`;
+        })
+        table += '</table></div>'
+        container.innerHTML = table;
+
+        // Agregar evento click a cada botón de eliminar
+        events.forEach(event => {
+            document
+                .getElementById(`btn-delete-event-${event.id_event}`).addEventListener("click", async () => {
+                    try {
+                        const res = await fetch(`/event/${event.id_event}`, {
+                            method: "DELETE",
+                            credentials: "include",
+                        });
+
+                        const text = await res.text();
+
+                        if (!res.ok) {
+                            console.warn("Error en la respuesta:", text);
+                            return;
+                        }
+                        const data = JSON.parse(text);
+                        console.log("Evento eliminado:", data);
+
+                        alert("Evento eliminado exitosamente.");
+                        window.location.reload(); // Recargar la página para ver los cambios
+                    } catch (err) {
+                        console.error("Error al eliminar el evento:", err);
+                    }
+
+                });
+        });
+    } catch (err) {
+        console.error("Error al cargar eventos:", err);
     }
 }
 
@@ -665,12 +787,27 @@ async function checkSession() {
             if (event.sport === "futbol") {
                 cardSport = 'Fútbol';
                 fileSport = 'SoccerImg';
+            }
+            else if (event.sport === "1 vs 1 futbol") {
+                cardSport = '1 vs 1 Fútbol';
+                fileSport = 'SoccerImg';
+
             } else if (event.sport === "basquetbol") {
                 cardSport = 'Basquetbol';
                 fileSport = 'BasketballImg';
+
+            } else if (event.sport === "1 vs 1 basquetbol") {
+                cardSport = '1 vs 1 Basquetbol';
+                fileSport = 'BasketballImg';
+
             } else if (event.sport === "futbol americano") {
                 cardSport = 'Fútbol Américano';
                 fileSport = 'FootballImg';
+            }
+            else if (event.sport === "1 vs 1 futbol americano") {
+                cardSport = '1 vs 1 Fútbol Americano';
+                fileSport = 'FootballImg';
+
             }
             let cardStatus = '';
             if (event.status === "en proceso") {
@@ -720,7 +857,11 @@ async function checkSession() {
         document.getElementById('iniciar-administracion').addEventListener('click', async () => {
             await administrateEvent(); // Llama a la función para administrar un evento
         })
+        document.getElementById('delete-event-btn').addEventListener("click", async () => {
+            await deleteEvent(); // Llama a la función para eliminar un evento
+        });
     }
+
 }
 document.addEventListener("DOMContentLoaded", () => {
     checkSession(); // Verifica la sesión al cargar la página

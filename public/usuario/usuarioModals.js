@@ -130,6 +130,7 @@ async function fetchTransactionAction(e) {
         "amount": parseInt(transactionFormData.get("amount")),
         "type": modeOperation === "DEPOSITO" ? "DEPOSITO" : "RETIRO"
     }
+    console.log(data);
 
     let endpoint = ""
 
@@ -173,6 +174,7 @@ async function fetchAddUserCard(e) {
         "cardPassword": parseInt(cardFormData.get("cardPassword")),
         "bank": cardFormData.get("bank"),
     }
+    console.log(data)
 
     try {
         const res = await fetch("http://localhost:1234/user/card", {

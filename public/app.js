@@ -87,7 +87,23 @@ async function checkSession() {
         console.error("Error al verificar la sesión:", error);
         window.location.href = "index.html";
     }
+    try{
+        const res = await fetch("/user/protected", {
+            method: "GET",
+            credentials: "include",
+        });
+
+        if (!res.ok) throw new Error("No pudo acceder a la informacion del usuario");
+
+        const user = await res.json();
+        console.log(user);
+        let balance = document.getElementById("balance");
+        balance.innerHTML = `<h5>Bienvenido ${user.username}</h5><p>Tu saldo es de $${user.balance}</p>`;
+    }catch(e){
+        console.error("Error al fetch de la informacion del usuario: ", e);
+    }
     if( window.location.pathname.split("/").pop() === "main.html"){
+        let balance = document.getElementById("balance");
         displayAllEvents();
     }
 }
@@ -123,9 +139,9 @@ async function displayAllEvents() {
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">${event.name}</h5>
-                        <p class="card-text">Deporte: ${cardSport}</p>
-                        <p class="card-text">Fecha: ${cardDate}</p>
-                        <p class="card-text">Estatus: ${cardStatus}</p>
+                        <p class="card-text">Deporte: ${event.sport}</p>
+                        <p class="card-text">Fecha: ${event.begin_date}</p>
+                        <p class="card-text">Estatus: ${event.status}</p>
                         <div class="d-flex justify-content-center">
                             <a id="bet-btn-${event.id_event}" class="btn btn-secondary">Apostar</a>
                         </div>

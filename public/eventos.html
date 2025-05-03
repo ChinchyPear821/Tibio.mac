@@ -27,9 +27,7 @@
                 <div class="navbar-nav" style="color: red;">
                     <p class="p-2">Bienvenido: <span id="admin-name">F Mac Louis</span></p>
                     <a class="nav-link " href="admin.html">Inicio</a>
-                    <a class="nav-link" href="apuestas.html">Apuestas</a>
                     <a class="nav-link active" href="eventos.html">Eventos</a>
-                    <a class="nav-link" href="Usuarios.html">Usuarios</a>
                     <button onclick="logout()" class="btn btn-secondary">Salir</button>
                 </div>
             </div>
@@ -50,7 +48,7 @@
                     <button class="btn btn-secondary mt-3 w-100" id="iniciar-administracion">ADMINISTRAR</button>
                 </div>
                 <div class="col-12 col-lg-3">
-                    <button class="btn btn-danger mt-3 w-100">ELIMINAR</button>
+                    <button class="btn btn-danger mt-3 w-100" id="delete-event-btn">ELIMINAR</button>
                 </div>
             </div>
         </div>
@@ -162,12 +160,7 @@
                             <label for="odds-triples" class="form-label">Triples totales</label>
                             <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
                                 name="triples-totales" id="odds-triples">
-                        </div>
-                        <div class="mb-3">
-                            <label for="odds-faltas" class="form-label">Faltas Totales</label>
-                            <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
-                                name="faltas-totales" id="odds-faltas">
-                        </div>
+                        </div>                        
                         <div class="mb-3">
                             <label for="odds-rebotes" class="form-label">Rebotes Totales</label>
                             <input type="number" step="0.01" min="1" max="10" class="form-control outcome-odds"
@@ -436,6 +429,21 @@
                 <button class="btn btn-primary w-100 mb-3" id="btn-close-event">Cerrar Evento</button>
                 <button class="btn btn-danger w-100 mb-3" id="btn-retutn-modify">Volver</button>
             </div>
+        </div>
+    </section>
+
+    <section id="section-delete-event" class="section-absolute" style="display: none;">
+        <div class="contenedor-crear-evento mx-auto w-100 mt-5" id="contenedor-administrar-evento"
+            style="background-color: aliceblue;">
+            <div class="text-end">
+                <button id="volver-delete-event" class="btn btn-danger p-0 border-0 mb-3"
+                    style="width: 50px; height: 50px;">
+                    <img src="./close.png" alt="Cerrar" style="width: 100%; height: 100%; object-fit: cover;">
+                </button>
+            </div>
+            <div id="delete-event-container" class="container-fluid">
+            </div>
+            
         </div>
     </section>
     <!-- Footer -->
