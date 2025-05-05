@@ -53,7 +53,7 @@ app.use((req, res, next) => {
 
     next();
 });
-
+app.use(express.static(path.join(__dirname, "../public")));
 app.get("/protected-route", (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ message: "No autorizado. Inicia sesión primero." });
@@ -79,7 +79,7 @@ app.use("/bonus", routBonus)
 
 app.use("/sports", routSports)
 // Servir frontend desde /Fetch
-app.use(express.static(path.join(__dirname, "../public")))
+
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/index.html"))
