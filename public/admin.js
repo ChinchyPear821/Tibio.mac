@@ -310,7 +310,7 @@ async function createEvent() {
             }
             // VALIDACIÓN ANTES DEL FETCH
             document.getElementById('section-create-event').style.display = 'none';
-            showLoadingModal();
+            
             const response = await fetch("/event/", {
                 method: "POST",
                 headers: {
@@ -663,7 +663,7 @@ async function closeEvent(id_event, sport) {
 
         try {
             document.getElementById("section-administrate-event").style.display="none";
-            showLoadingModal();
+            
             const body = {
                 id_event: id_event,
                 result: "pendiente"
@@ -771,7 +771,7 @@ async function deleteEvent() {
                 .getElementById(`btn-delete-event-${event.id_event}`).addEventListener("click", async () => {
                     try {
                         document.getElementById("section-delete-event").style.display="none"
-                        showLoadingModal();
+                        
                         const res = await fetch(`/event/${event.id_event}`, {
                             method: "DELETE",
                             credentials: "include",
