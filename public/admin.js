@@ -17,7 +17,33 @@ async function logout() {
 function eliminarAcentos(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
+function showLoadingModal() {
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    loadingModal.show();
+    window.loadingModalInstance = loadingModal;
+}
 
+function hideLoadingModal() {
+    if (window.loadingModalInstance) {
+        window.loadingModalInstance.hide();
+    }
+}
+
+function showSuccessModal(message = "Operación realizada correctamente") {
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    const successMessageContainer = document.querySelector('#successModal h5');
+    successMessageContainer.textContent = message;
+    successModal.show();
+    window.successModalInstance = successModal;
+}
+
+function showErrorModal(message = "Ocurrio un error") {
+    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    const errorMessageContainer = document.querySelector('#errorModal h5');
+    errorMessageContainer.textContent = message;
+    errorModal.show();
+    window.errorModalInstance = errorModal;
+}
 
 //Eventos
 async function createEvent() {
@@ -270,7 +296,8 @@ async function createEvent() {
             };
         }
         try {
-            // VALIDACIÓN ANTES DEL FETCH
+
+
 
             console.log("Datos del evento:", eventData);
             const isValidOdds = eventData.outcomes.every(outcome => {
@@ -281,6 +308,9 @@ async function createEvent() {
                 alert("Todos los momios deben estar entre 1 y 10.");
                 return; // No envía el formulario
             }
+            // VALIDACIÓN ANTES DEL FETCH
+            document.getElementById('section-create-event').style.display = 'none';
+            showLoadingModal();
             const response = await fetch("/event/", {
                 method: "POST",
                 headers: {
@@ -290,16 +320,24 @@ async function createEvent() {
                 credentials: "include"
             });
 
+
+
             const result = await response.json();
             console.log(result)
+
+            hideLoadingModal();
             if (response.ok) {
-                alert("Evento creado exitosamente");
+                //alert("Evento creado exitosamente");
+                showSuccessModal("¡Evento creado correctamente!");
                 document.getElementById('section-create-event').style.display = 'none';
-                window.location.reload(); // Recargar la página para ver el nuevo evento    
+                //window.location.reload();
+
             } else {
+                hideLoadingModal();
                 alert("Error al crear evento: " + result.error || result.message);
             }
         } catch (err) {
+            hideLoadingModal();
             console.error("Error en la solicitud:", err);
             alert("Ocurrió un error al enviar el formulario.");
         }
@@ -348,13 +386,19 @@ async function administrateEvent() {
             } else if (event.status === "finalizado") {
                 tableStatus = 'Finalizado';
             }
+
+            const is1vs1 = event.sport.startsWith("1 vs 1");
             table += `<tr>
                             <td>${event.id_event}</td>
                             <td>${event.name}</td>
                             <td>${tableSport}</td>
                             <td>${event.begin_date}</td>
                             <td>${tableStatus}</td>
-                            <td><button class="btn btn-primary" id="btn-administrate-event-${event.id_event}">Administrar</button></td>
+                            <td>${
+                                is1vs1
+                                ? ''
+                                : `<button class="btn btn-primary" id="btn-administrate-event-${event.id_event}">Administrar</button>`
+                            }</td>
                         </tr>`;
         })
         table += '</table></div>'
@@ -362,7 +406,14 @@ async function administrateEvent() {
 
         // Agregar evento click a cada botón de administrar
         events.forEach(event => {
-            document.getElementById(`btn-administrate-event-${event.id_event}`).addEventListener("click", async () => {
+            const button = document.getElementById(`btn-administrate-event-${event.id_event}`);
+            if (!button) {
+                console.warn(`Botón no encontrado para evento ${event.id_event}`);
+                return;
+            }
+            button.addEventListener("click", async () => {
+
+
                 try {
                     const res = await fetch(`/event/search?id_event=${event.id_event}`, {
                         method: "GET",
@@ -515,6 +566,7 @@ async function updateOutcomes(id_event, outcomes) {
     console.log("Evento a modificar:", id_event);
     console.log("Outcomes a modificar:", outcomes);
     try {
+
         const response = await fetch(`/event/${id_event}/outcomes`, {
             method: "PATCH",
             headers: {
@@ -532,7 +584,9 @@ async function updateOutcomes(id_event, outcomes) {
         }
 
         console.log("Resultado de la actualización:", result);
-        alert("Momios actualizados exitosamente.");
+        document.getElementById("update-outcomes").display="none";
+        showSuccessModal("Momios actualizados correctamente");
+        //alert("Momios actualizados exitosamente.");
     }
     catch (err) {
         console.error("Error en la solicitud de actualización:", err);
@@ -578,7 +632,7 @@ async function closeEvent(id_event, sport) {
             data: {
                 home_touchdowns: parseInt(document.getElementById("stats-local-touchdowns").value),
                 away_touchdowns: parseInt(document.getElementById("stats-visitor-touchdowns").value),
-                field_goals: parseInt(document.getElementById("stats-field-goals").value),
+                field_goals: parseInt(document.getElementById("stats-fieldgoals").value),
                 interceptions: parseInt(document.getElementById("stats-interceptions").value),
                 sacks: parseInt(document.getElementById("stats-sacks").value),
             }
@@ -604,15 +658,16 @@ async function closeEvent(id_event, sport) {
         } else {
             // Si la respuesta es exitosa
             console.log('Actualización exitosa:', result);
-            alert("¡Estadísticas actualizadas correctamente!");
+            //alert("¡Estadísticas actualizadas correctamente!");
         }
 
         try {
+            document.getElementById("section-administrate-event").style.display="none";
+            showLoadingModal();
             const body = {
                 id_event: id_event,
                 result: "pendiente"
             };
-
 
             const res = await fetch(`/event/close`, {
                 method: "PATCH",
@@ -625,10 +680,19 @@ async function closeEvent(id_event, sport) {
 
             const result = await res.json();
             console.log(result)
+
+            hideLoadingModal();
             if (res.ok) {
-                alert("Evento cerrado exitosamente");
-                window.location.reload();
+                hideLoadingModal();
+                showSuccessModal();
+                document.getElementById("successModalButton").addEventListener("click", () => {
+                    window.location.reload();
+                });
+
+                //alert("Evento cerrado exitosamente");
+               // window.location.reload();
             } else {
+                showSuccessModal();
                 alert("Error al cerrar evento: " + result.error || result.message);
             }
 
@@ -644,6 +708,8 @@ async function closeEvent(id_event, sport) {
     }
 
 }
+
+
 //Delete Event
 async function deleteEvent() {
     document.getElementById('section-delete-event').style.display = 'block';
@@ -704,6 +770,8 @@ async function deleteEvent() {
             document
                 .getElementById(`btn-delete-event-${event.id_event}`).addEventListener("click", async () => {
                     try {
+                        document.getElementById("section-delete-event").style.display="none"
+                        showLoadingModal();
                         const res = await fetch(`/event/${event.id_event}`, {
                             method: "DELETE",
                             credentials: "include",
@@ -712,14 +780,16 @@ async function deleteEvent() {
                         const text = await res.text();
 
                         if (!res.ok) {
+                            hideLoadingModal();
                             console.warn("Error en la respuesta:", text);
                             return;
                         }
                         const data = JSON.parse(text);
+                        hideLoadingModal();
                         console.log("Evento eliminado:", data);
-
-                        alert("Evento eliminado exitosamente.");
-                        window.location.reload(); // Recargar la página para ver los cambios
+                        showSuccessModal();
+                        //alert("Evento eliminado exitosamente.");
+                        //window.location.reload(); // Recargar la página para ver los cambios
                     } catch (err) {
                         console.error("Error al eliminar el evento:", err);
                     }
@@ -821,6 +891,8 @@ async function checkSession() {
             const col = document.createElement("div");
             col.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3", "mb-4", "ms-2", "mt-3");
 
+            const isFinalized = event.result === "finalizado";
+
             // Insertar contenido de la carta
             col.innerHTML = `
                 <div class="card mt-4 shadow-sm border-0 rounded-4 h-100">
@@ -833,6 +905,7 @@ async function checkSession() {
                     </div>
                     <div class="card-body text-center">
                     <h5 class="card-title fw-semibold text-danger text-primary">${event.name}</h5>
+                   
                     <p class="card-text mb-1"><i class="bi bi-controller me-1"></i>Deporte: <strong>${cardSport}</strong></p>
                     <p class="card-text mb-1"><i class="bi bi-calendar-event me-1"></i>Fecha: <strong>${cardDate}</strong></p>
                     <p class="card-text"><i class="bi bi-info-circle me-1"></i>Estatus: <strong>${cardStatus}</strong></p>

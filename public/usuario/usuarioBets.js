@@ -28,60 +28,35 @@ async function fetchAllBetsByUser() {
 }
 
 //FUNCTIONS
+function parseBetDate(dateString) {
+    const [datePart] = dateString.split(" ")
+    const [day, month, year] = datePart.split("/").map(Number)
+    return new Date(year, month - 1, day)
+}
+
 function applyFiltersBets() {
     containerBets.innerHTML = ""
     const typeValue = typeFilterBets.value
     typeBet = typeValue
     const daysValue = parseInt(dateFilterBets.value)
 
-    const nowDay = new Date().getDate()
-    //Enero = 0 
-    const nowMonth = new Date().getMonth() + 1
+    const now = new Date()
+    const dateLimit = new Date(now)
+    dateLimit.setDate(now.getDate() - daysValue)
 
-    let limitDay = 0, limitMonth = 0
+    filteredBets = allBets.filter(bet => {
+        const betDate = parseBetDate(bet.begin_date)
+        const isInRange = betDate >= dateLimit
 
-    if (typeValue == "ganada" || typeValue == "perdida") {
-        filteredBets = allBets.filter(bet => {
-
-            let betDay = bet.begin_date.slice(0, 2)
-            let betMonth = bet.begin_date.slice(3, 4)
-
-            if (daysValue == 15) {
-
-                limitDay = nowDay - daysValue
-                limitMonth = limitDay < 0 ? nowMonth - 1 : nowMonth
-                limitDay = 30 - Math.abs(limitDay)
-
-            } else if (daysValue == 30) {
-                limitDay = nowDay
-                limitMonth = nowMonth - 1
-            }
-
-            return bet.result == typeValue && betDay >= limitDay && betMonth >= limitMonth
-        })
-
-    } else if (typeValue == "en proceso") {
-        filteredBets = allBets.filter(bet => {
-
-            let betDay = bet.begin_date.slice(0, 2)
-            let betMonth = bet.begin_date.slice(3, 4)
-
-            if (daysValue == 15) {
-
-                limitDay = nowDay - daysValue
-                limitMonth = limitDay < 0 ? nowMonth - 1 : nowMonth
-                limitDay = 30 - Math.abs(limitDay)
-
-            } else if (daysValue == 30) {
-                limitDay = nowDay
-                limitMonth = nowMonth - 1
-            }
-
-            return bet.status == typeValue && betDay >= limitDay && betMonth >= limitMonth
-        })
-    } else if (typeValue == "ALL") {
-        filteredBets = allBets
-    }
+        if (typeValue === "ganada" || typeValue === "perdida") {
+            return bet.result === typeValue && isInRange
+        } else if (typeValue === "en proceso") {
+            return bet.status === typeValue && isInRange
+        } else if (typeValue === "ALL") {
+            return true
+        }
+        return false
+    })
 
     renderCountBets = 0
     renderNextBets()
@@ -138,5 +113,5 @@ function renderNextBets() {
 //INICIAR
 typeFilterBets.addEventListener("change", applyFiltersBets)
 dateFilterBets.addEventListener("change", applyFiltersBets)
-loadMoreBtnBets.addEventListener("click", renderNextTransactions)
+loadMoreBtnBets.addEventListener("click", renderNextBets)
 fetchAllBetsByUser()

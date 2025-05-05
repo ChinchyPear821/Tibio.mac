@@ -25,11 +25,15 @@
             </button>
             <div class="collapse navbar-collapse" style="justify-content: right;" id="navbarNavAltMarkup">
                 <div class="navbar-nav" style="color: red;">
+                    <p id="nav-name" class="p-2">Bienvenido: </p>
                     <p class="p-2">Balance: <span id="balance">$0.00</span></p>
+                    <!-- Botón para el nombre de usuario -->
                     <a class="nav-link active" href="#">Inicio</a>
                     <a class="nav-link" href="historial.html">Historial</a>
                     <a class="nav-link" href="./usuario/usuario.html">Usuario</a>
                     <a class="nav-link" href="categorias.html">Categorias</a>
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#bonosModal">Bonos</a>
+
                     <button onclick="logout()" class="btn btn-secondary">Salir</button>
                 </div>
             </div>
@@ -66,34 +70,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="betModalLabel">Formulario de Apuesta</h5>
+                    <h5 class="modal-title" id="betModalLabel">Realiza tu apuesta</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="betModalBody">
-                    <!-- El contenido del formulario se insertará aquí dinámicamente -->
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="submit-bet">Realizar Apuesta</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Confirmación -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmationModalLabel">Confirmar Apuesta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="confirmationModalBody">
-                    <!-- El resumen de la apuesta se insertará aquí dinámicamente -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirm-bet">Confirmar Apuesta</button>
+                    <button type="button" class="btn btn-danger" id="submit-bet">Realizar Apuesta</button>
                 </div>
             </div>
         </div>
@@ -119,7 +104,51 @@
             <div class="modal-content text-center p-4">
                 <div class="text-success mb-2" style="font-size: 3rem;">✅</div>
                 <h5 class="mb-3">¡Apuesta realizada!</h5>
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="window.location.reload()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal de Bonos de usuario -->
+    <div class="modal fade" id="bonosModal" tabindex="-1" aria-labelledby="bonosModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bonosModalLabel">Consulta tus bonos disponibles y canjeados</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-dark table-striped">
+                        <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="bonos-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de Confirmacion -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirmar Apuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="confirmationModalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-bet">Confirmar Apuesta</button>
+                </div>
             </div>
         </div>
     </div>

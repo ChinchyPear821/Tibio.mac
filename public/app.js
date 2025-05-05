@@ -7,6 +7,11 @@ async function logout() {
 
         const result = await response.json();
         alert(result.message || "Sesión cerrada");
+        if (window.location.pathname === "/usuario/usuario.html") {
+            window.location.href = "../index.html";
+        } else {
+            window.location.href = "index.html";
+        }
 
         window.location.href = "index.html";
     } catch (error) {
@@ -42,7 +47,6 @@ function showErrorModal(message = "Ocurrio un error") {
     errorModal.show();
     window.errorModalInstance = errorModal;
 }
-
 
 
 function getEventImages(eventName, sport) {
@@ -83,11 +87,14 @@ async function checkSession() {
 
         const user = await response.json();
         console.log("Usuario autenticado:", user);
+        if (user.user.rol === "ADMIN") {
+            window.location.href = "admin.html";
+        }
     } catch (error) {
         console.error("Error al verificar la sesión:", error);
         window.location.href = "index.html";
     }
-    try{
+    try {
         const res = await fetch("/user/protected", {
             method: "GET",
             credentials: "include",
@@ -97,14 +104,31 @@ async function checkSession() {
 
         const user = await res.json();
         console.log(user);
-        let balance = document.getElementById("balance");
-        balance.innerHTML = `<h5>Bienvenido ${user.username}</h5><p>Tu saldo es de $${user.balance}</p>`;
-    }catch(e){
+        // Aquí obtenemos los elementos del DOM
+        // Verificamos si existe el balance y la navbar
+        const balanceElement = document.getElementById("balance");
+        const navbar = document.querySelector(".navbar-nav");
+
+        if (balanceElement && user.balance !== undefined) {
+            balanceElement.innerText = `$${user.balance.toFixed(2)}`;
+        }
+
+        if (navbar && user.name) {
+            const userNameElement = document.createElement("p");
+            userNameElement.classList.add("p-2");
+            userNameElement.innerText = `Bienvenido ${user.name}`;
+            navbar.prepend(userNameElement);
+        }
+        await loadUserBonuses();
+
+
+        // Solo si estamos en main.html
+        if (window.location.pathname.split("/").pop() === "main.html") {
+            await displayAllEvents();
+        }
+
+    } catch (e) {
         console.error("Error al fetch de la informacion del usuario: ", e);
-    }
-    if( window.location.pathname.split("/").pop() === "main.html"){
-        let balance = document.getElementById("balance");
-        displayAllEvents();
     }
 }
 
@@ -129,27 +153,35 @@ async function displayAllEvents() {
         filteredEvents.forEach(event => {
             const col = document.createElement("div");
             col.classList.add("col-12", "col-md-6", "col-lg-4", "mb-4");
-            const { localImg, visitorImg } = getEventImages(event.name, event.sport);
+
+            const {localImg, visitorImg} = getEventImages(event.name, event.sport);
+            const cardSport = event.sport;
+            const cardDate = event.begin_date;
+            const cardStatus = event.status;
 
             col.innerHTML = `
-                <div class="card mt-5" style="width: 22rem; justify-content: center;">
-                    <div class="d-flex justify-content-around mt-2 pb-3 pt-3">
-                        <img src="${localImg}" style="width: 150px; height: 100px;" class="card-img-top" alt="local">
-                        <img src="${visitorImg}" style="width: 150px; height: 100px;" class="card-img-top" alt="visitor">
+                <div class="card mt-5 shadow-sm border-0 rounded-4 h-100" style="width: 22rem; justify-content: center;">
+                    <div class="card-header bg-light text-center border-0">
+                        <div class="d-flex justify-content-center align-items-center gap-3">
+                            <img src="${localImg}" class="img-fluid" style="max-height: 60px;" alt="local">
+                            <span class="fw-bold">vs</span>
+                            <img src="${visitorImg}" class="img-fluid" style="max-height: 60px;" alt="visitor">
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">${event.name}</h5>
-                        <p class="card-text">Deporte: ${event.sport}</p>
-                        <p class="card-text">Fecha: ${event.begin_date}</p>
-                        <p class="card-text">Estatus: ${event.status}</p>
-                        <div class="d-flex justify-content-center">
-                            <a id="bet-btn-${event.id_event}" class="btn btn-secondary">Apostar</a>
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-semibold text-danger text-primary">${event.name}</h5>
+                        <p class="card-text mb-1"><i class="bi bi-controller me-1"></i>Deporte: <strong>${cardSport}</strong></p>
+                        <p class="card-text mb-1"><i class="bi bi-calendar-event me-1"></i>Fecha: <strong>${cardDate}</strong></p>
+                        <p class="card-text"><i class="bi bi-info-circle me-1"></i>Estatus: <strong>${cardStatus}</strong></p>
+                        <div class="d-flex justify-content-center mt-3">
+                            <a id="bet-btn-${event.id_event}" class="btn btn-outline-danger px-4 rounded-pill">Apostar</a>
                         </div>
                     </div>
                 </div>
             `;
 
             container.appendChild(col);
+
             document.getElementById(`bet-btn-${event.id_event}`).addEventListener('click', () => {
                 showBetForm(event.id_event);
             });
@@ -189,14 +221,14 @@ async function showBetForm(id_event) {
 
         const betModalBody = document.getElementById('betModalBody');
         betModalBody.innerHTML = `
-            <h3>Realiza tu Apuesta para ${eventData.name}</h3>
+            <h3> Local: ${eventData.name.split(" vs ")[0]} vs Visitante: ${eventData.name.split(" vs ")[1]}</h3>
             <form id="form-bet">
            
                 <div class="form-group mb-3">
                     <label>Tipo de Apuesta</label>
                     <div id="type-buttons" class="d-flex flex-wrap gap-2 mt-2">
                         ${outcomes.map(outcome => `
-                            <button type="button" class="btn btn-outline-primary outcome-btn" data-type="${outcome.outcome_name.toLowerCase()}">
+                            <button type="button" class="btn btn-outline-danger outcome-btn" data-type="${outcome.outcome_name.toLowerCase()}">
                                 ${outcome.outcome_name}
                             </button>
                         `).join("")}
@@ -204,9 +236,9 @@ async function showBetForm(id_event) {
                 </div>
 
                 <div class="form-group" id="target-group">
-                    <label for="target">Target</label>
+                    <label for="target">Objetivo de apuesta</label>
                     <select id="target" class="form-control" required>
-                        <option value="">Selecciona el target</option>
+                        <option value=""> e.g 2 goles, 3 tarjetas amarillas...</option>
                     </select>
                 </div>
                 <input type="hidden" id="auto-target">
@@ -255,7 +287,11 @@ async function showBetForm(id_event) {
                     document.getElementById("target-group").style.display = "none";
                     targetSelect.required = false;
                     document.getElementById("auto-target").value = visitanteTeam;
-                } else {
+                }else if (selectedType === "empate") {
+                    document.getElementById("target-group").style.display = "none";
+                    targetSelect.required = false;
+                    document.getElementById("auto-target").value = "empate";
+                }else {
                     document.getElementById("target-group").style.display = "block";
                     targetSelect.required = true;
                     document.getElementById("auto-target").value = "";
@@ -279,7 +315,6 @@ async function showBetForm(id_event) {
                 }
             });
         });
-
 
 
         document.getElementById("submit-bet").addEventListener("click", function (e) {
@@ -307,7 +342,7 @@ async function showBetForm(id_event) {
             const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
             confirmationModal.show();
 
-            console.log("outcome:" ,selectedOutcome);
+            console.log("outcome:", selectedOutcome);
 
             document.getElementById("confirm-bet").addEventListener("click", async function () {
                 const token = localStorage.getItem("token");
@@ -341,6 +376,8 @@ async function showBetForm(id_event) {
 
                     }
                     hideLoadingModal();
+                    document.getElementById("confirmationModal").style.display="none";
+                    document.getElementById("betModal").style.display="none";
                     showSuccessModal("¡Apuesta realizada correctamente!");
                     betFormModal._element.addEventListener('hidden.bs.modal', () => {
                         document.body.classList.remove('modal-open');
@@ -360,6 +397,73 @@ async function showBetForm(id_event) {
         console.error("Error al mostrar el formulario de apuestas:", err);
     }
 }
+
+
+async function loadUserBonuses() {
+
+    try {
+        const token = localStorage.getItem("token")
+        const res = await fetch("/bonus/user", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            credentials: "include"
+        });
+
+        if (!res.ok) throw new Error("No se pudieron obtener los bonos");
+
+        const bonuses = await res.json();
+        const tbody = document.getElementById("bonos-table-body");
+        tbody.innerHTML = ""; // Limpiar contenido anterior
+
+        bonuses.forEach(bonus => {
+            const tr = document.createElement("tr");
+
+            const statusLabel = bonus.status === "canjeado" ? "Canjeado" : "Disponible";
+            const actionBtn = bonus.status === "pendiente"
+                ? `<button class="btn btn-success btn-sm" onclick="redeemBonus('${bonus.id_bonus}')">Canjear</button>`
+                : `<span class="text-muted">—</span>`;
+
+            tr.innerHTML = `
+                <td>${bonus.type} - $${bonus.amount}</td>
+                <td>${statusLabel}</td>
+                <td>${actionBtn}</td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+
+    } catch (e) {
+        console.error("Error al cargar los bonos:", e);
+    }
+}
+
+async function redeemBonus(id_bonus) {
+    try {
+        const token = localStorage.getItem("token")
+        const res = await fetch(`/bonus/redeem/${id_bonus}`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            credentials: "include"
+        });
+
+        if (!res.ok) {
+            const {error} = await res.json();
+            return alert("Error: " + error);
+        }
+
+        alert("¡Bono canjeado con éxito!");
+        await loadUserBonuses(); // Refrescar la tabla
+        await checkSession();    // Refrescar el balance
+    } catch (e) {
+        console.error("Error al canjear bono:", e);
+        alert("Error al canjear bono");
+    }
+}
+
 
 // Llamar a la función cuando se cargue la página
 document.addEventListener("DOMContentLoaded", checkSession);

@@ -136,33 +136,37 @@ function createEventCard(event) {
                 ...event,
                 target: event.target
             };
-            actionButtonHTML = `<button class="btn btn-primary mt-3" onclick='openAcceptOneVsOneModal(${JSON.stringify(safeEvent)})'>Aceptar Apuesta</button>`;
+            actionButtonHTML = `<button class="btn btn-danger mt-3" onclick='openAcceptOneVsOneModal(${JSON.stringify(safeEvent)})'>Aceptar Apuesta</button>`;
         }
     } else {
-        actionButtonHTML = `<button class="btn btn-success mt-3" onclick="showBetForm('${event.id_event}')">Apostar</button>`;
+        actionButtonHTML = `<button class="btn btn-danger mt-3" onclick="showBetForm('${event.id_event}')">Apostar</button>`;
     }
 
     const challengeButtonHTML = event.sport.startsWith("1 vs 1")
         ? ""
-        : `<button class="btn btn-primary mt-3" onclick="openChallengeModal('${event.id_event}', '${event.sport}')">Reta a otro usuario</button>`;
+        : `<button class="btn btn-danger mt-3" onclick="openChallengeModal('${event.id_event}', '${event.sport}')">Reta a otro usuario</button>`;
     const { localImg, visitorImg } = getEventImages(event.name, event.sport);
 
     eventCard.innerHTML = `
-        <div class="card">
-            <div class="d-flex justify-content-around mt-2 pb-3 pt-3">
-                        <img src="${localImg}" style="width: 150px; height: 100px;" class="card-img-top" alt="local">
-                        <img src="${visitorImg}" style="width: 150px; height: 100px;" class="card-img-top" alt="visitor">
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">${event.name}</h5>
-                <p class="card-title">${event.sport}</p>
-                <p class="card-title">${event.status}</p>
-                <p class="card-text">${event.begin_date}</p>
-                ${actionButtonHTML}
-                ${challengeButtonHTML}
+    <div class="card mt-5 shadow-sm border-0 rounded-4 h-100" style="width: 22rem; justify-content: center; padding-top: 10px;margin-top: 8%;">
+        <div class="card-header bg-light text-center border-0">
+            <div class="d-flex justify-content-center align-items-center gap-3">
+                <img src="${localImg}" class="img-fluid" style="max-height: 60px;" alt="local">
+                <span class="fw-bold">vs</span>
+                <img src="${visitorImg}" class="img-fluid" style="max-height: 60px;" alt="visitor">
             </div>
         </div>
-    `;
+        <div class="card-body text-center">
+            <h5 class="card-title fw-semibold text-danger text-primary">${event.name}</h5>
+            <p class="card-text mb-1"><i class="bi bi-controller me-1"></i>Deporte: <strong>${event.sport}</strong></p>
+            <p class="card-text mb-1"><i class="bi bi-calendar-event me-1"></i>Fecha: <strong>${event.begin_date}</strong></p>
+            <p class="card-text"><i class="bi bi-info-circle me-1"></i>Estatus: <strong>${event.status}</strong></p>
+            ${actionButtonHTML}
+            ${challengeButtonHTML}
+        </div>
+    </div>
+`;
+
 
     return eventCard;
 }

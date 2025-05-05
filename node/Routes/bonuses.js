@@ -4,14 +4,8 @@ import {authenticateToken} from "../utils/functions.js";
 
 export const routBonus = new Router();
 
-// POST
 routBonus.post("/", BonusController.createBonus);
-
-// GET
-routBonus.get("/:id_user", BonusController.getBonusesByUser);
-
-// PATCH
-routBonus.patch("/redeem/:id_bonus",authenticateToken, BonusController.redeemBonus);
-
-// DELETE
+routBonus.get("/user",authenticateToken, BonusController.getBonusesByUser);
+routBonus.post("/redeem/:id_bonus", authenticateToken, BonusController.redeemBonus);
 routBonus.delete("/:id_bonus", BonusController.deleteBonus);
+

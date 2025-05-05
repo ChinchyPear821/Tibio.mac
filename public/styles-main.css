@@ -61,7 +61,7 @@
 }
 
 #loadingModal {
-    z-index: 1056 !important;
+    z-index: 1100 !important;
 }
 
 .modal-backdrop.loading-backdrop {

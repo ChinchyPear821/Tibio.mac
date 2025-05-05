@@ -2,7 +2,7 @@
 GET https://examples.http-client.intellij.net/get
     ?generated-in=WebStorm
 
-### SOLICITUD PARA CREAR UNA APUESTA
+### SOLICITUD PARA CREAR UNA EVENTO
 // "name" debe ser de la siguiente forma "equipoA vs equipoB" el vs debe ir en medio separado de un espacio y sport
 // debe se alguno de los que estan en const.js en CATEGORY
 POST http://localhost:1234/event/
@@ -10,7 +10,14 @@ Content-Type: application/json
 
 {
   "name": "vikings vs lakers",
-  "sport": "basquetbol"
+  "sport": "basquetbol",
+  "outcomes": [
+    { "outcome_name": "ganador", "official_odds": 1 },
+    { "outcome_name": "goles", "official_odds": 1 },
+    { "outcome_name": "tarjetas amarillas", "official_odds": 1 },
+    { "outcome_name": "tiros esquina", "official_odds": 1 },
+    { "outcome_name": "tarjetas rojas", "official_odds": 1 }
+  ]
 }
 ### EJEMPLO DE CREAR APUESTA/EVENTO 1 VS 1
 // Para crear una apuesta de tipo 1vs 1 tenemos que poner en sport el evento que seria 1 vs 1 y luego el deporte del que es

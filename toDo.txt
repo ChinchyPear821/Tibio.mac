@@ -1,4 +1,0 @@
-1. Hacer que renderice todas las transacciones
-2. Hacer que renderice todas las apuestas hechas por un usuario
-3. Crear formulario para Depositar/Retirar
-4. Crear una tabla para tarjetas Route/Controller/Model

@@ -24,7 +24,7 @@ CREATE TABLE events (
     sport TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'EN PROCESO',
     result TEXT,
-    begin_date TEXT NOT NULL, 
+    begin_date TEXT NOT NULL,
     end_date TEXT
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE bets (
     category TEXT,
     type TEXT NOT NULL,
     amount NUMERIC NOT NULL,
-    extra NUMERIC NOT NULL,  -- 'extra' parece referirse al momio
+    extra NUMERIC NOT NULL,
     status TEXT NOT NULL,
     target TEXT,
     result TEXT,
@@ -60,7 +60,7 @@ CREATE TABLE transactions (
     id_transaction TEXT NOT NULL PRIMARY KEY,
     id_user TEXT,
     amount REAL NOT NULL,
-    card TEXT NOT NULL,  -- Cambiado a TEXT para evitar problemas con números largos
+    card TEXT NOT NULL,
     bank TEXT NOT NULL,
     type TEXT NOT NULL,
     date TEXT NOT NULL,
@@ -112,5 +112,15 @@ CREATE TABLE bonuses (
     type TEXT NOT NULL,
     status TEXT NOT NULL,
     redeemed_date TEXT,
+    FOREIGN KEY (id_user) REFERENCES users(id_user)
+);
+CREATE TABLE cards(
+    id_card TEXT NOT NULL UNIQUE PRIMARY KEY,
+    id_user TEXT NOT NULL,
+    name TEXT NOT NULL,
+    number INTEGER NOT NULL,
+    expiration TEXT NOT NULL,
+    cvv INTEGER NOT NULL,
+    bank TEXT NOT NULL,
     FOREIGN KEY (id_user) REFERENCES users(id_user)
 );

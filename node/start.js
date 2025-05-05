@@ -12,18 +12,36 @@ import {routEvent} from "./Routes/event.js";
 import {routSports} from "./Routes/sports.js";
 import { routBonus} from "./Routes/bonuses.js";
 
-import path from "path"
-import { fileURLToPath } from "url"
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+// Configurar __dirname para ES Modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
+const isRender = process.env.RENDER === "true";
+
+if (isRender) {
+    const origin = path.join(__dirname, "../database/sqLite.db");
+    const destination = "/data/sqLite.db";
+
+    if (!fs.existsSync(destination)) {
+        fs.copyFileSync(origin, destination);
+        console.log("Base de datos copiada a /data");
+    } else {
+        console.log("Base ya existe en /data");
+    }
+}
 const app = express()
 
 app.disable("x-powered-by")
 
 app.use(json())
 app.use(cors({
-    origin: "http://localhost:1234", 
+    origin: process.env.CLIENT_ORIGIN || "http://localhost:1234",
     credentials: true
 }));
+
 app.use(cookieParser())
 
 // Middleware para token
@@ -68,9 +86,8 @@ app.use("/transaction", routTransaction)
 app.use("/event", routEvent)
 
 app.use("/bonus", routBonus)
-// Configurar __dirname para ES Modules
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+
+
 
 app.use("/sports", routSports)
 // Servir frontend desde /Fetch
@@ -82,6 +99,6 @@ app.get("/", (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`)
+    console.log(`Serrvidorssss en http://localhost:${PORT}`)
 })
 monitorBets();

@@ -2,214 +2,212 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuario</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" href="../LOGO.png" type="image/x-icon">
-  <link rel="stylesheet" href="../styles-main.css">
-  <link rel="stylesheet" href="./usuario.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="../LOGO.png" type="image/x-icon">
+    <link rel="stylesheet" href="../styles-main.css">
+    <link rel="stylesheet" href="./usuario.css">
 </head>
 
 <body class="bg-light">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  fixed-top">
+        <div class="container-fluid d-flex justify-content-between">
+            <a class="navbar-brand fs-1 fs-sm-3 fs-md-2 fs-lg-1" href="#"><img src="../LOGO.png" alt="" srcset=""
+                                                                               width="50px" height="50px">ARDIENTE.mx</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" style="justify-content: right;" id="navbarNavAltMarkup">
+                <div class="navbar-nav" style="color: red;">
+                    <a class="nav-link " href="../main.html">Inicio</a>
+                    <a class="nav-link " href="../historial.html">Historial</a>
+                    <a class="nav-link active" href="#">Usuario</a>
+                    <a class="nav-link" href="../categorias.html">Categorias</a>
+                    <button onclick="logout()" class="btn btn-secondary">Salir</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+<!-- Espacio para navbar fija -->
+    <div style="height: 80px;"></div>
 
-  <!-- Header -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark  fixed-top">
-  <div class="container-fluid d-flex justify-content-between">
-      <a class="navbar-brand fs-1 fs-sm-3 fs-md-2 fs-lg-1" href="#"><img src="../LOGO.png" alt="" srcset=""
-                                                                         width="50px" height="50px">ARDIENTE.mx</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-              aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" style="justify-content: right;" id="navbarNavAltMarkup">
-              <div class="navbar-nav" style="color: red;">
-                  <p class="p-2">Balance: <span>$0.00</span></p>
-                  <a class="nav-link " href="#">Inicio</a>
-                  <a class="nav-link " href="../historial.html">Historial</a>
-                  <a class="nav-link active" href="#">Usuario</a>
-                  <a class="nav-link" href="../categorias.html">Categorias</a>
-                  <button onclick="logout()" class="btn btn-secondary">Salir</button>
-              </div>
-          </div>
-      </div>
-  </nav>
-  <!-- Espacio para navbar fija -->
-  <div style="height: 80px;"></div>
-
-  <div class="container py-5 bg-white rounded shadow-sm">
+    <div class="container py-5 bg-white rounded shadow-sm">
     <div class="row mb-4">
-      <div class="col">
-        <h4 class="welcomeUser fw-bold text-primary"></h4>
-      </div>
+        <div class="col">
+            <h4 class="welcomeUser fw-bold text-primary"></h4>
+        </div>
     </div>
 
     <!-- Información del usuario y balance -->
     <div class="row mb-4">
-      <div class="col-md-4 mb-3">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <p><strong>Nombre:</strong> <span class="userName"></span></p>
-            <p><strong>Email:</strong> <span class="userEmail"></span></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-8 mb-3">
-        <div class="card text-white bg-danger shadow-sm">
-          <div class="card-body d-flex justify-content-between align-items-center">
-            <div>
-              <h5 class="card-title mb-1">Balance</h5>
-              <h2 class="userBalance mb-0">$0.00</h2>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> <span class="userName"></span></p>
+                    <p><strong>Email:</strong> <span class="userEmail"></span></p>
+                </div>
             </div>
-            <div class="d-flex gap-2">
-              <button class="btn btn-light btnDeposit">Depositar</button>
-              <button class="btn btn-light btnWithdraw">Retirar</button>
-            </div>
-          </div>
         </div>
-      </div>
+        <div class="col-md-8 mb-3">
+            <div class="card text-white bg-danger shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-1">Balance</h5>
+                        <h2 class="userBalance mb-0">$0.00</h2>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-light btnDeposit">Depositar</button>
+                        <button class="btn btn-light btnWithdraw">Retirar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Apuestas y transacciones -->
     <div class="row">
-      <!-- Transacciones -->
-      <div class="col-md-6 mb-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title text-center">Historial de Transacciones</h5>
-            <div class="row g-2 mb-3">
-              <div class="col">
-                <label class="form-label">Tipo:</label>
-                <select id="transactions-filter-type" class="form-select">
-                  <option value="ALL">Todas</option>
-                  <option value="DEPOSITO">Depósito</option>
-                  <option value="RETIRO">Retiro</option>
-                </select>
-              </div>
-              <div class="col">
-                <label class="form-label">Rango:</label>
-                <select id="transactions-filter-date" class="form-select">
-                  <option value="30">Últimos 30 días</option>
-                  <option value="15">Últimos 15 días</option>
-                </select>
-              </div>
+        <!-- Transacciones -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Historial de Transacciones</h5>
+                    <div class="row g-2 mb-3">
+                        <div class="col">
+                            <label class="form-label">Tipo:</label>
+                            <select id="transactions-filter-type" class="form-select">
+                                <option value="ALL">Todas</option>
+                                <option value="DEPOSITO">Depósito</option>
+                                <option value="RETIRO">Retiro</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Rango:</label>
+                            <select id="transactions-filter-date" class="form-select">
+                                <option value="30">Últimos 30 días</option>
+                                <option value="15">Últimos 15 días</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-scroll-container" id="trasaction-scroll-container"></div>
+                    <div class="d-grid mt-3">
+                        <button id="transactions-load-more" class="btn btn-outline-danger">Cargar más</button>
+                    </div>
+                </div>
             </div>
-            <div class="card-scroll-container" id="trasaction-scroll-container"></div>
-            <div class="d-grid mt-3">
-              <button id="transactions-load-more" class="btn btn-outline-danger">Cargar más</button>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <!-- Apuestas -->
-      <div class="col-md-6 mb-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title text-center">Historial de Apuestas</h5>
-            <div class="row g-2 mb-3">
-              <div class="col">
-                <label class="form-label">Status:</label>
-                <select id="bets-filter-type" class="form-select">
-                  <option value="ALL">Todas</option>
-                  <option value="en proceso">En Proceso</option>
-                  <option value="ganada">Ganadora</option>
-                  <option value="perdida">Perdedora</option>
-                </select>
-              </div>
-              <div class="col">
-                <label class="form-label">Rango:</label>
-                <select id="bets-filter-date" class="form-select">
-                  <option value="30">Últimos 30 días</option>
-                  <option value="15">Últimos 15 días</option>
-                </select>
-              </div>
+        <!-- Apuestas -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Historial de Apuestas</h5>
+                    <div class="row g-2 mb-3">
+                        <div class="col">
+                            <label class="form-label">Status:</label>
+                            <select id="bets-filter-type" class="form-select">
+                                <option value="ALL">Todas</option>
+                                <option value="en proceso">En Proceso</option>
+                                <option value="ganada">Ganadora</option>
+                                <option value="perdida">Perdedora</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Rango:</label>
+                            <select id="bets-filter-date" class="form-select">
+                                <option value="30">Últimos 30 días</option>
+                                <option value="15">Últimos 15 días</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-scroll-container" id="bet-scroll-container"></div>
+                    <div class="d-grid mt-3">
+                        <button id="bets-load-more" class="btn btn-outline-danger">Cargar más</button>
+                    </div>
+                </div>
             </div>
-            <div class="card-scroll-container" id="bet-scroll-container"></div>
-            <div class="d-grid mt-3">
-              <button id="bets-load-more" class="btn btn-outline-danger">Cargar más</button>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Modal Depositar/Retirar -->
-    <div id="transactionModal" class="modal hidden">
-      <div class="modal-content p-4 rounded shadow-sm">
-        <h5 class="modalTitle mb-3"></h5>
-        <form id="transactionForm" class="mb-3">
-          <div class="mb-3">
-            <label class="form-label">Selecciona tu tarjeta</label>
-            <select name="card" class="form-select allCards-slct"></select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label"><span class="amountType"></span></label>
-            <input type="number" name="amount" class="form-control" placeholder="$100" required>
-          </div>
-          <button type="submit" class="btn btn-primary w-100 btnModalSubmit"></button>
-        </form>
-        <div class="d-grid gap-2">
-          <button class="btn btn-outline-secondary addCardBtn">Agregar Tarjeta</button>
-          <button class="btn btn-outline-danger btnCloseModal">Cerrar</button>
+
+        <!-- Modal Depositar/Retirar -->
+        <div id="transactionModal" class="modal hidden">
+            <div class="modal-content p-4 rounded shadow-sm">
+                <h5 class="modalTitle mb-3"></h5>
+                <form id="transactionForm" class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">Selecciona tu tarjeta</label>
+                        <select name="card" class="form-select allCards-slct"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><span class="amountType"></span></label>
+                        <input type="number" name="amount" class="form-control" placeholder="$100" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btnModalSubmit"></button>
+                </form>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-secondary addCardBtn">Agregar Tarjeta</button>
+                    <button class="btn btn-outline-danger btnCloseModal">Cerrar</button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Modal Agregar Tarjeta -->
-    <div id="addCardModal" class="modal hidden">
-      <div class="modal-content p-4 rounded shadow-sm">
-        <h5 class="mb-3">Agregar Tarjeta</h5>
-        <form id="addCardForm" class="mb-3">
-          <div class="mb-3">
-            <label class="form-label">Nombre en la tarjeta</label>
-            <input type="text" name="cardName" class="form-control" placeholder="Gilberto Avalos" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Número de tarjeta</label>
-            <input type="number" name="cardNumber" class="form-control" placeholder="11111111111" required>
-          </div>
-          <div class="mb-3 row">
-            <div class="col">
-              <label class="form-label">Mes</label>
-              <select name="monthCardExpiration" class="form-select monthCardExpiration"></select>
+        <!-- Modal Agregar Tarjeta -->
+        <div id="addCardModal" class="modal hidden">
+            <div class="modal-content p-4 rounded shadow-sm">
+                <h5 class="mb-3">Agregar Tarjeta</h5>
+                <form id="addCardForm" class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre en la tarjeta</label>
+                        <input type="text" name="cardName" class="form-control" placeholder="Gilberto Avalos" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número de tarjeta</label>
+                        <input type="number" name="cardNumber" class="form-control" placeholder="11111111111" required>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label class="form-label">Mes</label>
+                            <select name="monthCardExpiration" class="form-select monthCardExpiration"></select>
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Año</label>
+                            <select name="yearCardExpiration" class="form-select yearCardExpiration"></select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">CVV</label>
+                        <input type="number" name="cardPassword" class="form-control" placeholder="123" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Banco</label>
+                        <select name="bank" class="form-select bank"></select>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 addCardSubmitBtn">Agregar Tarjeta</button>
+                </form>
+                <button class="btn btn-outline-danger w-100 closeAddCardModalbtn">Cerrar</button>
             </div>
-            <div class="col">
-              <label class="form-label">Año</label>
-              <select name="yearCardExpiration" class="form-select yearCardExpiration"></select>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">CVV</label>
-            <input type="number" name="cardPassword" class="form-control" placeholder="123" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Banco</label>
-            <select name="bank" class="form-select bank"></select>
-          </div>
-          <button type="submit" class="btn btn-success w-100 addCardSubmitBtn">Agregar Tarjeta</button>
-        </form>
-        <button class="btn btn-outline-danger w-100 closeAddCardModalbtn">Cerrar</button>
-      </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Footer -->
-  <footer class="bg-dark text-light text-center py-3 fixed-bottom">
-    <div class="container d-flex justify-content-center align-items-center gap-4">
-      <img src="../LOGO.png" alt="Logo" width="40" height="40">
-      <span>Acerca</span>
-      <span>Créditos</span>
-    </div>
-  </footer>
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3 fixed-bottom">
+        <div class="container d-flex justify-content-center align-items-center gap-4">
+            <img src="../LOGO.png" alt="Logo" width="40" height="40">
+            <span>Acerca</span>
+            <span>Créditos</span>
+        </div>
+    </footer>
 
-  <!-- Scripts -->
-  <script src="../app.js"></script>
-  <script src="./usuarioInfo.js"></script>
-  <script src="./usuarioTransactions.js"></script>
-  <script src="./usuarioBets.js"></script>
-  <script src="./usuarioModals.js"></script>
+    <!-- Scripts -->
+    <script src="../app.js"></script>
+    <script src="./usuarioInfo.js"></script>
+    <script src="./usuarioTransactions.js"></script>
+    <script src="./usuarioBets.js"></script>
+    <script src="./usuarioModals.js"></script>
 </body>
 
 </html>

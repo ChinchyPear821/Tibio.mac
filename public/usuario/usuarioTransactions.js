@@ -9,6 +9,12 @@ const loadMoreBtnTransactions = document.getElementById("transactions-load-more"
 const typeFilterTransactions = document.getElementById("transactions-filter-type")
 const dateFilterTransaction = document.getElementById("transactions-filter-date")
 
+function parseTransactionDate(dateString) {
+    const [datePart] = dateString.split(" ") // "3/5/2025"
+    const [day, month, year] = datePart.split("/").map(Number)
+    return new Date(year, month - 1, day) // Se crea un objeto Date
+}
+
 //FETCH'S A LA API
 async function fetchAllTransactionsByUser() {
     try {
@@ -32,38 +38,22 @@ function applyFiltersTransactions() {
     const typeValue = typeFilterTransactions.value
     const daysValue = parseInt(dateFilterTransaction.value)
 
-    const nowDay = new Date().getDate()
-    const nowMonth = new Date().getMonth() + 1
+    const now = new Date()
+    const dateLimit = new Date(now)
+    dateLimit.setDate(now.getDate() - daysValue) // Filtra las transacciones por la fecha
 
-    let limitDay = 0, limitMonth = 0
+    filteredTransactions = allTransactions.filter(trs => {
+        const trsDate = parseTransactionDate(trs.date)
+        const isInRange = trsDate >= dateLimit
 
-    if (typeValue != "ALL") {
-        filteredTransactions = allTransactions.filter(trs => {
+        if (typeValue !== "ALL") {
+            return trs.type === typeValue && isInRange
+        }
+        return isInRange
+    })
 
-            const trsDay = trs.date.slice(0, 2)
-            const trsMonth = trs.date.slice(3, 4)
-
-            if (daysValue == 15) {
-
-                limitDay = nowDay - daysValue
-                limitMonth = limitDay < 0 ? nowMonth - 1 : nowMonth
-                limitDay = 30 - Math.abs(limitDay)
-
-            } else if (daysValue == 30) {
-
-                limitDay = nowDay
-                limitMonth = nowMonth - 1
-
-            }
-            return trs.type == typeValue && trsDay >= limitDay && trsMonth >= limitMonth
-        })
-
-    } else {
-        filteredTransactions = allTransactions
-    }
     renderCountTransaction = 0
     renderNextTransactions()
-
 }
 
 function renderNextTransactions() {
