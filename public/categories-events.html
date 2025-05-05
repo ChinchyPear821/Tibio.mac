@@ -25,10 +25,10 @@
         </button>
         <div class="collapse navbar-collapse" style="justify-content: right;" id="navbarNavAltMarkup">
             <div class="navbar-nav" style="color: red;">
-                <p class="p-2">Balance: <span>$0.00</span></p>
+                <p class="p-2">Balance: <span id="balance">$0.00</span></p>
                 <a class="nav-link" href="main.html">Inicio</a>
-                <a class="nav-link" href="historial.html">Historial</a>
-                <a class="nav-link" href="usuario.html">Usuario</a>
+                <!--<a class="nav-link" href="historial.html">Historial</a>-->
+                <a class="nav-link" href="/usuario/usuario.html">Usuario</a>
                 <a class="nav-link active" href="categorias.html">Categorias</a>
                 <button onclick="logout()" class="btn btn-secondary">Salir</button>
             </div>
@@ -40,7 +40,7 @@
 
 <div class="container mt-5 mb-5">
     <h2>Eventos En proceso de <span id="category-name"></span></h2>
-    <div class="row" id="events-container">
+    <div class="row gy-4 gx-4" id="events-container">
         <!-- Aquí se cargarán los eventos de la categoría -->
     </div>
 </div>

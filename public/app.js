@@ -68,10 +68,11 @@ function getEventImages(eventName, sport) {
     }
 
     return {
-        localImg: `./${fileSport}/${local}.png`,
-        visitorImg: `./${fileSport}/${visitor}.png`
+        localImg: `/${fileSport}/${local}.png`,
+        visitorImg: `/${fileSport}/${visitor}.png`
     };
 }
+
 
 
 async function checkSession() {
@@ -113,10 +114,10 @@ async function checkSession() {
             balanceElement.innerText = `$${user.balance.toFixed(2)}`;
         }
 
-        if (navbar && user.name) {
+        if (navbar && user.username) {
             const userNameElement = document.createElement("p");
             userNameElement.classList.add("p-2");
-            userNameElement.innerText = `Bienvenido ${user.name}`;
+            userNameElement.innerText = `Bienvenido ${user.username}`;
             navbar.prepend(userNameElement);
         }
         await loadUserBonuses();
@@ -152,7 +153,7 @@ async function displayAllEvents() {
 
         filteredEvents.forEach(event => {
             const col = document.createElement("div");
-            col.classList.add("col-12", "col-md-6", "col-lg-4", "mb-4");
+            col.classList.add('col-lg-4', 'col-md-6', 'col-sm-12', 'd-flex', 'justify-content-center');
 
             const {localImg, visitorImg} = getEventImages(event.name, event.sport);
             const cardSport = event.sport;
@@ -322,7 +323,7 @@ async function showBetForm(id_event) {
 
             const type = selectedType;
             const amount = parseFloat(document.getElementById("amount").value);
-            const target = selectedType === "ganador local" || selectedType === "ganador visitante"
+            const target = selectedType === "ganador local" || selectedType === "ganador visitante" || selectedType === "empate"
                 ? document.getElementById("auto-target").value.trim()
                 : targetSelect.value.trim();
 

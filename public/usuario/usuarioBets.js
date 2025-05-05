@@ -14,13 +14,15 @@ const dateFilterBets = document.getElementById("bets-filter-date")
 async function fetchAllBetsByUser() {
     try {
         const res = await fetch("/bet/user", {
+            method: "GET",
             credentials: "include"
         })
 
         if (!res.ok) throw new Error("Error en el endpont de la API betsAllByUser")
-
         const data = await res.json()
+
         allBets = data.reverse()
+        console.log("apuestas obtenidas", allBets);
         applyFiltersBets()
     } catch (e) {
         console.log("Error al hacer fetch de todas las apuestas: ", e)
@@ -29,10 +31,14 @@ async function fetchAllBetsByUser() {
 
 //FUNCTIONS
 function parseBetDate(dateString) {
-    const [datePart] = dateString.split(" ")
-    const [day, month, year] = datePart.split("/").map(Number)
-    return new Date(year, month - 1, day)
+    if (!dateString || typeof dateString !== "string") return null;
+
+    const [datePart] = dateString.split(" ");
+    const [day, month, year] = datePart.split("/").map(Number);
+
+    return new Date(year, month - 1, day);
 }
+
 
 function applyFiltersBets() {
     containerBets.innerHTML = ""
@@ -45,7 +51,8 @@ function applyFiltersBets() {
     dateLimit.setDate(now.getDate() - daysValue)
 
     filteredBets = allBets.filter(bet => {
-        const betDate = parseBetDate(bet.begin_date)
+        const betDate = parseBetDate(bet.begin_date);
+        if (!betDate) return false;
         const isInRange = betDate >= dateLimit
 
         if (typeValue === "ganada" || typeValue === "perdida") {

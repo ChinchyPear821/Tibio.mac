@@ -36,6 +36,14 @@ const outcomesBySport = {
     ]
 };
 
+function getBaseSport(sport) {
+    // Si empieza con "1 vs 1", extrae la parte después
+    if (sport.startsWith("1 vs 1")) {
+        return sport.replace("1 vs 1", "").trim().toLowerCase();
+    }
+    return sport.trim().toLowerCase();
+}
+
 function getEventImages(eventName, sport) {
     const [local, visitor] = eventName.split(" vs ");
     let fileSport = '';
@@ -126,7 +134,7 @@ function displayEvents(events) {
 
 function createEventCard(event) {
     const eventCard = document.createElement('div');
-    eventCard.classList.add('col-md-4');
+    eventCard.classList.add('col-lg-4', 'col-md-6', 'col-sm-12', 'd-flex', 'justify-content-center');
 
     let actionButtonHTML = '';
 
@@ -145,10 +153,12 @@ function createEventCard(event) {
     const challengeButtonHTML = event.sport.startsWith("1 vs 1")
         ? ""
         : `<button class="btn btn-danger mt-3" onclick="openChallengeModal('${event.id_event}', '${event.sport}')">Reta a otro usuario</button>`;
-    const { localImg, visitorImg } = getEventImages(event.name, event.sport);
+    const sportBase = getBaseSport(event.sport);
+    const { localImg, visitorImg } = getEventImages(event.name, sportBase);
 
     eventCard.innerHTML = `
-    <div class="card mt-5 shadow-sm border-0 rounded-4 h-100" style="width: 22rem; justify-content: center; padding-top: 10px;margin-top: 8%;">
+    <div class="card shadow-sm border-0 rounded-4 h-100 mx-auto" style="width: 22rem; padding-top: 10px;">
+
         <div class="card-header bg-light text-center border-0">
             <div class="d-flex justify-content-center align-items-center gap-3">
                 <img src="${localImg}" class="img-fluid" style="max-height: 60px;" alt="local">
@@ -210,14 +220,14 @@ document.getElementById("btn-confirm-accept-one-vs-one").addEventListener("click
             window.location.reload();
         } else {
             const errorData = await response.json();
-            alert("Error al aceptar la apuesta " + errorData.message);
+            alert("Error al aceptar la apuesta No puedes aceptar la apuesta que mandaste: " + errorData.message);
         }
         hideLoadingModal();
         challengeModal.hide();
 
 
     } catch (error) {
-        console.error("Error al aceptar apuesta:", error);
+        console.error("Error al aceptar apuesta: No puedes aceptar la apuesta que mandaste");
     }
 });
 
