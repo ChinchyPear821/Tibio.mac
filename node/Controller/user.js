@@ -17,7 +17,7 @@ export class UserController{
             return res.status(201).json(userInfo)
         }catch(e){
             console.error("Error al regresar la informacion dle usuario:", error)
-            res.status(500).json({ error: "Error al regresar la informacion del usuario "})
+            res.status(400).json({ error: "Error al regresar la informacion del usuario "})
         }
     }
     static async allCardsByUser(req, res){
