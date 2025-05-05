@@ -18,7 +18,7 @@ function parseTransactionDate(dateString) {
 //FETCH'S A LA API
 async function fetchAllTransactionsByUser() {
     try {
-        const res = await fetch("http://localhost:1234/transaction/user", {
+        const res = await fetch("/transaction/user", {
             credentials: "include"
         })
 

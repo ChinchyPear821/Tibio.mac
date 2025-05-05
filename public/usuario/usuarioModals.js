@@ -32,7 +32,7 @@ async function openModalTransaction(type) {
     let allUserCards = []
 
     try {
-        const res = await fetch("http://localhost:1234/user/cards", {
+        const res = await fetch("/user/cards", {
             credentials: "include",
         })
 
@@ -135,9 +135,9 @@ async function fetchTransactionAction(e) {
     let endpoint = ""
 
     if (modeOperation === "DEPOSITO") {
-        endpoint = "http://localhost:1234/transaction/deposit"
+        endpoint = "/transaction/deposit"
     } else if (modeOperation === "RETIRO") {
-        endpoint = "http://localhost:1234/transaction/withdraw"
+        endpoint = "/transaction/withdraw"
     }
 
     console.log(data, endpoint)
@@ -177,7 +177,7 @@ async function fetchAddUserCard(e) {
     console.log(data)
 
     try {
-        const res = await fetch("http://localhost:1234/user/card", {
+        const res = await fetch("/user/card", {
             credentials: "include",
             method: "POST",
             headers: { "Content-Type": "application/json" },

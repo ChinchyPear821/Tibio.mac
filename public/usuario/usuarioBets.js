@@ -13,7 +13,7 @@ const dateFilterBets = document.getElementById("bets-filter-date")
 //FETCH'S A LA API
 async function fetchAllBetsByUser() {
     try {
-        const res = await fetch("http://localhost:1234/bet/user", {
+        const res = await fetch("/bet/user", {
             credentials: "include"
         })
 

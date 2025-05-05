@@ -9,7 +9,7 @@ let userBalance = document.querySelector(".userBalance")
 //FETCH'S A LA API
 async function fetchUserInfo(){
     try{
-        const res = await fetch("http://localhost:1234/user/protected", {
+        const res = await fetch("/user/protected", {
             credentials: "include"
         })
 
