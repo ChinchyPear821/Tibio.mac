@@ -19,19 +19,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const isRender = process.env.RENDER === "true";
 
-if (isRender) {
-    const origin = path.join(__dirname, "../database/sqLite.db");
-    const destination = "/data/sqLite.db";
-
-    if (!fs.existsSync(destination)) {
-        fs.copyFileSync(origin, destination);
-        console.log("Base de datos copiada a /data");
-    } else {
-        console.log("Base ya existe en /data");
-    }
-}
 const app = express()
 
 app.disable("x-powered-by")
