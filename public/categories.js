@@ -63,8 +63,8 @@ function getEventImages(eventName, sport) {
     }
 
     return {
-        localImg: `./${fileSport}/${local}.png`,
-        visitorImg: `./${fileSport}/${visitor}.png`
+        localImg: `/${fileSport}/${local}.png`,
+        visitorImg: `/${fileSport}/${visitor}.png`
     };
 }
 
@@ -75,9 +75,9 @@ async function fetchEvents(category) {
     try {
         // Hace 3 fetch para despues poder filtrar apuestas con las apuestas
         const [categoryEventsRes, oneVsOneEventsRes, betsRes] = await Promise.all([
-            fetch(`http://localhost:1234/event/search?sport=${category}&status=en proceso`),
-            fetch(`http://localhost:1234/event/search?sport=1 vs 1 ${category}&status=en proceso`),
-            fetch("http://localhost:1234/bet/")
+            fetch(`/event/search?sport=${category}&status=en proceso`),
+            fetch(`/event/search?sport=1 vs 1 ${category}&status=en proceso`),
+            fetch("/bet/")
         ]);
 
 
