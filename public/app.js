@@ -360,7 +360,6 @@ async function showBetForm(id_event) {
 
 
                 try {
-                    showLoadingModal();
                     const res = await fetch(`/bet`, {
                         method: "POST",
                         headers: {
