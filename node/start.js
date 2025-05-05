@@ -99,6 +99,6 @@ app.get("/", (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`Serrvidorssss en http://localhost:${PORT}`)
+    console.log(`Servidor en http://localhost:${PORT}`)
 })
 monitorBets();
