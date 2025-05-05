@@ -202,7 +202,7 @@ document.getElementById("btn-confirm-accept-one-vs-one").addEventListener("click
     const token = localStorage.getItem("token");
 
     try {
-        showLoadingModal();
+        
         const response = await fetch("/bet/place", {
             method: "PATCH",
             headers: {
@@ -215,12 +215,12 @@ document.getElementById("btn-confirm-accept-one-vs-one").addEventListener("click
         if (response.ok) {
             showSuccessModal("¡Reto aceptado exitosamente!");
             const modal = bootstrap.Modal.getInstance(document.getElementById("acceptOneVsOneModal"));
-            showErrorModal("No puedes aceptar la apuesta que creaste");
             modal.hide();
             window.location.reload();
         } else {
             const errorData = await response.json();
             alert("Error al aceptar la apuesta No puedes aceptar la apuesta que mandaste: " + errorData.message);
+            window.location.reload();
         }
         hideLoadingModal();
         challengeModal.hide();
@@ -327,7 +327,7 @@ async function openChallengeModal(id_event, sport) {
             }
 
             try {
-                showLoadingModal();
+                
                 const createEventRes = await fetch('/event/', {
                     method: 'POST',
                     headers: {
