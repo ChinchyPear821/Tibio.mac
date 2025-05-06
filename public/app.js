@@ -226,12 +226,12 @@ async function showBetForm(id_event) {
             futbol_americano: ["ganador", "touchdowns", "sacks", "goles de campo", "intercepciones"]
         };
         const typeDescriptions = {
-            "ganador local": "Apuesta por el equipo local que ganará el encuentro.",
-            "ganador visitante": "Apuesta por el equipo local que ganará el encuentro.",
+            "ganador local": "Apuesta por el equipo local que ganará el partido.",
+            "ganador visitante": "Apuesta por el equipo local que ganará el partido.",
             "goles local": "Predice la cantidad de goles anotados por el equipo local en el partido.",
             "goles visitante": "Predice la cantidad de goles anotados por el equipo visitante en el partido.",
             "empate": "Predice que ambos equipos quedaran en empate.",
-            "tarjetas amarillas": "Apuesta por cuántas tarjetas amarillas se mostrarán.",
+            "tarjetas amarillas": "Apuesta por cuántas tarjetas amarillas habrá.",
             "tarjetas rojas": "Predice cuántas tarjetas rojas habrá.",
             "tiros esquina": "Apuesta por la cantidad de tiros de esquina.",
             "puntos totales": "Predice la suma total de puntos anotados.",
