@@ -487,7 +487,7 @@ async function administrateEvent() {
                         modifyEvent += `</table>
                             <div align="center">
                                 <button class="btn btn-primary w-100 mb-3" id="update-outcomes" type="button">Actualizar Momios</button>
-                                <button class="btn btn-secondary w-100 mb-3" id="finish-event" type="button">Finalizar Evento</button>
+                                <button class="btn btn-dark w-100 mb-3" id="finish-event" type="button">Finalizar Evento</button>
                                 <button type="button" class="btn btn-danger w-100" id="volver-form-container">Volver</button>
                             </div>    
                         </div>`
@@ -780,6 +780,7 @@ async function deleteEvent() {
                         const text = await res.text();
 
                         if (!res.ok) {
+                            alert("No se puede elimiar un evento si hay apuestas en proceso. El evento seleccionado tiene apuestas en proceso.")
                             hideLoadingModal();
                             console.warn("Error en la respuesta:", text);
                             return;
@@ -921,7 +922,7 @@ async function checkSession() {
     }
     //Solo en la ventana eventos
     const currentFile = window.location.pathname.split("/").pop();
-    if (currentFile === "eventos.html") {
+    if (currentFile === "events.html") {
         document.getElementById('section-create-event').style.display = 'none';
         document.getElementById('section-administrate-event').style.display = 'none';
         document.getElementById('btn-create-event').addEventListener('click', async () => {

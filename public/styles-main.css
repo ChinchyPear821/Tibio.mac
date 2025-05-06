@@ -5,7 +5,10 @@
     background-size: cover;
     height: 100%;
 }
-
+  .container {
+      max-width: 100%;
+      overflow-x: hidden;
+  }
 
 .sport-card {
     height: 250px;

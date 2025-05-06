@@ -27,16 +27,16 @@
                 <div class="navbar-nav" style="color: red;">
                     <p class="p-2">Bienvenido: <span id="admin-name">F Mac Louis</span></p>
                     <a class="nav-link " href="admin.html">Inicio</a>
-                    <a class="nav-link active" href="eventos.html">Eventos</a>
+                    <a class="nav-link active" href="events.html">Eventos</a>
                     <button onclick="logout()" class="btn btn-secondary">Salir</button>
                 </div>
             </div>
         </div>
     </nav>
-    <div class="container mt-5 mb-5 pb-4 " style="background-color: #000; color: white;">
+    <div class="container mt-5 mb-5 pb-5 py-5 " style="background-color: #000; color: white;">
         <div class="row mt-5">
             <div class="col">
-                <p class="h1 text-center">EVENTOS</p>
+                <p class="h1 text-center">GESTIONAR EVENTOS</p>
             </div>
         </div>
         <div class="container mt-2 ">
@@ -56,11 +56,11 @@
         <div class="row" id="event-container">
         </div>
     </div>
-    <section id="section-create-event" class="section-absolute">
+    <section id="section-create-event" class="section-absolute" style="display: none">
         <div class="contenedor-crear-evento  w-100 lg-75">
             <div class="card mx-auto mt-4 p-3 shadow" style="max-width: 600px;">
                 <form id="create-event-form">
-                    <h4 class="mb-3">Datos Generales</h4>
+                    <h4 class="mb-3">Datos Del Evento</h4>
                     <div class="dropdown w-100 mb-3">
                         Deporte
                         <input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown"
@@ -223,7 +223,7 @@
             </div>
         </div>
     </section>
-    <section id="section-administrate-event" class="section-absolute">
+    <section id="section-administrate-event" class="section-absolute" style="display: none">
         <div class="contenedor-crear-evento mx-auto w-100 mt-5" id="contenedor-administrar-evento"
             style="background-color: aliceblue;">
             <div class="text-end">
@@ -431,7 +431,7 @@
                         </table>
                     </div>
                 </div>
-                <button class="btn btn-primary w-100 mb-3" id="btn-close-event">Cerrar Evento</button>
+                <button class="btn btn-dark w-100 mb-3" id="btn-close-event">Cerrar Evento</button>
                 <button class="btn btn-danger w-100 mb-3" id="btn-retutn-modify">Volver</button>
             </div>
         </div>
@@ -451,7 +451,7 @@
             
         </div>
     </section>
-    <!-- Modal de Confirmación -->
+    <!-- Modal de Confirmacion -->
     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -488,9 +488,8 @@
     <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content text-center p-4">
-                <div class="text-success mb-2" style="font-size: 3rem;">✅</div>
-                <h5 class="mb-3">¡Apuesta realizada!</h5>
-                <button id="succesModalBUtton" type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="window.location.reload()">Aceptar</button>
+                 <h5 class="mb-3">¡Operación realizada con éxito!</h5>
+                <button id="succesModalBUtton" type="button" class="btn btn-black" data-bs-dismiss="modal" onclick="window.location.reload()">Aceptar</button>
             </div>
         </div>
     </div>

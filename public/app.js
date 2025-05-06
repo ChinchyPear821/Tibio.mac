@@ -7,7 +7,7 @@ async function logout() {
 
         const result = await response.json();
         alert(result.message || "Sesión cerrada");
-        if (window.location.pathname === "/usuario/usuario.html") {
+        if (window.location.pathname === "/usuario/user.html") {
             window.location.href = "../index.html";
         } else {
             window.location.href = "index.html";
@@ -373,6 +373,10 @@ async function showBetForm(id_event) {
             const target = selectedType === "ganador local" || selectedType === "ganador visitante" || selectedType === "empate"
                 ? document.getElementById("auto-target").value.trim()
                 : targetSelect.value.trim();
+            if(!type||!amount||!target){
+                alert("Debes llenar todos los campos para hacer tu apuesta.");
+                return;
+            }
 
             const extra = parseFloat(extraInput.value);
             const selectedOutcome = outcomes.find(outcome => outcome.outcome_name.toLowerCase() === type);
