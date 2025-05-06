@@ -190,6 +190,7 @@ function openAcceptOneVsOneModal(bet) {
     document.getElementById("oneVsOneAmount").textContent = `$${bet.amount}`;
     document.getElementById("oneVsOneTarget").textContent = `${bet.target}`;
 
+
     const modal = new bootstrap.Modal(document.getElementById("acceptOneVsOneModal"));
     modal.show();
 }
@@ -220,12 +221,12 @@ document.getElementById("btn-confirm-accept-one-vs-one").addEventListener("click
             window.location.reload();
         } else {
             const errorData = await response.json();
+
             alert("Error al aceptar la apuesta No puedes aceptar la apuesta que mandaste: " + errorData.message);
             window.location.reload();
         }
         hideLoadingModal();
         challengeModal.hide();
-
 
     } catch (error) {
         console.error("Error al aceptar apuesta: No puedes aceptar la apuesta que mandaste");
@@ -292,6 +293,15 @@ async function openChallengeModal(id_event, sport) {
         document.getElementById('challenge-sport-name').textContent = `1 vs 1 ${sport}`;
 
         challengeModal.show();
+        const amountInput = document.getElementById('bet-amount');
+        const maxAmount = parseInt(amountInput.max);
+
+        amountInput.addEventListener('input', () => {
+            const value = parseInt(amountInput.value);
+            if (!isNaN(value) && value > maxAmount) {
+                amountInput.value = maxAmount;
+            }
+        });
 
         const sendChallengeBtn = document.getElementById('send-challenge');
         sendChallengeBtn.replaceWith(sendChallengeBtn.cloneNode(true));
@@ -326,9 +336,27 @@ async function openChallengeModal(id_event, sport) {
             if (!sportOutcomes) {
                 return alert(`No hay outcomes definidos para el deporte: ${sport}`);
             }
+            const amountInput = document.getElementById('bet-amount');
+            const maxAmount = parseInt(amountInput.max);
+
+            amountInput.addEventListener('input', () => {
+                const value = parseInt(amountInput.value);
+                if (!isNaN(value) && value > maxAmount) {
+                    amountInput.value = maxAmount;
+                }
+            });
 
             try {
-                
+                const userRes = await fetch("/user/protected", {
+                    credentials: "include"
+                });
+                const userData = await userRes.json();
+                if (!userRes.ok) throw new Error("No se pudo obtener la información del usuario.");
+                console.log(userData)
+
+                if (userData.balance < parseFloat(amount)) {
+                    return alert("No tienes suficiente saldo para realizar esta apuesta.");
+                }
                 const createEventRes = await fetch('/event/', {
                     method: 'POST',
                     headers: {
@@ -375,6 +403,7 @@ async function openChallengeModal(id_event, sport) {
 
                 const newBetData = await createBetRes.json();
                 if (!createBetRes.ok) {
+                    alert("No tienes suficiente saldo. Deposita e Intenta Nuevamente.")
                     throw new Error(newBetData.error || "Error al crear apuesta");
                 }
 

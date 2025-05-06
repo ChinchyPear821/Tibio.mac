@@ -31,7 +31,7 @@
                     <a class="nav-link active" href="#">Inicio</a>
                     <!--<a class="nav-link" href="historial.html">Historial</a>-->
                     <a class="nav-link" href="./usuario/usuario.html">Usuario</a>
-                    <a class="nav-link" href="categorias.html">Categorias</a>
+                    <a class="nav-link" href="categories.html">Categorias</a>
                     <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#bonosModal">Bonos</a>
 
                     <button onclick="logout()" class="btn btn-secondary">Salir</button>
@@ -39,7 +39,7 @@
             </div>
         </div>
     </nav>
-    <div class="container mb-5 mt-5">
+    <div class="container mb-5 mt-5 pb-5">
         <div class="row gy-4 gx-4 justify-content-center" id="event-container">
 
         </div>
@@ -133,21 +133,18 @@
         </div>
     </div>
 
-
-
-
     <script src="app.js"></script>
     <script src="usuario/usuarioInfo.js"></script>
 
     <!-- Footer -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom"
-        style="color: aliceblue; justify-content: center;">
-        <div class="row" style="gap: 0%;">
-            <div class="col"><img src="./LOGO.png" alt="" height="50px" width="50px"></div>
-            <div class="col">Acerca de Papoi?</div>
-            <div class="col">Créditos</div>
+    <footer class="bg-dark text-light text-center py-3 mt-4">
+        <div class="container d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+            <img src="./LOGO.png" alt="Logo" height="40" width="40">
+            <a href="#" class="text-light text-decoration-none">Acerca de <span style="font-weight: bold">ARDIENTE.MX</span></a>
+            <a href="https://mac.acatlan.unam.mx/portada/" class="text-light text-decoration-none">Créditos</a>
         </div>
-    </nav>
+    </footer>
+
 </body>
 
 </html>

@@ -294,6 +294,14 @@ async function showBetForm(id_event) {
             <div id="respuesta-apuesta"></div>
         `;
         let selectedType = "";
+        const amountInput = document.getElementById('amount');
+        const maxAmount = parseInt(amountInput.max);
+
+        amountInput.addEventListener('input', () => {
+            if (parseInt(amountInput.value) > maxAmount) {
+                amountInput.value = maxAmount;
+            }
+        });
 
         const typeButtonsContainer = document.getElementById("type-buttons");
         const extraInput = document.getElementById("extra");
@@ -411,6 +419,7 @@ async function showBetForm(id_event) {
                     const data = await res.json();
                     console.log("Apuesta recibida", data);
                     if (!res.ok) {
+                        return alert("No tienes suficiente saldo. Deposita e intenta nuevamente.");
                         throw new Error(data.message || "Error en la petición");
 
                     }

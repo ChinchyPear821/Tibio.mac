@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // Enviar los datos al servidor
-            showLoadingModal();
             const response = await fetch("/user/login", {
                 method: "POST",
                 headers: {
@@ -58,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 hideLoadingModal();
                 const error = await response.json();
-                alert("Error al iniciar sesión: " + error.message);  // Aquí debería salir el error de "Usuario no encontrado" o "Contraseña incorrecta"
+                alert("Usuario No Encontrado o Contraseña Incorrecta");  // Aquí debería salir el error de "Usuario no encontrado" o "Contraseña incorrecta"
             }
         } catch (err) {
             hideLoadingModal();
