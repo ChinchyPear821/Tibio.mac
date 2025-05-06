@@ -48,4 +48,12 @@ Content-Type: application/json
 }
 
 
+###
+PUT http://localhost:1234/user/updateRole
+Content-Type: application/json
+
+{
+  "id_user":"ed216d83-3b9a-401b-8205-38a4a6aa77b2"
+}
+
 

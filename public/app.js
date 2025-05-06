@@ -12,8 +12,6 @@ async function logout() {
         } else {
             window.location.href = "index.html";
         }
-
-        window.location.href = "index.html";
     } catch (error) {
         console.error("Error al cerrar sesión:", error);
         alert("Hubo un problema al cerrar sesión.");
@@ -47,7 +45,12 @@ function showErrorModal(message = "Ocurrio un error") {
     errorModal.show();
     window.errorModalInstance = errorModal;
 }
-
+function capitalizeWords(str) {
+    return str
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+}
 
 function getEventImages(eventName, sport) {
     const [local, visitor] = eventName.split(" vs ");
@@ -74,10 +77,6 @@ function getEventImages(eventName, sport) {
         visitorImg: `/images/${fileSport}/${visitor.toLowerCase()}.png`
     };
 }
-
-
-
-
 
 async function checkSession() {
     try {
@@ -111,18 +110,22 @@ async function checkSession() {
         console.log(user);
         // Aquí obtenemos los elementos del DOM
         // Verificamos si existe el balance y la navbar
-        const balanceElement = document.getElementById("balance");
+         const balanceElement = document.getElementById("balance");
         const navbar = document.querySelector(".navbar-nav");
 
-        if (balanceElement && user.balance !== undefined) {
+         if (balanceElement && user.balance !== undefined) {
             balanceElement.innerText = `$${user.balance.toFixed(2)}`;
         }
 
-        if (navbar && user.username) {
-            const userNameElement = document.createElement("p");
-            userNameElement.classList.add("p-2");
+         if (navbar && user.username) {
+            let userNameElement = document.getElementById("user-welcome");
+            if (!userNameElement) {
+                userNameElement = document.createElement("p");
+                userNameElement.id = "user-welcome"; // Identificador único
+                userNameElement.classList.add("p-2");
+                navbar.prepend(userNameElement);
+            }
             userNameElement.innerText = `Bienvenido ${user.username}`;
-            navbar.prepend(userNameElement);
         }
         await loadUserBonuses();
 
@@ -147,6 +150,7 @@ async function displayAllEvents() {
 
         const events = await res.json();
         const container = document.getElementById("event-container");
+        container.innerHTML = "";
 
         const filteredEvents = events.filter(event => !event.sport.toLowerCase().startsWith("1 vs 1"))
 
@@ -221,8 +225,33 @@ async function showBetForm(id_event) {
             basquetbol: ["ganador", "puntos totales", "triples", "rebotes"],
             futbol_americano: ["ganador", "touchdowns", "sacks", "goles de campo", "intercepciones"]
         };
+        const typeDescriptions = {
+            "ganador local": "Apuesta por el equipo local que ganará el encuentro.",
+            "ganador visitante": "Apuesta por el equipo local que ganará el encuentro.",
+            "goles local": "Predice la cantidad de goles anotados por el equipo local en el partido.",
+            "goles visitante": "Predice la cantidad de goles anotados por el equipo visitante en el partido.",
+            "empate": "Predice que ambos equipos quedaran en empate.",
+            "tarjetas amarillas": "Apuesta por cuántas tarjetas amarillas se mostrarán.",
+            "tarjetas rojas": "Predice cuántas tarjetas rojas habrá.",
+            "tiros esquina": "Apuesta por la cantidad de tiros de esquina.",
+            "puntos totales": "Predice la suma total de puntos anotados.",
+            "puntos local": "Predice la cantidad de puntos anotados por el equipo local en el partido.",
+            "puntos visitante": "Predice la cantidad de puntos anotados por el equipo visitante en el partido.",
+            "triples": "Apuesta por la cantidad de tiros de tres anotados.",
+            "rebotes": "Predice el número total de rebotes.",
+            "anotaciones local": "Predice la cantidad de anotaciones del equipo visitante en el partido.",
+            "anotaciones visitante": "Predice la cantidad de anotaciones del equipo visitante en el partido.",
+            "touchdowns": "Cantidad de touchdowns realizados.",
+            "sacks": "Número de veces que se derriba al mariscal de campo.",
+            "goles de campo": "Cantidad de goles de campo anotados.",
+            "intercepciones": "Número de intercepciones realizadas."
+        };
+
 
         const availableTypes = sportTypes[sport] || [];
+        document.getElementById("betModalLabel").textContent = `Evento: ${eventData.name}`;
+        const betModalLabel = document.getElementById("betModalLabel");
+        betModalLabel.textContent = `Evento: ${eventData.name}`;
 
         const betModalBody = document.getElementById('betModalBody');
         betModalBody.innerHTML = `
@@ -234,27 +263,31 @@ async function showBetForm(id_event) {
                     <div id="type-buttons" class="d-flex flex-wrap gap-2 mt-2">
                         ${outcomes.map(outcome => `
                             <button type="button" class="btn btn-outline-danger outcome-btn" data-type="${outcome.outcome_name.toLowerCase()}">
-                                ${outcome.outcome_name}
+                                 ${capitalizeWords(outcome.outcome_name)}  
                             </button>
                         `).join("")}
                     </div>
+                    <div id="type-description" class="mt-2 badge bg-black text-wrap fw-semibold"></div>
+
                 </div>
 
                 <div class="form-group" id="target-group">
+                    
                     <label for="target">Objetivo de apuesta</label>
+                   
                     <select id="target" class="form-control" required>
-                        <option value=""> e.g 2 goles, 3 tarjetas amarillas...</option>
+                        <option value=""> Selecciona tu target</option>
                     </select>
                 </div>
                 <input type="hidden" id="auto-target">
 
                 <div class="form-group">
                     <label for="amount">Cantidad a Apostar</label>
-                    <input type="number" id="amount" class="form-control" required>
+                    <input type="number" id="amount" class="form-control" required min="1" max="25000">
                 </div>
                 <div class="form-group">
-                    <label for="extra">Momio</label>
-                    <input type="number" id="extra" class="form-control" readonly>
+                    <label for="extra">Momio de a Apuesta Seleccionada</label>
+                    <input type="number" id="extra" class="form-control bg-danger text-white bold" readonly>
                 </div>
                 <input type="hidden" id="id_outcome">
             </form>
@@ -272,6 +305,8 @@ async function showBetForm(id_event) {
                 typeButtonsContainer.querySelectorAll(".outcome-btn").forEach(btn => btn.classList.remove("active"));
                 button.classList.add("active");
                 selectedType = button.dataset.type;
+                document.getElementById("type-description").innerText =
+                    typeDescriptions[selectedType] || "";
 
                 const selectedOutcome = outcomes.find(outcome => outcome.outcome_name.toLowerCase() === selectedType);
                 if (selectedOutcome) {
@@ -388,6 +423,7 @@ async function showBetForm(id_event) {
                         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
                     });
                 } catch (err) {
+                    alert("Error al enviar tu apuesta. Intenta de nuevo")
                     document.getElementById("respuesta-apuesta").textContent = "Error: " + err.message;
                     hideLoadingModal();
                 }
@@ -398,6 +434,7 @@ async function showBetForm(id_event) {
         betFormModal.show();
 
     } catch (err) {
+        alert("Error al enviar tu apuesta, intenta de nuevo.")
         console.error("Error al mostrar el formulario de apuestas:", err);
     }
 }
@@ -467,6 +504,11 @@ async function redeemBonus(id_bonus) {
         alert("Error al canjear bono");
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadUserBonuses()
+})
+
 
 
 // Llamar a la función cuando se cargue la página

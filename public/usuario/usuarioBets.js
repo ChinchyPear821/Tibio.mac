@@ -89,13 +89,15 @@ function renderNextBets() {
             momioGanado = bet.amount * bet.extra
         } else if (typeBet === "perdida") {
             statusText = "PERDIDA";
-        }        
+        }
+        const draw = bet.target === bet.type;
+        const textTarget = draw ? "Tipo: Empate" : `Tipo: ${bet.target} ${bet.type}`;
 
         card.innerHTML = `
             <strong>${statusText}</strong>
             Categoria: ${bet.category}
             </br>
-            Tipo: ${bet.target} ${bet.type}
+            ${textTarget}    
             </br>
             Monto: ${bet.amount}
             </br>
@@ -117,6 +119,7 @@ function renderNextBets() {
     }
 
 }
+
 //INICIAR
 typeFilterBets.addEventListener("change", applyFiltersBets)
 dateFilterBets.addEventListener("change", applyFiltersBets)

@@ -30,6 +30,8 @@
                     <!--<a class="nav-link" href="historial.html">Historial</a>-->
                     <a class="nav-link" href="./usuario/usuario.html">Usuario</a>
                     <a class="nav-link  active" href="categorias.html">Categorias</a>
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#bonosModal">Bonos</a>
+
                     <button onclick="logout()" class="btn btn-secondary">Salir</button>
                 </div>
             </div>
@@ -63,6 +65,30 @@
             </div>
         </div>
         <br><br>
+    </div>
+    <!--Modal de Bonos de usuario -->
+    <div class="modal fade" id="bonosModal" tabindex="-1" aria-labelledby="bonosModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bonosModalLabel">Consulta tus bonos disponibles y canjeados</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-dark table-striped">
+                        <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="bonos-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="app.js"></script>
     <script src="categories.js"></script>

@@ -15,9 +15,9 @@ export class UserController{
             const userInfo = await UserModel.protected({ data: { id_user } })
 
             return res.status(201).json(userInfo)
-        }catch(e){
+        }catch(error){
             console.error("Error al regresar la informacion dle usuario:", error)
-            res.status(400).json({ error: "Error al regresar la informacion del usuario "})
+            res.status(401).json({ error: "Error al regresar la informacion del usuario "})
         }
     }
     static async allCardsByUser(req, res){
@@ -112,6 +112,18 @@ export class UserController{
         }catch(e){
             console.error("Error addCard controller", e)
             return res.status(500).json({ error: "Error addCard controller" })
+        }
+    }
+
+    static async updateUserRole(req, res) {
+        try {
+            const id_user = req.body;
+            // Llamar al modelo para actualizar el rol
+            const result = await UserModel.updateRole(id_user);
+            return res.status(200).json({result});
+        } catch (error) {
+            console.error("Error al actualizar el rol del usuario:", error);
+            return res.status(500).json({ error: "Error al actualizar el rol del usuario." });
         }
     }
 } 

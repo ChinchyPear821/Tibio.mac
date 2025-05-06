@@ -898,9 +898,9 @@ async function checkSession() {
                 <div class="card mt-4 shadow-sm border-0 rounded-4 h-100">
                     <div class="card-header bg-light text-center border-0">
                     <div class="d-flex justify-content-center align-items-center gap-3">
-                        <img src="/images/${fileSport}/${local}.png" class="img-fluid" style="max-height: 60px;" alt="${local}">
+                        <img src="/images/${fileSport}/${local.toLowerCase()}.png" class="img-fluid" style="max-height: 60px;" alt="${local}">
                         <span class="fw-bold">vs</span>
-                        <img src="/images/${fileSport}/${visitor}.png" class="img-fluid" style="max-height: 60px;" alt="${visitor}">
+                        <img src="/images/${fileSport}/${visitor.toLowerCase()}.png" class="img-fluid" style="max-height: 60px;" alt="${visitor}">
                     </div>
                     </div>
                     <div class="card-body text-center">

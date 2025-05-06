@@ -121,4 +121,19 @@ export class UserModel {
             throw new Error("Erroe addCard mode", e)
         }
     }
+    static async updateRole( id_user) {
+        try {
+            const role = "ADMIN";
+            const result = db.prepare(`
+                UPDATE users
+                SET rol = ?
+                WHERE id_user = ?
+            `).run(role, id_user);
+
+            return result;
+        } catch (error) {
+            console.error("Error al actualizar el rol del usuario:", error);
+            throw error;
+        }
+    }
 }
