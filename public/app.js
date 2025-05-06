@@ -66,12 +66,16 @@ function getEventImages(eventName, sport) {
         default:
             fileSport = 'UnknownSportImg';
     }
+    console.log(`/images/${fileSport}/${local.toLowerCase()}.png`);
+    console.log(`/images/${fileSport}/${visitor.toLowerCase()}.png`,)
 
     return {
-        localImg: `/images/${fileSport}/${encodeURIComponent(local)}.png`,
-        visitorImg: `/images/${fileSport}/${encodeURIComponent(visitor)}.png`
+        localImg: `/images/${fileSport}/${local.toLowerCase()}.png`,
+        visitorImg: `/images/${fileSport}/${visitor.toLowerCase()}.png`
     };
 }
+
+
 
 
 
