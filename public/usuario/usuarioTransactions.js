@@ -12,8 +12,6 @@ const dateFilterTransaction = document.getElementById("transactions-filter-date"
 function generatePDF(transactions) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-
-    // Título del PDF
     doc.setFontSize(16);
     doc.text("Historial de Transacciones", 20, 20);
 

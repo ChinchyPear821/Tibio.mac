@@ -60,7 +60,30 @@
         </div>
     </div>
 
-    <!-- Modal de Éxito -->
+<button type="button" class="btn btn-dark btn-sm w-auto position-fixed bottom-0 end-0 m-3 rounded-pill shadow"
+        data-bs-toggle="modal" data-bs-target="#qrModal" style="z-index: 1050;">
+    Ver QR
+</button>
+
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalText" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrModalText" style="color:#000">Escanea el codigo QR</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="qr.jpeg" alt="Código QR" class="img-fluid">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Modal de Exito -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content text-center p-4">
