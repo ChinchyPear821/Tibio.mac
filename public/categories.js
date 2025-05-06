@@ -63,8 +63,8 @@ function getEventImages(eventName, sport) {
     }
 
     return {
-        localImg: `/${fileSport}/${local}.png`,
-        visitorImg: `/${fileSport}/${visitor}.png`
+        localImg: `/images/${fileSport}/${encodeURIComponent(local)}.png`,
+        visitorImg: `/images/${fileSport}/${encodeURIComponent(visitor)}.png`
     };
 }
 

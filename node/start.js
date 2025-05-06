@@ -54,6 +54,8 @@ app.use((req, res, next) => {
     next();
 });
 app.use(express.static(path.join(__dirname, "../public")));
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
+
 app.get("/protected-route", (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ message: "No autorizado. Inicia sesión primero." });
